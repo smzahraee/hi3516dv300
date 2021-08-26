@@ -1,0 +1,10 @@
+{
+    "subsystem": "kernel",
+    "parts": {
+        "kernel": {
+            "module_list": [
+                "//kernel/linux/build: linux_kernel"
+            ]
+        }
+    }
+}
