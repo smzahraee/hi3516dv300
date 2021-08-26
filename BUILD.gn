@@ -18,7 +18,10 @@ if (defined(ohos_lite)) {
     import("//build/config/clang/clang.gni")
 }
 
-kernel_version = "linux-4.19"
+declare_args() {
+    kernel_version = "linux-4.19"
+}
+
 if (defined(ohos_lite)) {
     build_ext_component("linux_kernel") {
     exec_path = rebase_path(".", root_build_dir)
