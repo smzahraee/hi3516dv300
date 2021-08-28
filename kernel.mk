@@ -16,7 +16,7 @@
 
 PRODUCT_NAME=$(TARGET_PRODUCT)
 OHOS_BUILD_HOME := $(realpath $(shell pwd)/../../../)
-KERNEL_SRC_TMP_PATH := $(OUT_DIR)/kernel/linux/${KERNEL_VERSION}
+KERNEL_SRC_TMP_PATH := $(OUT_DIR)/kernel/${KERNEL_VERSION}
 ifeq ($(BUILD_TYPE), standard)
     OHOS_BUILD_HOME := $(OHOS_ROOT_PATH)
     BOOT_IMAGE_PATH = $(OHOS_BUILD_HOME)/device/hisilicon/hispark_taurus/prebuilts
