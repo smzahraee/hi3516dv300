@@ -23,7 +23,7 @@ ifeq ($(BUILD_TYPE), standard)
     KERNEL_SRC_TMP_PATH := $(OUT_DIR)/kernel/src_tmp/${KERNEL_VERSION}
 endif
 
-KERNEL_SRC_PATH := $(OHOS_BUILD_HOME)/kernel/${KERNEL_VERSION}
+KERNEL_SRC_PATH := $(OHOS_BUILD_HOME)/kernel/linux/${KERNEL_VERSION}
 KERNEL_PATCH_PATH := $(OHOS_BUILD_HOME)/kernel/linux/patches/${KERNEL_VERSION}
 KERNEL_CONFIG_PATH := $(OHOS_BUILD_HOME)/kernel/linux/config/${KERNEL_VERSION}
 PREBUILTS_GCC_DIR := $(OHOS_BUILD_HOME)/prebuilts/gcc
