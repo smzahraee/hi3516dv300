@@ -33,7 +33,7 @@ if (defined(ohos_lite)) {
     build_type = "small"
     product_path_rebase = rebase_path(product_path, ohos_root_path)
     command = "./kernel_module_build.sh ${outdir} ${build_type} ${clang_dir} ${product_path_rebase} ${board_name} ${kernel_version}"
-    deps = [ "//prebuilts/lite/sysroot/build:mark_as_prebuilts" ]
+    deps = [ "//build/lite:mark_as_prebuilts" ]
   }
 } else {
     kernel_build_script_dir = "//kernel/linux/build"
