@@ -17,6 +17,7 @@
 PRODUCT_NAME=$(TARGET_PRODUCT)
 OHOS_BUILD_HOME := $(realpath $(shell pwd)/../../../)
 KERNEL_SRC_TMP_PATH := $(OUT_DIR)/kernel/${KERNEL_VERSION}
+KERNEL_OBJ_TMP_PATH := $(OUT_DIR)/kernel/OBJ/${KERNEL_VERSION}
 ifeq ($(BUILD_TYPE), standard)
     OHOS_BUILD_HOME := $(OHOS_ROOT_PATH)
     BOOT_IMAGE_PATH = $(OHOS_BUILD_HOME)/device/hisilicon/hispark_taurus/prebuilts
@@ -67,6 +68,8 @@ HDF_PATCH_FILE := $(DEVICE_PATCH_DIR)/hdf.patch
 SMALL_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME)_$(BUILD_TYPE).patch
 KERNEL_IMAGE_FILE := $(KERNEL_SRC_TMP_PATH)/arch/arm/boot/uImage
 DEFCONFIG_FILE := $(DEVICE_NAME)_$(BUILD_TYPE)_defconfig
+
+export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
 $(KERNEL_IMAGE_FILE):
 	$(hide) echo "build kernel..."
