@@ -23,5 +23,5 @@ set -e
 pushd ${1}
 ./kernel_module_build.sh ${2} ${4} ${5} ${6} ${7} ${8}
 mkdir -p ${3}
-cp ${2}/kernel/src_tmp/${8}/arch/arm/boot/uImage ${3}/uImage
+cp ${2}/kernel/OBJ/${8}/arch/arm/boot/uImage ${3}/uImage
 popd
