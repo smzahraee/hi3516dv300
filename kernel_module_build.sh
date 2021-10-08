@@ -46,7 +46,7 @@ LINUX_KERNEL_UIMAGE_FILE=${LINUX_KERNEL_OBJ_OUT}/arch/arm/boot/uImage
 
 make -f kernel.mk
 
-if [ -f ${LINUX_KERNEL_UIMAGE_FILE} ];then
+if [ -f "${LINUX_KERNEL_UIMAGE_FILE}" ];then
     echo "uImage: ${LINUX_KERNEL_UIMAGE_FILE} build success"
 else
     echo "uImage: ${LINUX_KERNEL_UIMAGE_FILE} build failed!!!"
