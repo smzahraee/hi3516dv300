@@ -12,52 +12,50 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 if (defined(ohos_lite)) {
-    import("//build/lite/config/component/lite_component.gni")
+  import("//build/lite/config/component/lite_component.gni")
 } else {
-    import("//build/ohos.gni")
-    import("//build/config/clang/clang.gni")
+  import("//build/config/clang/clang.gni")
+  import("//build/ohos.gni")
 }
 import("//build/ohos/kernel/kernel.gni")
 
 if (defined(ohos_lite)) {
-    build_ext_component("linux_kernel") {
+  build_ext_component("linux_kernel") {
+    no_default_deps = true
     exec_path = rebase_path(".", root_build_dir)
     outdir = rebase_path("$root_out_dir")
     clang_dir = ""
     if (ohos_build_compiler_dir != "") {
-        clang_dir = rebase_path("${ohos_build_compiler_dir}")
+      clang_dir = rebase_path("${ohos_build_compiler_dir}")
     }
     build_type = "small"
     product_path_rebase = rebase_path(product_path, ohos_root_path)
     command = "./kernel_module_build.sh ${outdir} ${build_type} ${clang_dir} ${product_path_rebase} ${board_name} ${linux_kernel_version}"
-    deps = [ "//build/lite:mark_as_prebuilts" ]
   }
 } else {
-    kernel_build_script_dir = "//kernel/linux/build"
-    kernel_source_dir = "//kernel/linux/$linux_kernel_version"
+  kernel_build_script_dir = "//kernel/linux/build"
+  kernel_source_dir = "//kernel/linux/$linux_kernel_version"
 
-    action("build_kernel") {
-        script = "build_kernel.sh"
-        sources = [ kernel_source_dir ]
+  action("build_kernel") {
+    script = "build_kernel.sh"
+    sources = [ kernel_source_dir ]
 
-        product_path="vendor/$product_company/$product_name"
-        build_type = "standard"
-        outputs = [ "$root_build_dir/packages/phone/images/uImage" ]
-        args = [
-            rebase_path(kernel_build_script_dir, root_build_dir),
-            rebase_path("$root_out_dir/../KERNEL_OBJ"),
-            rebase_path("$root_build_dir/packages/phone/images"),
-            build_type,
-            rebase_path("$clang_base_path"),
-            product_path,
-            device_name,
-            linux_kernel_version
-        ]
-    }
+    product_path = "vendor/$product_company/$product_name"
+    build_type = "standard"
+    outputs = [ "$root_build_dir/packages/phone/images/uImage" ]
+    args = [
+      rebase_path(kernel_build_script_dir, root_build_dir),
+      rebase_path("$root_out_dir/../KERNEL_OBJ"),
+      rebase_path("$root_build_dir/packages/phone/images"),
+      build_type,
+      rebase_path("$clang_base_path"),
+      product_path,
+      device_name,
+      linux_kernel_version,
+    ]
+  }
 
-    group("linux_kernel") {
-        deps = [
-            ":build_kernel",
-        ]
-    }
+  group("linux_kernel") {
+    deps = [ ":build_kernel" ]
+  }
 }
