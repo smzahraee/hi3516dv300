@@ -15,15 +15,28 @@
 
 set -e
 
-#$1 - kernel build script work dir
-#$2 - kernel build script stage dir
-#$3 - GN target output dir
+function readfile ()
+{
+    for file in $1/*
+    do
+        if [ -d $file ];then
+	    readfile $file $2 $3
+        elif [ $file -nt $2 ]; then
+            echo $file is update
+            touch $3;
+            return
+        fi
+    done
+}    
 
-echo build_kernel
-pushd ${1}
-./kernel_module_build.sh ${2} ${4} ${5} ${6} ${7} ${8}
-mkdir -p ${3}
-rm -rf ${3}/../../../kernel.timestamp
-cp ${2}/kernel/OBJ/${8}/arch/arm/boot/uImage ${3}/uImage
-cp ${2}/kernel/OBJ/${8}/arch/arm/boot/zImage-dtb ${3}/zImage-dtb
-popd
+echo $1 for check kernel dir
+echo $2 for output image
+echo $3 for timestamp
+if [ -e $2 ]; then
+    readfile $1 $2 $3
+    if [ $3 -nt $2 ]; then
+        echo "need update $2"
+        rm -rf $2;
+    fi
+fi
+
