@@ -19,9 +19,9 @@ function readfile ()
 {
     for file in $1/*
     do
-        if [ -d $file ];then
+        if [ -d "$file" ];then
 	    readfile $file $2 $3
-        elif [ $file -nt $2 ]; then
+        elif [ "$file" -nt "$2" ]; then
             echo $file is update
             touch $3;
             return
@@ -32,9 +32,9 @@ function readfile ()
 echo $1 for check kernel dir
 echo $2 for output image
 echo $3 for timestamp
-if [ -e $2 ]; then
+if [ -e "$2" ]; then
     readfile $1 $2 $3
-    if [ $3 -nt $2 ]; then
+    if [ "$3" -nt "$2" ]; then
         echo "need update $2"
         rm -rf $2;
     fi
