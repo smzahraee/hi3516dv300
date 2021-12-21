@@ -1,0 +1,53 @@
+{
+    "name": "@ohos/linux",
+    "version": "",
+    "description": "Linux内核",
+    "homePage": "https://gitee.com/openharmony",
+    "license": "",
+    "repository": "",
+    "domain": "os",
+    "language": "",
+    "publishAs": "",
+    "private": false,
+    "scripts": {},
+    "tags": [],
+    "keywords": [],
+    "envs": [],
+    "dirs": [],
+    "author": {
+        "name": "",
+        "email": "",
+        "url": ""
+    },
+    "contributors": [
+        {
+            "name": "",
+            "email": "",
+            "url": ""
+        }
+    ],
+    "segment": {},
+    "component": {
+        "name": "linux",
+        "subsystem": "linux",
+        "syscap": [
+            "SystemCapabilit.Kernel.Linux"
+        ],
+        "features": [],
+        "adated_system_type": [
+            "small",
+            "standard"
+        ],
+        "rom": "",
+        "ram": "",
+        "deps": {
+            "components": [],
+            "third_party": []
+        },
+        "build": {
+            "sub_component": [],
+            "inner_kits": [],
+            "test": []
+        }
+    }
+}
