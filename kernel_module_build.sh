@@ -16,45 +16,43 @@
 set -e
 
 export OUT_DIR=$1
+export BUILD_TYPE=$2
+export KERNEL_ARCH=$3
+export PRODUCT_PATH=$4
+export DEVICE_NAME=$5
 export KERNEL_VERSION=$6
-if [ "$2" == "small" ];then
-    if [ ""x == $(which arm-linux-gnueabi-ld)x ] || [ ""x == $(which arm-linux-gnueabi-gcc)x ];then
-        echo "Please install gcc-arm-linux-gnueabi, run \"sudo apt-get install gcc-arm-linux-gnueabi\"."
-        exit 1
-    fi
-    export BUILD_TYPE=small
+if [ "$BUILD_TYPE" == "small" ];then
     LINUX_KERNEL_OUT=${OUT_DIR}/kernel/${KERNEL_VERSION}
-    if [ "$3" != "" ];then
-	LLVM_PATH=$3
-        export CLANG_CC=${LLVM_PATH}/bin/clang
-    fi
     if [ "$5" == "hispark_taurus" ];then
-	export DEVICE_NAME=hi3516dv300
+        export DEVICE_NAME=hi3516dv300
     fi
-elif [ "$2" == "standard" ];then
-    export BUILD_TYPE=standard
-    export DEVICE_NAME=$5
+elif [ "$BUILD_TYPE" == "standard" ];then
     LINUX_KERNEL_OUT=${OUT_DIR}/kernel/src_tmp/${KERNEL_VERSION}
-    CLANG_BASE_PATH=$3
 fi
 LINUX_KERNEL_OBJ_OUT=${OUT_DIR}/kernel/OBJ/${KERNEL_VERSION}
 
 export OHOS_ROOT_PATH=$(pwd)/../../..
-export PRODUCT_PATH=$4
-
-LINUX_KERNEL_UIMAGE_FILE=${LINUX_KERNEL_OBJ_OUT}/arch/arm/boot/uImage
+# it needs adaptation for more device target
+kernel_image=""
+if [ "$KERNEL_ARCH" == "arm" ];then
+    kernel_image="uImage"
+elif [ "$KERNEL_ARCH" == "arm64" ];then
+    kernel_image="Image"
+fi
+export KERNEL_IMAGE=${kernel_image}
+LINUX_KERNEL_IMAGE_FILE=${LINUX_KERNEL_OBJ_OUT}/arch/${KERNEL_ARCH}/boot/${kernel_image}
 
 make -f kernel.mk
 
-if [ -f "${LINUX_KERNEL_UIMAGE_FILE}" ];then
-    echo "uImage: ${LINUX_KERNEL_UIMAGE_FILE} build success"
+if [ -f "${LINUX_KERNEL_IMAGE_FILE}" ];then
+    echo "Image: ${LINUX_KERNEL_IMAGE_FILE} build success"
 else
-    echo "uImage: ${LINUX_KERNEL_UIMAGE_FILE} build failed!!!"
+    echo "Image: ${LINUX_KERNEL_IMAGE_FILE} build failed!!!"
     exit 1
 fi
 
-if [ "$2" == "small" ];then
-    cp -rf ${LINUX_KERNEL_UIMAGE_FILE} ${OUT_DIR}/uImage_${DEVICE_NAME}_smp
+if [ "$5" == "hispark_taurus" ];then
+    cp -rf ${LINUX_KERNEL_IMAGE_FILE} ${OUT_DIR}/uImage_${DEVICE_NAME}_smp
 fi
 
 exit 0

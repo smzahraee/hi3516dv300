@@ -19,7 +19,6 @@ OHOS_BUILD_HOME := $(realpath $(shell pwd)/../../../)
 KERNEL_SRC_TMP_PATH := $(OUT_DIR)/kernel/${KERNEL_VERSION}
 KERNEL_OBJ_TMP_PATH := $(OUT_DIR)/kernel/OBJ/${KERNEL_VERSION}
 ifeq ($(BUILD_TYPE), standard)
-    OHOS_BUILD_HOME := $(OHOS_ROOT_PATH)
     BOOT_IMAGE_PATH = $(OHOS_BUILD_HOME)/device/board/hisilicon/hispark_taurus/uboot/prebuilts
     KERNEL_SRC_TMP_PATH := $(OUT_DIR)/kernel/src_tmp/${KERNEL_VERSION}
 endif
@@ -31,30 +30,19 @@ PREBUILTS_GCC_DIR := $(OHOS_BUILD_HOME)/prebuilts/gcc
 CLANG_HOST_TOOLCHAIN := $(OHOS_BUILD_HOME)/prebuilts/clang/ohos/linux-x86_64/llvm/bin
 KERNEL_HOSTCC := $(CLANG_HOST_TOOLCHAIN)/clang
 KERNEL_PREBUILT_MAKE := make
+CLANG_CC := $(CLANG_HOST_TOOLCHAIN)/clang
 
-ifeq ($(BUILD_TYPE), standard)
-    KERNEL_ARCH := arm
+ifeq ($(KERNEL_ARCH), arm)
     KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/arm/gcc-linaro-7.5.0-arm-linux-gnueabi/bin
     KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/arm-linux-gnueabi-
-    CLANG_CC := $(CLANG_HOST_TOOLCHAIN)/clang
-else ifeq ($(BUILD_TYPE), small)
-    KERNEL_ARCH := arm
-    ifeq ($(CLANG_CC), "")
-        CLANG_CC := $(CLANG_HOST_TOOLCHAIN)/clang
-    endif
+else ifeq ($(KERNEL_ARCH), arm64)
+    KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/aarch64/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin
+    KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/aarch64-linux-gnu-
 endif
-
-KERNEL_PERL := /usr/bin/perl
 
 KERNEL_CROSS_COMPILE :=
 KERNEL_CROSS_COMPILE += CC="$(CLANG_CC)"
-ifeq ($(BUILD_TYPE), standard)
-    KERNEL_CROSS_COMPILE += HOSTCC="$(KERNEL_HOSTCC)"
-    KERNEL_CROSS_COMPILE += PERL=$(KERNEL_PERL)
-    KERNEL_CROSS_COMPILE += CROSS_COMPILE="$(KERNEL_TARGET_TOOLCHAIN_PREFIX)"
-else ifeq ($(BUILD_TYPE), small)
-    KERNEL_CROSS_COMPILE += CROSS_COMPILE="arm-linux-gnueabi-"
-endif
+KERNEL_CROSS_COMPILE += CROSS_COMPILE="$(KERNEL_TARGET_TOOLCHAIN_PREFIX)"
 
 KERNEL_MAKE := \
     PATH="$(BOOT_IMAGE_PATH):$$PATH" \
@@ -66,7 +54,7 @@ DEVICE_PATCH_DIR := $(OHOS_BUILD_HOME)/kernel/linux/patches/${KERNEL_VERSION}/$(
 DEVICE_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME).patch
 HDF_PATCH_FILE := $(DEVICE_PATCH_DIR)/hdf.patch
 SMALL_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME)_$(BUILD_TYPE).patch
-KERNEL_IMAGE_FILE := $(KERNEL_SRC_TMP_PATH)/arch/arm/boot/uImage
+KERNEL_IMAGE_FILE := $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/boot/$(KERNEL_IMAGE)
 DEFCONFIG_FILE := $(DEVICE_NAME)_$(BUILD_TYPE)_defconfig
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
@@ -85,7 +73,7 @@ endif
 ifeq ($(KERNEL_VERSION), linux-5.10)
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) modules_prepare
 endif
-	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) -j64 uImage
+	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) -j64 $(KERNEL_IMAGE)
 endif
 .PHONY: build-kernel
 build-kernel: $(KERNEL_IMAGE_FILE)
