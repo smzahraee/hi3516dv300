@@ -11,7 +11,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-if (defined(ohos_lite)) {
+if (os_level == "mini" || os_level == "small") {
   import("//build/lite/config/component/lite_component.gni")
 } else {
   import("//build/config/clang/clang.gni")
@@ -19,30 +19,33 @@ if (defined(ohos_lite)) {
 }
 import("//build/ohos/kernel/kernel.gni")
 
-if (defined(ohos_lite)) {
+# it needs adaptation for more device target
+kernel_image = ""
+if (target_cpu == "arm") {
+  kernel_image = "uImage"
+} else if (target_cpu == "arm64") {
+  kernel_image = "Image"
+}
+
+if (os_level == "mini" || os_level == "small") {
   build_ext_component("linux_kernel") {
     no_default_deps = true
     exec_path = rebase_path(".", root_build_dir)
     outdir = rebase_path("$root_out_dir")
-    clang_dir = ""
-    if (ohos_build_compiler_dir != "") {
-      clang_dir = rebase_path("${ohos_build_compiler_dir}")
-    }
     build_type = "small"
     product_path_rebase = rebase_path(product_path, ohos_root_path)
-    command = "./kernel_module_build.sh ${outdir} ${build_type} ${clang_dir} ${product_path_rebase} ${board_name} ${linux_kernel_version}"
+    command = "./kernel_module_build.sh ${outdir} ${build_type} ${target_cpu} ${product_path_rebase} ${board_name} ${linux_kernel_version}"
   }
 } else {
   kernel_build_script_dir = "//kernel/linux/build"
   kernel_source_dir = "//kernel/linux/$linux_kernel_version"
-
   action("check_build") {
     script = "check_build.sh"
     sources = [ kernel_source_dir ]
     outputs = [ "$root_build_dir/kernel.timestamp" ]
     args = [
       rebase_path(kernel_source_dir, root_build_dir),
-      rebase_path("$root_build_dir/packages/phone/images/uImage"),
+      rebase_path("$root_build_dir/packages/phone/images/$kernel_image"),
       rebase_path("$root_build_dir/kernel.timestamp"),
     ]
   }
@@ -54,13 +57,13 @@ if (defined(ohos_lite)) {
     deps = [ ":check_build" ]
     product_path = "vendor/$product_company/$product_name"
     build_type = "standard"
-    outputs = [ "$root_build_dir/packages/phone/images/uImage" ]
+    outputs = [ "$root_build_dir/packages/phone/images/$kernel_image" ]
     args = [
       rebase_path(kernel_build_script_dir, root_build_dir),
       rebase_path("$root_out_dir/../KERNEL_OBJ"),
       rebase_path("$root_build_dir/packages/phone/images"),
       build_type,
-      rebase_path("$clang_base_path"),
+      target_cpu,
       product_path,
       device_name,
       linux_kernel_version,
