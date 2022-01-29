@@ -14,7 +14,7 @@
         "name": "linux",
         "subsystem": "kernel",
         "syscap": [
-            "SystemCapabilit.Kernel.Linux"
+            "SystemCapability.Kernel.Linux"
         ],
         "features": [],
         "adapted_system_type": [
