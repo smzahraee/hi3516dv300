@@ -52,6 +52,7 @@ KERNEL_MAKE := \
 ifneq ($(findstring $(BUILD_TYPE), small standard),)
 DEVICE_PATCH_DIR := $(OHOS_BUILD_HOME)/kernel/linux/patches/${KERNEL_VERSION}/$(DEVICE_NAME)_patch
 DEVICE_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME).patch
+PRODUCT_PATCH_FILE := $(OHOS_BUILD_HOME)/vendor/hisilicon/watchos/patchs/$(DEVICE_NAME).patch
 HDF_PATCH_FILE := $(DEVICE_PATCH_DIR)/hdf.patch
 SMALL_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME)_$(BUILD_TYPE).patch
 KERNEL_IMAGE_FILE := $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/boot/$(KERNEL_IMAGE)
@@ -62,8 +63,14 @@ export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 $(KERNEL_IMAGE_FILE):
 	$(hide) echo "build kernel..."
 	$(hide) rm -rf $(KERNEL_SRC_TMP_PATH);mkdir -p $(KERNEL_SRC_TMP_PATH);cp -arfL $(KERNEL_SRC_PATH)/* $(KERNEL_SRC_TMP_PATH)/
-	$(hide) $(OHOS_BUILD_HOME)/drivers/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(HDF_PATCH_FILE)
+	$(hide) $(OHOS_BUILD_HOME)/drivers/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(HDF_PATCH_FILE) 
+     
+ifeq ($(PRODUCT_PATH), vendor/hisilicon/watchos)
+	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(PRODUCT_PATCH_FILE)
+else
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(DEVICE_PATCH_FILE)
+endif 
+
 ifneq ($(findstring $(BUILD_TYPE), small),)
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(SMALL_PATCH_FILE)
 endif
