@@ -41,12 +41,22 @@ else ifeq ($(KERNEL_ARCH), arm64)
 endif
 
 KERNEL_CROSS_COMPILE :=
+ifeq ($(DEVICE_NAME), hi3751v350)
+KERNEL_CROSS_COMPILE += CONFIG_MSP="y"
+else
 KERNEL_CROSS_COMPILE += CC="$(CLANG_CC)"
+endif
 KERNEL_CROSS_COMPILE += CROSS_COMPILE="$(KERNEL_TARGET_TOOLCHAIN_PREFIX)"
 
+ifeq ($(DEVICE_NAME), hi3751v350)
+KERNEL_MAKE := \
+    PATH="$(BOOT_IMAGE_PATH):$(KERNEL_TARGET_TOOLCHAIN):$$PATH" \
+    $(KERNEL_PREBUILT_MAKE)
+else
 KERNEL_MAKE := \
     PATH="$(BOOT_IMAGE_PATH):$$PATH" \
     $(KERNEL_PREBUILT_MAKE)
+endif
 
 
 ifneq ($(findstring $(BUILD_TYPE), small standard),)
@@ -62,8 +72,14 @@ export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
 $(KERNEL_IMAGE_FILE):
 	$(hide) echo "build kernel..."
+ifeq ($(DEVICE_NAME), hi3751v350)
+	$(hide) rm -rf $(KERNEL_SRC_TMP_PATH);mkdir -p $(KERNEL_SRC_TMP_PATH);cp -arfP $(KERNEL_SRC_PATH)/* $(KERNEL_SRC_TMP_PATH)/
+	$(hide) cd $(KERNEL_SRC_TMP_PATH)/drivers && rm -rf common && ln -s $(SDK_SOURCE_DIR)/common/drv ./common && cd -
+	$(hide) cd $(KERNEL_SRC_TMP_PATH)/drivers && rm -rf msp && ln -s $(SDK_SOURCE_DIR)/msp/drv ./msp && cd -
+else
 	$(hide) rm -rf $(KERNEL_SRC_TMP_PATH);mkdir -p $(KERNEL_SRC_TMP_PATH);cp -arfL $(KERNEL_SRC_PATH)/* $(KERNEL_SRC_TMP_PATH)/
-	$(hide) $(OHOS_BUILD_HOME)/drivers/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(HDF_PATCH_FILE) 
+endif
+	$(hide) $(OHOS_BUILD_HOME)/drivers/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(HDF_PATCH_FILE)
      
 ifeq ($(PRODUCT_PATH), vendor/hisilicon/watchos)
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(PRODUCT_PATCH_FILE)
@@ -81,6 +97,9 @@ ifeq ($(KERNEL_VERSION), linux-5.10)
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) modules_prepare
 endif
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) -j64 $(KERNEL_IMAGE)
+endif
+ifeq ($(DEVICE_NAME), hi3751v350)
+	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) dtbs
 endif
 .PHONY: build-kernel
 build-kernel: $(KERNEL_IMAGE_FILE)
