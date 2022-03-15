@@ -1,0 +1,85 @@
+#!/bin/sh
+################################################################################
+#
+# Copyright (C) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+# File: cpusetdecouple_cpuhotplug01.sh
+#
+# Description: Check whether CPU hot-plug and CPUSET decoupling are implemented
+#
+# Authors:     Ma Feng - mafeng.ma@huawei.com
+#
+# History:     Mar 15 2022 - init scripts
+#
+################################################################################
+
+ret=0
+
+source tst_oh.sh
+
+do_setup()
+{
+	if [ ! -d "/dev/cpuset" ]; then
+		mkdir /dev/cupset
+	fi
+
+	if mountpoint -q /dev/cpuset; then
+		tst_res TINFO "mountpoint -q /dev/cpuset"
+	else
+		mount -t cpuset none /dev/cupset
+		tst_res TINFO "mount -t cpuset none /dev/cupset"
+	fi
+}
+
+do_test()
+{
+	tst_res TINFO "Start test cupsetdecouple_cpuhotplug01"
+	mkdir /dev/cpuset/hotplug01
+	echo "0-3" > /dev/cpuset/hotplug01/cpuset.cpus
+	cat /dev/cpuset/hotplug01/cpuset.cpus
+
+	cpu_total=$(cat /proc/cpuinfo | grep "processor" | wc -l)
+	cpu_total=$(( $cpu_total -1 ))
+
+	for i in $(seq 1 $cpu_total); do
+		echo $i
+		echo 0 > /sys/devices/system/cpu/cpu$i/online
+		cat /dev/cpuset/hotplug01/cpuset.cpus
+		cpu_set=$(cat /dev/cpuset/hotplug01/cpuset.cpus)
+		if [ $cpu_set == '0-3' ]; then
+			tst_res TINFO "hotplug01 cpu$i offline cpuset decouple success"
+		else
+			tst_res TINFO "hotplug01 cpu$i offline cpuset decouple fail"
+			ret=$(( $ret + 1 ))
+		fi
+		echo 1 > /sys/devices/system/cpu/cpu$i/online
+	done
+
+	if [ $ret -eq 0 ];then
+		tst_res TPASS "cpusetdecouple_cpuhotplug01 CPU hot-plug and CPUSET decoupling are implemented."
+	else
+		tst_res TFAIL "cpusetdecouple_cpuhotplug01 CPU hot-plug and CPUSET decoupling are implemented."
+	fi
+}
+
+do_clean()
+{
+	rmdir /dev/cpuset/hotplug01
+}
+
+do_setup
+do_test
+do_clean
+tst_exit

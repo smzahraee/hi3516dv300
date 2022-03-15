@@ -1,0 +1,51 @@
+# Copyright (C) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/ohos.gni")
+import("//build/ohos_var.gni")
+if (is_standard_system) {
+  import("//build/test.gni")
+}
+
+if (is_standard_system) {
+  module_output_path = "linuxkerneltest/"
+  linuxkerneltest_public_deps = [ "//third_party/googletest:gtest_main" ]
+
+  ohos_unittest("accesstokenid_test") {
+    module_out_path = module_output_path
+    sources = [ "unittest/accesstokenid/accesstokenid_test.cpp" ]
+    deps = linuxkerneltest_public_deps
+    part_name = "linux"
+    subsystem_name = "kernel"
+  }
+
+  script_dir = "kernel/linux/build/test/moduletest/runtest"
+  action("init_runtest") {
+    script = "init_runtest.sh"
+    outputs = [ "$root_build_dir/tests/moduletest/runtest.timestamp" ]
+    args = [
+      rebase_path("$root_build_dir/../../$script_dir"),
+      rebase_path("$root_build_dir/tests/moduletest"),
+    ]
+  }
+}
+
+group("linuxkerneltest") {
+  testonly = true
+  if (is_standard_system) {
+    deps = [
+      ":accesstokenid_test",
+      ":init_runtest",
+    ]
+  }
+}

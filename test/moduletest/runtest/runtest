@@ -1,0 +1,523 @@
+#!/bin/sh
+################################################################################
+#
+# Copyright (C) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+# File: runtest
+#
+# Description: shell scripts entry for linuxkerneltest
+#
+# Authors:     Ma Feng - mafeng.ma@huawei.com
+#
+# History:     Mar 15 2022 - init scripts
+#
+################################################################################
+
+export DEBUG=1
+
+export LC_ALL=c
+
+source lib/libapi.sh
+
+export test_lists
+export test_scenario
+export cur_test
+export cur_testcase
+export cross_compile_flag
+export no_need_run_checkflg=0
+export testcase_timeout_flg=0
+export no_need_run_testlist
+export testcase_timelimit=120
+export testcase_exit_code=0
+
+export testcase_total=0
+export testcase_fail=0
+export testcase_timeout=0
+export testsuite_total=0
+
+export TEST_ROOT=`pwd`
+export KERNEL_TEST_SUITE=${TEST_ROOT}/../
+export LOG_DIR=${TEST_ROOT}/log
+export BIN_LOCATE_DIR=${TEST_ROOT}/bin
+export INSTALL_BIN_DIR=/data/local/tmp/OH_kernel_test
+export COMPILE_LOG_DIR=${LOG_DIR}/compile_log
+export COMPILE_LOG=${COMPILE_LOG_DIR}/compile.log
+export RESULT_LOG_DIR
+export RESULT_SUM_LOG
+export RESULT_FAIL_LOG
+export TOOL_BIN_DIR
+
+export ARCH
+export CROSS_COMPILE
+export KERNEL_DIR
+export CROSS_COMPILER_DIR
+export HOST_TARGET
+export CROSS_COMPILE_NAME
+
+print_usage()
+{
+    "
+    usage:
+
+    COMPILE:
+    sh runtest compile [ -t test_lists ] [ -d sdk_dir ] [ -a arch ] [ -c cross_compile ] [ -k kernel_dir ] [ -o install_dir ]
+    -t testsuite name or a file of testsuites list
+        eg. -t ltp: compile single testsuite of ltp
+        eg. -t a.file: compile all testsuites in a.file
+        (missing -t means compile all testsuites)
+    -d sdk directory
+    -a arch for cross_compile, eg: arm or arm64
+    -c cross_compile name, eg: arm-linux-gnueabi- or aarch64-linux-gnu-
+    -k kernel dir for module compile, eg: /usr/src/module_obj
+    -o install directory, eg: /data/, default to /data/local/tmp
+
+    TEST:
+    sh runtest test [ -t test_lists ] [ -n skip_cases ] [ -l testcase timeout limit ]
+    -t testsuite name or a file of testsuites list
+        eg. -t ltp: test single testsuite of ltp
+        eg. -t a.file: test all testsuites in a.file
+        (missing -t means test all testsuites)
+
+    -n conf file of testcases no needed to run, default located at test/skip_test/XXX
+
+    -l testcase timeout limit, testcase will be killed in 120s(by default) if it hasn't finished run itself
+
+    eg1: sh runtest test -t OH_RK3568_config -n OH_RK3568_skiptest -l 60
+
+    eg2: sh runtest test -t ltp -n OH_RK3568_skiptest -l 60
+
+    eg2: sh runtest test -t cpusetdecouple_cpuhotplug_t -n OH_RK3568_skiptest -l 60
+    "
+
+    exit 0
+}
+
+check_cross_compiler()
+{
+    if [ ! -z ${CROSS_COMPILER_DIR} ] && [ ! -d ${CROSS_COMPILER_DIR} ]; then
+        print_error "${CROSS_COMPILER_DIR} not found, check params!!!"
+        exit 1
+    fi
+
+    export PATH=${CROSS_COMPILER_DIR}:$PATH
+    CROSS_COMPILE_NAME=${CROSS_COMPILE_NAME}gcc
+    which ${CROSS_COMPILE_NAME}
+    if [ $? -ne 0 ]; then
+        print_error "${CROSS_COMPILE_NAME} not found, check SDK!!!"
+        exit 1
+    fi
+
+    if [ -z ${KERNEL_DIR} ] && [ ! -d ${KERNEL_DIR} ]; then
+        print_error "${KERNEL_DIR} not found, check params!!!"
+        exit 1
+    fi
+
+    if [ cross_compile_flag == 1 ]; then
+        HOST_TARGET=${CROSS_COMPILE%-*}
+    fi
+}
+
+do_install()
+{
+    print_info "Install OH_kernel_test to ${INSTALL_BIN_DIR}..."
+    if [ ! -d ${INSTALL_BIN_DIR} ];then
+        mkdir -p ${INSTALL_BIN_DIR}
+    fi
+
+    cp -r ${TEST_ROOT}/lib ${INSTALL_BIN_DIR}
+    cp ${TEST_ROOT}/runtest ${INSTALL_BIN_DIR}
+    cp -r ${TEST_ROOT}/test ${INSTALL_BIN_DIR}
+    cp -r ${TEST_ROOT}/conf ${INSTALL_BIN_DIR}
+    cp -r ${BIN_LOCATE_DIR} ${INSTALL_BIN_DIR}
+}
+
+do_compile()
+{
+    check_cross_compiler
+
+    if [ -z "${test_lists}" ]; then
+        test_lists=`cat ${TEST_ROOT}/conf/testsuites.list`
+    fi
+
+    if [ ! -d ${BIN_LOCATE_DIR} ]; then
+        mkdir -p ${BIN_LOCATE_DIR}
+    fi
+
+    if [ -d ${COMPILE_LOG_DIR} ]; then
+        rm -rf ${COMPILE_LOG_DIR}
+    fi
+    mkdir -p ${COMPILE_LOG_DIR}
+
+    echo "Start to compile testsuites..." >> ${COMPILE_LOG}
+    echo "Testsuites list:" >> ${COMPILE_LOG}
+    echo "${test_lists}" >> ${COMPILE_LOG}
+
+    for testsuite in ${test_lists}; do
+        cd ${KERNEL_TEST_SUITE}
+        if [ ! -d ${testsuite} ]; then
+            print_error "${testsuite} not found!!!"
+            continue
+        fi
+        print_info "Start to compile ${testsuite}..."
+        mkdir -p ${COMPILE_LOG_DIR}/${testsuite}
+        cd ${testsuite}/${testsuite}_src
+        if [ -f "pre_compile.sh" ]; then
+            sh pre_compile.sh
+        fi
+
+        TOOL_BIN_DIR=${BIN_LOCATE_DIR}/${testsuite}/testcases/bin
+        if [ ! -d ${TOOL_BIN_DIR} ]; then
+            mkdir -p ${TOOL_BIN_DIR}
+        fi
+
+        if [ -e "configure" ]; then
+            if [ cross_compile_flag == 1 ]; then
+                ./configure cross_compile=$CROSS_COMPILE_NAME --host=$HOST_TARGET --target=$HOST_TARGET --prefix=${BIN_LOCATE_DIR}/${testsuite} --with-realtime-testsuite >> ${COMPILE_LOG_DIR}/${testsuite}/configure.log 2>&1
+            else
+                ./configure --prefix=$BIN_LOCATE_DIR/${testsuite} --with-realtime-testsuite >> ${COMPILE_LOG_DIR}/${testsuite}/configure.log 2>&1
+            fi
+        fi
+
+        make clean >> ${COMPILE_LOG_DIR}/${testsuite}/make.log 2>&1
+        if [ ${testsuite} == "ltp" ]; then
+            ./configure CFLAGS="-static" LDFLAGS="-static" --prefix=$BIN_LOCATE_DIR/${testsuite} >> ${COMPILE_LOG_DIR}/${testsuite}/configure.log 2>&1
+        fi
+
+        make -j $(nproc) >> ${COMPILE_LOG_DIR}/${testsuite}/make.log 2>&1
+        if [ $? -ne 0 ]; then
+            print_warn "${testsuite} make error, skip!"
+            continue
+        fi
+
+        make install >> ${COMPILE_LOG_DIR}/${testsuite}/make.log 2>&1
+        if [ $? -ne 0 ]; then
+            print_warn "${testsuite} make install error, skip!"
+            continue
+        fi
+
+        if [ -f ../init.sh ]; then
+            cp ../init.sh ${BIN_LOCATE_DIR}/${testsuite}_init.sh
+        fi
+
+        if [ -f ../uninit.sh ]; then
+            cp ../uninit.sh ${BIN_LOCATE_DIR}/${testsuite}_uninit.sh
+        fi
+
+        print_info "Finished compile ${testsuite}."
+    done
+
+    cd ${TEST_ROOT}
+    do_install
+}
+
+skip_run()
+{
+    local test_cmd=$1
+
+    if [ -z "$test_cmd" ]; then
+        return 1
+    else
+        local m_flag=`echo $test_cmd | awk '{print substr($1, 1, 1)}'`
+        if [ -z "$m_flag" ]||[ "$m_flag" = "#" ]; then
+            return 1
+        fi
+
+        if [ "${no_need_run_checkflg}" = "1" ]; then
+            local testcase_name=`echo $test_cmd | awk '{print $1}'`
+            cat ${TEST_ROOT}/tests/skip_test/${no_need_run_testlist} | grep "${testcase_name}" | sed 's/^[\t]*//g' | grep -e "^${testcase_name} " -e "^${testcase_name}"$'\t' -e "^${testcase_name}$" > /dev/null
+            if [ $? -eq 0 ]; then
+                return 1
+            fi
+        fi
+
+        return 0
+    fi
+}
+
+run_test()
+{
+    local test_cmd=$1
+
+    local testcase_name=`echo $test_cmd | awk '{print $1}'`
+    local testcase_cmdline=`echo $test_cmd | awk '{for(i=2;i<=NF;i++) printf $i OFS}'`
+
+    setsid sh -c "eval ${testcase_cmdline}" > ${RESULT_LOG_DIR}/${cur_test}/${testcase_name}.log 2>&1 &
+    local pgid=$!
+
+    timeout=${testcase_timelimit}
+    while [ $timeout -gt 0 ]; do
+        kill -s 0 $pgid 2>/dev/null
+        if [ $? -ne 0 ]; then
+            break
+        fi
+        timeout=$((timeout - 1))
+        sleep 1
+    done
+
+    if [ $timeout -le 0 ]; then
+        kill -KILL -- -$pgid
+    fi
+
+    wait $pgid
+    testcase_exit_code=$?
+}
+
+do_test_by_feature()
+{
+    if [ -z "${test_lists}" ]; then
+        test_lists=`cat ${TEST_ROOT}/conf/testsuites.list`
+    fi
+
+    RESULT_LOG_DIR=${LOG_DIR}/${test_scenario}_`date +"%Y_%m_%d-%Hh_%Mm_%Ss"`_result_log
+    RESULT_SUM_LOG=${RESULT_LOG_DIR}/result_sum.log
+    RESULT_FAIL_LOG=${RESULT_LOG_DIR}/result_fail.log
+
+    mkdir -p ${RESULT_LOG_DIR}
+
+    echo "Start to test" >> ${RESULT_SUM_LOG}
+    echo "Testsuites list:" >> ${RESULT_SUM_LOG}
+    echo "${test_lists}" >> ${RESULT_SUM_LOG}
+    print_info "Start to test ${test_lists}"
+
+    while read testcase
+    do
+        skip_run "${testcase}"
+        if [ $? -ne 0 ]; then
+            continue
+        fi
+
+        cd ${BIN_LOCATE_DIR}/testcases/bin
+        run_test "${testcase}"
+
+        if [ $? -ne 0 ]; then
+            echo "${testcase}" >> ${RESULT_LOG_DIR}/fail.list
+            echo "[${testsuite}] ${testcase}" >> ${RESULT_FAIL_LOG}
+            testcase_fail=$(($testcase_fail + 1))
+        fi
+
+        testcase_total=$(($testcase_total + 1))
+    done < ${TEST_ROOT}/tests/${test_lists}
+
+    cd ${TEST_ROOT}
+    echo "" | tee ${RESULT_SUM_LOG}
+    echo "******************************************************" | tee ${RESULT_SUM_LOG}
+    echo "Test result summary:" | tee ${RESULT_SUM_LOG}
+    echo "Total testcases:   ${testcase_total}" | tee ${RESULT_SUM_LOG}
+    echo "Fail testcases:    ${testcase_fail}" | tee ${RESULT_SUM_LOG}
+}
+
+do_test_by_conf()
+{
+    if [ -z "${test_lists}" ]; then
+        test_lists=`cat ${TEST_ROOT}/conf/testsuites.list`
+    fi
+
+    RESULT_LOG_DIR=${LOG_DIR}/${test_scenario}_`date +"%Y_%m_%d-%Hh_%Mm_%Ss"`_result_log
+    RESULT_SUM_LOG=${RESULT_LOG_DIR}/result_sum.log
+    RESULT_FAIL_LOG=${RESULT_LOG_DIR}/result_fail.log
+
+    mkdir -p ${RESULT_LOG_DIR}
+
+    echo "Start to test" >> ${RESULT_SUM_LOG}
+    echo "Testsuites list:" >> ${RESULT_SUM_LOG}
+    echo "${test_lists}" >> ${RESULT_SUM_LOG}
+
+    local curtest_total=0
+    local curtest_fail=0
+    local curtest_timeout=0
+
+    original_path=$PATH
+
+    for testsuite in ${test_lists}; do
+        curtest_fail=0
+        curtest_total=0
+        curtest_timeout=0
+
+        if [ ! -f ${TEST_ROOT}/tests/${testsuite} ]; then
+            print_error "${testsuite} file not found in ${TEST_ROOT}/tests!"
+            continue
+        fi
+
+        cur_test=${testsuite}
+        mkdir -p ${RESULT_LOG_DIR}/${testsuite}
+        echo "Start time: `date '+%Y-%m-%d %H:%M:%S'`" >> ${RESULT_LOG_DIR}/${testsuite}/summary.log
+        print_info "`date '+%Y-%m-%d %H:%M:%S'` Start to test ${testsuite}"
+        print_info "******************************************************"
+
+        if [ -f ${BIN_LOCATE_DIR}/${testsuite}_init.sh ]; then
+            cd ${BIN_LOCATE_DIR}
+            source ./${testsuite}_init.sh &> ${RESULT_LOG_DIR}/${testsuite}/init.log
+        fi
+
+        PATH=${BIN_LOCATE_DIR}/${testsuite}/testcases/bin:${TEST_ROOT}/lib:$PATH
+        while read testcase; do
+            local testcase_name=`echo ${testcase} | awk '{print $1}'`
+            skip_run "${testcase}"
+            if [ $? -ne 0 ]; then
+                continue
+            fi
+
+            cur_testcase=${testcase}
+            echo "Testsuite:${cur_test} Testcase:${cur_testcase}" > ${RESULT_LOG_DIR}/current_test
+            cd ${BIN_LOCATE_DIR}/${testsuite}/testcases/bin
+            run_test "${testcase}"
+
+            if [ $testcase_exit_code -eq 137 ]; then
+                echo "${testcase} (Timeout)" >> ${RESULT_LOG_DIR}/${testsuite}/timeout.list
+                echo "${testsuite} ${testcase} (Timeout)" >> ${RESULT_FAIL_LOG}
+                testcase_timeout=$(($testcase_timeout + 1))
+                curtest_timeout=$(($testcase_timeout + 1))
+                print_warn "`date '+%Y-%m-%d %H:%M:%S'` ${testcase_name} TIMEOUT!"
+            elif [ $testcase_exit_code -ne 0 ]; then
+                echo "${testcase}" >> ${RESULT_LOG_DIR}/${testsuite}/fail.list
+                echo "${testsuite} ${testcase}" >> ${RESULT_FAIL_LOG}
+                testcase_fail=$(($testcase_fail + 1))
+                curtest_fail=$(($curtest_fail + 1))
+                print_error "`date '+%Y-%m-%d %H:%M:%S'` ${testcase_name} ERROR!!!"
+            else
+                print_pass "`date '+%Y-%m-%d %H:%M:%S'` ${testcase_name} PASS."
+            fi
+
+            testcase_total=$(($testcase_total + 1))
+            curtest_total=$(($curtest_total + 1))
+
+            cd ${TEST_ROOT} > /dev/null
+        done < ${TEST_ROOT}/tests/${testsuite}
+
+        if [ -f ${BIN_LOCATE_DIR}/${testsuite}_uninit.sh ]; then
+            cd ${BIN_LOCATE_DIR}
+            source ./${testsuite}_uninit.sh &> ${RESULT_LOG_DIR}/${testsuite}/uninit.log
+        fi
+
+        testsuite_total=$((${testsuite_totaol} + 1))
+        echo "Test total:   ${curtest_total}" >> ${RESULT_LOG_DIR}/${testsuite}/summary.log
+        echo "Test failed:  ${curtest_fail}" >> ${RESULT_LOG_DIR}/${testsuite}/summary.log
+        echo "Test timeout: ${curtest_timeout}" >> ${RESULT_LOG_DIR}/${testsuite}/summary.log
+        echo "End time:     `date '+%Y-%m-%d %H:%M:%S'`" >> ${RESULT_LOG_DIR}/${testsuite}/summary.log
+        print_info "${testsuite} test total:  ${curtest_total}"
+        print_info "${testsuite} test failed: ${curtest_fail}"
+        print_info "${testsuite} test timeout: ${curtest_timeout}"
+        print_info "`date '+%Y-%m-%d %H:%M:%S'` Finished to test ${testsuite}"
+        print_info "******************************************************"
+
+        PATH=${original_path}
+    done
+
+    cd ${TEST_ROOT}
+
+    echo "" >> ${RESULT_SUM_LOG}
+    echo "******************************************************" >> ${RESULT_SUM_LOG}
+    echo "Test result summary:" >> ${RESULT_SUM_LOG}
+    echo "Total testsuites:  ${testsuite_total}" >> ${RESULT_SUM_LOG}
+    echo "Total testcases:   ${testcase_total}" >> ${RESULT_SUM_LOG}
+    echo "Fail testcases:    ${testcase_fail}" >> ${RESULT_SUM_LOG}
+    echo "Timeout testcases:  ${testcase_timeout}" >> ${RESULT_SUM_LOG}
+
+    print_info "Test result summary:"
+    print_info "Total testsuites:   ${testsuite_total}"
+    print_info "Total testcases:    ${testcase_total}"
+    print_info "Fail testcases:     ${testcase_fail}"
+    print_info "Timeout testcases:  ${testcase_timeout}"
+}
+
+do_stop()
+{
+    print_info "Test aborted..."
+    echo "" >> ${RESULT_SUM_LOG}
+    echo "******************************************************" >> ${RESULT_SUM_LOG}
+    echo "Test result summary:" >> ${RESULT_SUM_LOG}
+    echo "Total testsuites:  ${testsuite_total}" >> ${RESULT_SUM_LOG}
+    echo "Total testcases:   ${testcase_total}" >> ${RESULT_SUM_LOG}
+    echo "Fail testcases:    ${testcase_fail}" >> ${RESULT_SUM_LOG}
+    echo "Timeout testcases:  ${testcase_timeout}" >> ${RESULT_SUM_LOG}
+
+    echo "Testsuite:${cur_test}" > ${RESULT_LOG_DIR}/current_test
+    echo "Testcase:${cur_testcase}" >> ${RESULT_LOG_DIR}/current_test
+
+    exit 10
+}
+
+main()
+{
+    if [ "$1" == "compile" ]; then
+        shift
+        while getopts t:d:a:c:k:o arg
+        do case $arg in
+            t)
+                test_scenario=$OPTARG
+                if [ ! -d ${KERNEL_TEST_SUITE}/${OPTARG} ] && [ ! -f ${KERNEL_TEST_SUITE}/conf/${OPTARG} ]; then
+                    print_usage
+                    exit 1
+                elif [ -d ${KERNEL_TEST_SUITE}/${OPTARG} ]; then
+                    test_lists=$OPTARG
+                else
+                    test_lists=`cat ${TEST_ROOT}/conf/${OPTARG}`
+                fi
+                ;;
+            d) CROSS_COMPILER_DIR=$OPTARG;;
+            a) ARCH=$OPTARG;;
+            c)
+                CROSS_COMPILE=$OPTARG
+                cross_compile_flag=1
+                ;;
+            k) KERNEL_DIR=$OPTARG;;
+            o) INSTALL_BIN_DIR=$OPTARG;;
+            *) print_usage;;
+            esac
+        done
+    fi
+
+    if [ "$1" == "test" ]; then
+        shift
+        while getopts t:n:l: arg
+        do case $arg in
+            t)
+                test_scenario=$OPTARG
+                if [ ! -d ${BIN_LOCATE_DIR}/${OPTARG} ] && [ ! -f ${TEST_ROOT}/conf/${OPTARG} ]; then
+                    print_error "$OPTARG not exits, please check!"
+                elif [ -d ${BIN_LOCATE_DIR}/${OPTARG} ]; then
+                    test_lists=$OPTARG
+                else
+                    test_lists=`cat ${TEST_ROOT}/conf/${OPTARG}`
+                fi
+                ;;
+            n)
+                no_need_run_checkflg=1
+                no_need_run_testlist=$OPTARG
+                if [ ! -f ${TEST_ROOT}/tests/skip_test/${no_need_run_testlist} ]; then
+                    print_error "${no_need_run_testlist} not found located at ${TEST_ROOT}/tests/skip_test, please check!"
+                    exit 1
+                fi
+                ;;
+            l)
+                testcase_timeout_flg=1
+                testcase_timelimit=$OPTARG
+                ;;
+            *) print_usage;;
+            esac
+        done
+        do_test_by_conf
+    else
+        print_usage
+        exit 1
+    fi
+}
+
+trap do_stop TERM INT HUP ABRT QUIT
+
+chmod +x -R bin/
+mount -o rw,remount /
+
+main "$@"
