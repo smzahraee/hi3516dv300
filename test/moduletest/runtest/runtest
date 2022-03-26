@@ -346,7 +346,6 @@ do_test_by_conf()
         curtest_timeout=0
 
         if [ ! -f ${TEST_ROOT}/tests/${testsuite} ]; then
-            print_error "${testsuite} file not found in ${TEST_ROOT}/tests!"
             continue
         fi
 
@@ -401,7 +400,7 @@ do_test_by_conf()
             source ./${testsuite}_uninit.sh &> ${RESULT_LOG_DIR}/${testsuite}/uninit.log
         fi
 
-        testsuite_total=$((${testsuite_totaol} + 1))
+        testsuite_total=$((${testsuite_total} + 1))
         echo "Test total:   ${curtest_total}" >> ${RESULT_LOG_DIR}/${testsuite}/summary.log
         echo "Test failed:  ${curtest_fail}" >> ${RESULT_LOG_DIR}/${testsuite}/summary.log
         echo "Test timeout: ${curtest_timeout}" >> ${RESULT_LOG_DIR}/${testsuite}/summary.log
@@ -508,6 +507,7 @@ main()
             *) print_usage;;
             esac
         done
+        echo "start sh runtest test -t $test_scenario -n $no_need_run_testlist -l $testcase_timelimit"
         do_test_by_conf
     else
         print_usage
