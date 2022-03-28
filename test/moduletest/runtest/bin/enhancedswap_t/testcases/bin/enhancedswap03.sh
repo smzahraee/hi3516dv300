@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
@@ -14,14 +15,51 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: enhancedswap03.sh
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: enhanced swap /dev/memcg/memory.zram_wm_ratio interface test
 #
 # Authors:     Ma Feng - mafeng.ma@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 24 2022 - init scripts
 #
 ################################################################################
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
+source tst_oh.sh
+
+do_setup()
+{
+
+}
+
+do_test()
+{
+    local ret=0
+    local res=0
+    local zram_wm_ratio=/dev/memcg/memory.zram_wm_ratio
+
+    tst_res TINFO "Start enhanced swap $zram_wm_ratio interface test"
+    echo -1 > $zram_wm_ratio
+    ret=$(($ret + $?))
+    echo 101 > $zram_wm_ratio
+    ret=$(($ret + $?))
+
+    if [ $ret -ne 2 ]; then
+        res=$(($res + 1))
+    fi
+
+    if [ $res -eq 0 ]; then
+        tst_res TPASS "enhanced swap $zram_wm_ratio interface test pass."
+    else
+        tst_res TFAIL "enhanced swap $zram_wm_ratio interface test failed!"
+    fi
+}
+
+do_clean()
+{
+
+}
+
+do_setup
+do_test
+do_clean
+tst_exit

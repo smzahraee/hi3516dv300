@@ -14,14 +14,17 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: enhancedswap_t
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: enhanced swap testcase list
 #
 # Authors:     Ma Feng - mafeng.ma@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 24 2022 - init scripts
 #
 ################################################################################
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
+enhancedswap01 enhancedswap01.sh
+enhancedswap02 enhancedswap02.sh
+enhancedswap03 enhancedswap03.sh
+enhancedswap04 enhancedswap04.sh
+enhancedswap05 enhancedswap05.sh
