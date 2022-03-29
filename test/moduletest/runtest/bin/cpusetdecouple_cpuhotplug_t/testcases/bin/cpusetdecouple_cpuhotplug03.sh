@@ -24,9 +24,6 @@
 # History:     Mar 15 2022 - init scripts
 #
 ################################################################################
-
-ret=0
-
 source tst_oh.sh
 
 do_setup()
@@ -45,15 +42,17 @@ do_setup()
 
 do_test()
 {
+	local ret=0
+
 	tst_res TINFO "Start test cupset_decouple_cpuhotplug03"
 	mkdir /dev/cpuset/hotplug03
-	echo 0 > /sys/devices/system/cpu/cpu2/online #offline cpu2
-	echo 0 > /sys/devices/system/cpu/cpu3/online #offline cpu3
+	echo 0 > /sys/devices/system/cpu/cpu2/online
+	echo 0 > /sys/devices/system/cpu/cpu3/online
 
 	echo "0-3" > /dev/cpuset/hotplug03/cpuset.cpus
 	cat /dev/cpuset/hotplug03/cpuset.cpus
 	cpu_set=$(cat /dev/cpuset/hotplug03/cpuset.cpus)
-	if [ $cpu_set == '0-3' ]; then
+	if [ "$cpu_set" == '0-3' ]; then
 		tst_res TINFO "hotplug03 cpu2 cpu3 offline cpuset decouple success"
 	else
 		tst_res TINFO "hotplug03 cpu2 cpu3 offline cpuset decouple fail"
@@ -61,9 +60,9 @@ do_test()
 	fi
 
 	if [ $ret -eq 0 ]; then
-		tst_res TPASS "cpusetdecouple_cpuhotplug03 CPU hot-plug and CPUSET decoupling are implemented."
+		tst_res TPASS "processes will be migrated to new online CPU pass."
 	else
-		tst_res TFAIL "cpusetdecouple_cpuhotplug03 CPU hot-plug and CPUSET decoupling are implemented."
+		tst_res TFAIL "processes will be migrated to new online CPU failed!"
 	fi
 
 	for i in $(seq 1 100); do

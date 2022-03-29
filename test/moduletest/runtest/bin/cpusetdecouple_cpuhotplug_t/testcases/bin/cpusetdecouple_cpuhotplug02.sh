@@ -24,9 +24,6 @@
 # History:     Mar 15 2022 - init scripts
 #
 ################################################################################
-
-ret=0
-
 source tst_oh.sh
 
 do_setup()
@@ -45,6 +42,8 @@ do_setup()
 
 do_test()
 {
+	local ret=0
+
 	tst_res TINFO "Start test cupset_decouple_cpuhotplug02"
 	mkdir /dev/cpuset/hotplug02
 	echo "1" > /dev/cpuset/hotplug02/cpuset.cpus
@@ -59,7 +58,7 @@ do_test()
 	cat /dev/cpuset/hotplug02/cpuset.cpus
 	cpu_set=$(cat /dev/cpuset/hotplug02/cpuset.cpus)
 
-	if [ $cpu_set == '1' ]; then
+	if [ "$cpu_set" == '1' ]; then
 		tst_res TINFO "hotplug02 cpu1 offline cpuset decouple success"
 	else
 		tst_res TINFO "hotplug02 cpu1 offline cpuset decouple fail"
@@ -67,12 +66,12 @@ do_test()
 	fi
 
 	if [ $ret -eq 0 ];then
-		tst_res TPASS "cpusetdecouple_cpuhotplug02 CPU hot-plug and CPUSET decoupling are implemented."
+		tst_res TPASS "process are migrated when the CPU is offline pass."
 	else
-		tst_res TFAIL "cpusetdecouple_cpuhotplug02 CPU hot-plug and CPUSET decoupling are implemented."
+		tst_res TFAIL "process are migrated when the CPU is offline failed!"
 	fi
 
-	echo 1 > /sys/devices/system/cpu/cpu1/online #offline cpu$i
+	echo 1 > /sys/devices/system/cpu/cpu1/online
 
 }
 

@@ -24,9 +24,6 @@
 # History:     Mar 15 2022 - init scripts
 #
 #################################################################################
-
-ret=0
-
 source tst_oh.sh
 
 do_setup()
@@ -45,6 +42,8 @@ do_setup()
 
 do_test()
 {
+	local ret=0
+
 	tst_res TINFO "Start test cupset_decouple_cpuhotplug04"
 	mkdir /dev/cpuset/hotplug04
 	echo "0-3" > /dev/cpuset/hotplug04/cpuset.cpus
@@ -55,10 +54,10 @@ do_test()
 
 	for i in $(seq 0 $cpu_total); do
 		echo $i
-		echo 0 > /sys/devices/system/cpu/cpu$i/online #offline cpu$i
+		echo 0 > /sys/devices/system/cpu/cpu$i/online
 		cat /dev/cpuset/hotplug04/cpuset.cpus
 		cpu_set=$(cat /dev/cpuset/hotplug04/cpuset.cpus)
-		if [ $cpu_set == '0-3' ]; then
+		if [ "$cpu_set" == '0-3' ]; then
 			tst_res TINFO "hotplug04 cpu$i offline cpuset decouple success"
 		else
 			tst_res TINFO "hotplug04 cpu$i offline cpuset decouple fail"
@@ -67,13 +66,13 @@ do_test()
 	done
 
 	if [ $ret -eq 0 ]; then
-		tst_res TPASS "cpusetdecouple_cpuhotplug04 CPU hot-plug and CPUSET decoupling are implemented."
+		tst_res TPASS "CPU online and offline function pass."
 	else
-		tst_res TFAIL "cpusetdecouple_cpuhotplug04 CPU hot-plug and CPUSET decoupling are implemented."
+		tst_res TFAIL "CPU online and offline function failed!"
 	fi
 
 	for i in $(seq 0 $cpu_total); do
-		echo 1 > /sys/devices/system/cpu/cpu$i/online #offline cpu$i
+		echo 1 > /sys/devices/system/cpu/cpu$i/online
 	done
 }
 

@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
@@ -14,14 +15,29 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: enhancedswap_t_uninit.sh
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: enhancedswap_t testsuite uninit script
 #
 # Authors:     Ma Feng - mafeng.ma@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 24 2022 - init scripts
 #
 ################################################################################
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
+
+uninit_platform()
+{
+    losetup -d /dev/block/loop6
+    echo ${hyperhold_device} > /proc/sys/kernel/hyperhold/device
+    echo ${hyperhold_enable} > /proc/sys/kernel/hyperhold/enable
+    echo ${zram0_group} > /sys/block/zram0/group
+    echo ${zram0_disksize} > /sys/block/zram0/disksize
+    rm -rf /data/hpdisk
+    swapoff /dev/block/zram0
+    echo 1 > /sys/block/zram0/reset
+}
+
+echo "***************************ESWAP UNINIT START***************************"
+free -m
+uninit_platform
+echo "***************************ESWAP UNINIT END***************************"
