@@ -14,15 +14,17 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: sched_rtg_t
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: sched rtg testcase list
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     liudanning - liudanning@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 24 2022 - init scripts
 #
 ################################################################################
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
+sched_rtg01 sched_rtg01.sh
+sched_rtg02 sched_rtg02.sh
+sched_rtg03 sched_rtg03.sh
+sched_rtg04 sched_rtg04.sh
+sched_rtg06 sched_rtg06.sh
