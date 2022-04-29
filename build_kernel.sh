@@ -28,7 +28,7 @@ rm -rf ${3}/../../../kernel.timestamp
 # it needs more adaptation
 if [ "$5" == "arm" ];then
     cp ${2}/kernel/OBJ/${8}/arch/arm/boot/uImage ${3}/uImage
-if [ "$7" == "hi3751v350"  ] || [ "$7" == "hispark_phoenix"  ];then
+if [ "$7" == "hispark_phoenix"  ];then
     cp ${2}/kernel/OBJ/${8}/arch/arm/boot/dts/hi3751v350.dtb ${3}/dtbo.img
     cat ${2}/kernel/OBJ/${8}/arch/arm/boot/zImage ${3}/dtbo.img > ${3}/zImage-dtb
 else

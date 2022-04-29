@@ -42,7 +42,7 @@ fi
 export KERNEL_IMAGE=${kernel_image}
 LINUX_KERNEL_IMAGE_FILE=${LINUX_KERNEL_OBJ_OUT}/arch/${KERNEL_ARCH}/boot/${kernel_image}
 
-if [ "$DEVICE_NAME" == "hi3751v350"  ] || [ "$DEVICE_NAME" == "hispark_phoenix"  ];then
+if [ "$DEVICE_NAME" == "hispark_phoenix"  ];then
 export SDK_SOURCE_DIR=${OHOS_ROOT_PATH}/device/soc/hisilicon/hi3751v350/sdk_linux/source
 fi
 
