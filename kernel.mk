@@ -41,14 +41,14 @@ else ifeq ($(KERNEL_ARCH), arm64)
 endif
 
 KERNEL_CROSS_COMPILE :=
-ifneq ($(filter $(DEVICE_NAME),hi3751v350 hispark_phoenix),)
+ifeq ($(DEVICE_NAME), hispark_phoenix)
 KERNEL_CROSS_COMPILE += CONFIG_MSP="y"
 else
 KERNEL_CROSS_COMPILE += CC="$(CLANG_CC)"
 endif
 KERNEL_CROSS_COMPILE += CROSS_COMPILE="$(KERNEL_TARGET_TOOLCHAIN_PREFIX)"
 
-ifneq ($(filter $(DEVICE_NAME),hi3751v350 hispark_phoenix),)
+ifeq ($(DEVICE_NAME), hispark_phoenix)
 KERNEL_MAKE := \
     PATH="$(BOOT_IMAGE_PATH):$(KERNEL_TARGET_TOOLCHAIN):$$PATH" \
     $(KERNEL_PREBUILT_MAKE)
@@ -72,7 +72,7 @@ export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
 $(KERNEL_IMAGE_FILE):
 	$(hide) echo "build kernel..."
-ifneq ($(filter $(DEVICE_NAME),hi3751v350 hispark_phoenix),)
+ifeq ($(DEVICE_NAME), hispark_phoenix)
 	$(hide) rm -rf $(KERNEL_SRC_TMP_PATH);mkdir -p $(KERNEL_SRC_TMP_PATH);cp -arfP $(KERNEL_SRC_PATH)/* $(KERNEL_SRC_TMP_PATH)/
 	$(hide) cd $(KERNEL_SRC_TMP_PATH)/drivers && rm -rf common && ln -s $(SDK_SOURCE_DIR)/common/drv ./common && cd -
 	$(hide) cd $(KERNEL_SRC_TMP_PATH)/drivers && rm -rf msp && ln -s $(SDK_SOURCE_DIR)/msp/drv ./msp && cd -
@@ -98,7 +98,7 @@ ifeq ($(KERNEL_VERSION), linux-5.10)
 endif
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) -j64 $(KERNEL_IMAGE)
 endif
-ifneq ($(filter $(DEVICE_NAME),hi3751v350 hispark_phoenix),)
+ifeq ($(DEVICE_NAME), hispark_phoenix)
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) dtbs
 endif
 .PHONY: build-kernel
