@@ -30,7 +30,7 @@ source tst_oh.sh
 do_setup()
 {
     dmesg -c
-    PPID=`ps -ef | grep "sched_rtg06.sh"  | grep -v grep | awk '{print $3}'`
+    PPID=$(ps -ef | grep "/sched_rtg06.sh"  | grep -v grep | awk '{print $3}')
 }
 
 do_test()
@@ -44,7 +44,7 @@ do_test()
 
 stability_test()
 {
-    start_task 41
+    sh create_process.sh 40
     if [ $1 == 'randmom' ]; then
         tst_res TINFO "All 40 porcesss join random rtg from 2 to 20"
         random_rtg
@@ -60,8 +60,10 @@ stability_test()
         all_in_one_rtg
     fi
     sleep 60
-    tst_res TINFO "kill 40 processes...."
+    tst_res TINFO "kill 40 loop processes...."
     ps -ef | grep "sched_rtg06.sh" | grep -v "grep" | grep -v ${PPID} | cut -c 9-18 | xargs kill -9
+    tst_res TINFO "kill 40 task processes...."
+    ps -ef | grep "create_process" | grep -v "grep" | grep -v ${PPID} | cut -c 9-18 | xargs kill -9
     sleep 5
     tst_res TINFO "kill process successed."
     aa start -b ohos.samples.ecg -a ohos.samples.ecg.default &&
@@ -83,19 +85,7 @@ stability_test()
     aa force-stop ohos.samples.ecg
 }
 
-start_task()
-{
-    local _num=$1
-    rm -rf taskpid.txt
-    for i in $(seq 1 $_num); do
-        while true; do
-            ((cnt++))
-            sleep 0.1
-        done &
-        local pgid=$!
-        echo $pgid >> taskpid.txt
-    done
-}
+
 
 random_rtg()
 {
