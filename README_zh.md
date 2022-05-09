@@ -28,13 +28,13 @@ hi3516dv300_small.patch: 在Hi3516DV300芯片上支持arm架构的内核启动�
 ```
 kernel/linux/patches
 ├── linux-4.19					# linux-4.19 相关patch
-│   └── hi3516dv300_patch		
-│   		├── hi3516dv300.patch	# linux-4.19 hi3516dv300 SOC patch
-│   		└── hdf.patch			# linux-4.19 hi3516dv300 hdf patch
+│   └── hi3516dv300_patch		
+│   		├── hi3516dv300.patch	# linux-4.19 hi3516dv300 SOC patch
+│   		└── hdf.patch			# linux-4.19 hi3516dv300 hdf patch
 └── linux-5.10
-    └── hi3516dv300_patch		
-    		├── hi3516dv300.patch	# linux-5.10 hi3516dv300 SOC patch
-    		└── hdf.patch			# linux-5.10 hi3516dv300 hdf patch
+    └── hi3516dv300_patch		
+    		├── hi3516dv300.patch	# linux-5.10 hi3516dv300 SOC patch
+    		└── hdf.patch			# linux-5.10 hi3516dv300 hdf patch
 ```
 
 ## 使用说明<a name="section1393789267"></a>
@@ -88,6 +88,6 @@ kernel/linux/patches
 
 ## 相关仓<a name="section27639463106"></a>
 
-<u>kernel\_linux\_patches</u>
+[<u>kernel\_linux\_patches</u>](https://gitee.com/openharmony/kernel_linux_patches)
 
-<u>kernel\_linux\_config</u>
+[<u>kernel\_linux\_config</u>](https://gitee.com/openharmony/kernel_linux_config)
