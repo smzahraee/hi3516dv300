@@ -14,16 +14,21 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: cpuisolation_t
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: cpuisolation testcase list
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     liudanning - liudanning@h-partners.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 24 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
+cpuisolation01 cpuisolation01.sh
+cpuisolation02 cpuisolation02.sh
+cpuisolation03 cpuisolation03.sh
+cpuisolation04 cpuisolation04.sh
+cpuisolation05 cpuisolation05.sh
+cpuisolation06 cpuisolation06.sh
+cpuisolation07 cpuisolation07.sh
+cpuisolation08 cpuisolation08.sh
+cpuisolation09 cpuisolation09.sh

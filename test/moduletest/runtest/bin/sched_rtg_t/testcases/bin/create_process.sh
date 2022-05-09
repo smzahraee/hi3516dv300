@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
@@ -14,16 +15,25 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: create_process.sh
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: create process
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     liudanning - liudanning@h-partners.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 24 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
+
+rm -rf taskpid.txt
+num=$1
+for i in $(seq 1 $num); do
+    #echo "start $i proc ..."
+    while true; do
+        ((cnt++))
+        sleep 0.1
+    done &
+    local pgid=$!
+    #echo "pid ${i}  $pgid generated"
+    echo $pgid >> taskpid.txt
+done

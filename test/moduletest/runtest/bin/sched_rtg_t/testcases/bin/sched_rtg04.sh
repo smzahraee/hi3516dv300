@@ -52,16 +52,18 @@ do_test()
     bytrace -t 10 -b 32000 --overwrite sched ace app disk ohos graphic sync workq ability >/data/mynewtrace.ftrace &
     tst_res TINFO "Checking sched RTG trace ..."
     sleep 3
-    echo 0 > $sched_group_id
-    echo 2 > $sched_group_id
-    sleep 40
+    for i in $(seq 1 20);do
+        echo 0 > $sched_group_id
+        echo 2 > $sched_group_id
+    done
+    sleep 50
     cat /data/mynewtrace.ftrace | grep "sched_rtg_task_each" &&
     cat /data/mynewtrace.ftrace | grep "find_rtg_cpu" &&
     cat /data/mynewtrace.ftrace | grep "sched_rtg_valid_normalized_util"
     if [ $? -eq 0 ]; then
-        tst_res TPASS "trace info no error found."
+        tst_res TPASS "trace info found."
     else
-        tst_res TFAIL "trace info had error found!"
+        tst_res TFAIL "trace info no found!"
     fi
 }
 
