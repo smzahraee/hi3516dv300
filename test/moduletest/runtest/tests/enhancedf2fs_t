@@ -14,17 +14,22 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: enhancedf2fs_t
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: enhancedf2fs_t testcase list
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Li Zhanming - lizhanming3@h-partners.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     April 8 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
+enhancedf2fs01 enhancedf2fs01.sh
+enhancedf2fs02 enhancedf2fs02.sh
+enhancedf2fs03 enhancedf2fs03.sh
+enhancedf2fs05 enhancedf2fs05.sh
+enhancedf2fs07 enhancedf2fs07.sh
+enhancedf2fs08 enhancedf2fs08.sh
+enhancedf2fs09 enhancedf2fs09.sh
+enhancedf2fs10 enhancedf2fs10.sh
+enhancedf2fs11 enhancedf2fs11.sh
+enhancedf2fs12 enhancedf2fs12.sh
