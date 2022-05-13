@@ -23,9 +23,6 @@ export DEVICE_NAME=$5
 export KERNEL_VERSION=$6
 if [ "$BUILD_TYPE" == "small" ];then
     LINUX_KERNEL_OUT=${OUT_DIR}/kernel/${KERNEL_VERSION}
-    if [ "$5" == "hispark_taurus" ];then
-        export DEVICE_NAME=hi3516dv300
-    fi
 elif [ "$BUILD_TYPE" == "standard" ];then
     LINUX_KERNEL_OUT=${OUT_DIR}/kernel/src_tmp/${KERNEL_VERSION}
 fi
