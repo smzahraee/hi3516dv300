@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
@@ -14,17 +15,21 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: run_fio.sh
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: run the fio
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Li Zhanming - lizhanming3@h-partners.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     April 8 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
+
+run_fio()
+{
+    ./fio --name=rw_bg --numjobs=1 --filename=/mnt/f2fs_mount/fio-test.file  \
+     --bs=32768K --rw=read --ioengine=psync --refill_buffers --group_reporting  \
+     --runtime=360 --time_based --filesize=128M     
+}
+
+run_fio

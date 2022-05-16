@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
@@ -14,17 +15,21 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: enhancedf2fs_t_uninit.sh
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: enhancedf2fs_t testsuite uninit script
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Li Zhanming - lizhanming3@h-partners.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     April 8 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
+
+delete_catalogue()
+{
+    rm -rf /mnt/f2fs_mount/
+}
+
+echo "***************************enhanced UNINIT START**************************"
+delete_catalogue
+echo "***************************enhanced UNINIT END****************************"
