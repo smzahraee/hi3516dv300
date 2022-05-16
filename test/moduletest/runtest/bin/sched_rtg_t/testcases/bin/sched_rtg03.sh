@@ -41,10 +41,8 @@ do_test()
 
     tst_res TINFO "Start sched RTG /proc/sched_rtg_debug interface test ..."
     cur_rtgid=$(cat $sched_group_id)
-    if [ cur_rtgid -eq 2 ]; then
-        tst_res TINFO "process $PID already in rtgid 2, remove it firstly..."
-        echo 0 > $sched_group_id
-    fi
+    tst_res TINFO "process $PID already in rtgid $sched_group_id, remove it firstly..."
+    echo 0 > $sched_group_id
 
     set_check_rtgid_debug 2 $PID 0 2
 
