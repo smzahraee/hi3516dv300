@@ -49,10 +49,10 @@ do_test()
     local sched_group_id=/proc/$PID/sched_group_id
 
     tst_res TINFO "Start sched RTG trace catching test ..."
-    bytrace -t 10 -b 32000 --overwrite sched ace app disk ohos graphic sync workq ability >/data/mynewtrace.ftrace &
+    bytrace -t 10 -b 32000 --overwrite sched ace app disk ohos graphic sync workq ability > rtgtrace.ftrace &
     tst_res TINFO "Checking sched RTG trace ..."
     sleep 3
-    for i in $(seq 1 20);do
+    for i in $(seq 1 50);do
         echo 0 > $sched_group_id
         echo 2 > $sched_group_id
     done

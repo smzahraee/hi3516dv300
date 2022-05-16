@@ -33,7 +33,7 @@ do_setup()
 {
     aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
     sleep 1
-    PID=`ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}'`
+    PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
 }
 
 do_test()
@@ -43,10 +43,8 @@ do_test()
 
     tst_res TINFO "Start process $PID sched RTG interface test ..."
     cur_rtgid=$(cat $sched_group_id)
-    if [ cur_rtgid -eq 2 ]; then
-        tst_res TINFO "process $PID already in rtgid 2, remove it firstly..."
-        echo 0 > $sched_group_id
-    fi
+    tst_res TINFO "process $PID already in rtgid $sched_group_id, remove it firstly..."
+    echo 0 > $sched_group_id
 
     set_check_rtgid -1 $PID 1 0
 
@@ -83,9 +81,9 @@ set_check_rtgid()
 
     local _cur_rtgid=$(cat $_sched_group_id)
     if [ $_cur_rtgid -eq $_expect_rtgid ]; then
-        tst_res TPASS "process $_pid rtgid equal to expected value."
+        tst_res TPASS "process $_pid rtgid $_cur_rtgid equal to expected value."
     else
-        tst_res TFAIL "process $_pid rtgid not equal to expected value!"
+        tst_res TFAIL "process $_pid rtgid $_cur_rtgid unexpected value $_expect_rtgid!"
     fi
 }
 

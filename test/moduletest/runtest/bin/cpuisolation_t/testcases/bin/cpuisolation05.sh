@@ -45,7 +45,7 @@ do_test()
 
     tst_res TINFO "Start CPU trace catching test ..."
     bytrace -t 10 -b 32000 --overwrite sched ace app disk ohos graphic sync  \
-    workq ability >/data/mynewtrace.ftrace &
+    workq ability > cputrace.ftrace &
     sleep 5
     for i in $(seq 1 8);do
         sh create_process.sh 40
