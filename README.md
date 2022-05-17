@@ -28,13 +28,13 @@ The vendor provides the driver code of the chip architecture.
 ```
 kernel/linux/patches
 ├── linux-4.19					# linux-4.19 patches
-│   └── hi3516dv300_patch		
-│   		├── hi3516dv300.patch	# linux-4.19 Hi3516D V300 SOC patches
-│   		└── hdf.patch			# linux-4.19 Hi3516D V300 HDF patches
+│   └── hi3516dv300_patch		
+│   		├── hi3516dv300.patch	# linux-4.19 Hi3516D V300 SOC patches
+│   		└── hdf.patch			# linux-4.19 Hi3516D V300 HDF patches
 └── linux-5.10
-    └── hi3516dv300_patch		
-    		├── hi3516dv300.patch	# linux-5.10 Hi3516D V300 SOC patches
-    		└── hdf.patch			# linux-5.10 Hi3516D V300 HDF patches
+    └── hi3516dv300_patch		
+    		├── hi3516dv300.patch	# linux-5.10 Hi3516D V300 SOC patches
+    		└── hdf.patch			# linux-5.10 Hi3516D V300 HDF patches
 ```
 
 ## Usage<a name="section1393789267"></a>
@@ -88,6 +88,6 @@ Perform a full build for the project to generate the **uImage** kernel image.
 
 ## Repositories Involved<a name="section27639463106"></a>
 
-<u>kernel\_linux\_patches</u>
+[<u>kernel\_linux\_patches</u>](https://gitee.com/openharmony/kernel_linux_patches)
 
-<u>kernel\_linux\_config</u>
+[<u>kernel\_linux\_config</u>](https://gitee.com/openharmony/kernel_linux_config)
