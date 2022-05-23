@@ -25,5 +25,10 @@ pushd ${1}
 mkdir -p ${3}
 rm -rf ${3}/../../../kernel.timestamp
 cp ${2}/kernel/OBJ/${8}/arch/arm/boot/uImage ${3}/uImage
-cp ${2}/kernel/OBJ/${8}/arch/arm/boot/zImage-dtb ${3}/zImage-dtb
+if [ "$7" == "hi3751v350"  ];then
+    cp ${2}/kernel/OBJ/${8}/arch/arm/boot/dts/hi3751v350.dtb ${3}/dtbo.img
+    cat ${2}/kernel/OBJ/${8}/arch/arm/boot/zImage ${3}/dtbo.img > ${3}/zImage-dtb
+else
+    cp ${2}/kernel/OBJ/${8}/arch/arm/boot/zImage-dtb ${3}/zImage-dtb
+fi
 popd
