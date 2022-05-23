@@ -59,10 +59,11 @@ do_test()
     sleep 40
 
     tst_res TINFO "Checking CPU trace ..."
-    cat /data/mynewtrace.ftrace | grep "set_busy" &&
-    cat /data/mynewtrace.ftrace | grep "update_nr_need"
+    cat cputrace.ftrace | grep "set_busy" &&
+    cat cputrace.ftrace | grep "update_nr_need"
     if [ $? -eq 0 ]; then
         tst_res TPASS "trace info found."
+        rm -rf cputrace.ftrace
     else
         tst_res TFAIL "trace info no found!"
     fi

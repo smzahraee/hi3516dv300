@@ -31,7 +31,7 @@ do_setup()
 {
     aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
     sleep 1
-    PID=`ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}'`
+    PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
 }
 
 do_test()
@@ -75,21 +75,21 @@ set_check_rtgid_debug()
     local _rtg_pid=$(cat /proc/sched_rtg_debug | grep ohos.samples.ec | grep -v grep | awk '{print $3}')
     if [ $_set_rtgid -ne 0 ]; then
         if [ $_rtg_id -eq $_expect_rtgid ]; then
-            tst_res TPASS "RTG_ID $_rtg_id equal to expected value."
+            tst_res TPASS "RTG_ID $_rtg_id exists in $_sched_rtg_debug expected."
             if [ $_rtg_pid -eq $PID ]; then
-                tst_res TPASS "process $_pid rtgid set to $rtg_pid expected."
+                tst_res TPASS "PID $_pid exists in $rtg_pid expected."
             else
-                tst_res TFAIL "$rtg_pid not equal to expected value!"
+                tst_res TFAIL "PID $_pid not exists in $rtg_pid unexpected!"
             fi
         else
-            tst_res TFAIL "RTG_ID $_rtg_id not equal to expected value!"
+            tst_res TFAIL "RTG_ID $_rtg_id not exists in $_sched_rtg_debug unexpected!"
         fi
     else
-        cat $_sched_rtg_debug | grep "RTG tasklist empty"
-        if [ $? -eq 0 ]; then
-            tst_res TPASS "process $_pid rtgid set to $_set_rtgid expected."
+        cat $_sched_rtg_debug | grep ohos.samples.ec
+        if [ $? -ne 0 ]; then
+            tst_res TPASS "process $_pid rtgid set to 0 expected."
         else
-            tst_res TFAIL "process $_pid rtgid set to $_set_rtgid unexpected!"
+            tst_res TFAIL "process $_pid rtgid set to 0 unexpected!"
         fi
     fi
 }
