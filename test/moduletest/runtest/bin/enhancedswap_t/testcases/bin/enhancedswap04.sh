@@ -42,11 +42,11 @@ do_test()
     tst_res TINFO "Start anon to zram test"
 
     # get init zram values
-    zram_100_b=`cat ${memcg_100_stat} | grep 'zram' | awk -F ' ' '{print$2}'`
-    zram_b=`cat ${memcg_stat} | grep 'zram' | awk -F ' ' '{print$2}'`
+    zram_100_b=$(cat ${memcg_100_stat} | grep 'zram' | awk -F ' ' '{print$2}')
+    zram_b=$(cat ${memcg_stat} | grep 'zram' | awk -F ' ' '{print$2}')
 
     # get buffer_size
-    buffer_size=`cat $zswapd_s | grep 'buffer_size' | awk -F ':' '{print$2}'`
+    buffer_size=$(cat $zswapd_s | grep 'buffer_size' | awk -F ':' '{print$2}')
 
     # set avail_buffers > buffer_size to swap out to zram
     echo 0 $(( $buffer_size + 50 )) $(( $buffer_size + 100 )) 0 > $avail_buffers
@@ -54,8 +54,8 @@ do_test()
     sleep 3
 
     # get new zram values after swap-out to zram
-    zram_100_a=`cat ${memcg_100_stat} | grep 'zram' | awk -F ' ' '{print$2}'`
-    zram_a=`cat ${memcg_stat} | grep 'zram' | awk -F ' ' '{print$2}'`
+    zram_100_a=$(cat ${memcg_100_stat} | grep 'zram' | awk -F ' ' '{print$2}')
+    zram_a=$(cat ${memcg_stat} | grep 'zram' | awk -F ' ' '{print$2}')
 
     tst_res TINFO "root zram: $zram_b --> $zram_a"
     tst_res TINFO "100 zram: $zram_100_b --> $zram_100_a"
