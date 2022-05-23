@@ -31,7 +31,7 @@ do_setup()
 {
     aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
     sleep 1
-    PID=`ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}'`
+    PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
 }
 
 do_test()

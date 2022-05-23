@@ -127,7 +127,7 @@ tst_res()
     TST_COUNT=$(($TST_COUNT+1))
 
     _tst_inc_ret "$res"
-    printf "$TST_ID $TST_COUNT `date` "
+    printf "$TST_ID $TST_COUNT $(date) "
     tst_print_colored $res "$res: "
     echo "$@"
 }
@@ -163,21 +163,21 @@ tst_judged()
 
 tst_judged_fail()
 {
-    actual_res=$1
+    actual_res1=$1
     shift
-    expect_res=$1
+    expect_res1=$1
     shift
-    comment="$@"
-    if [ "$actual_res" != "$expect_res" ]; then
-        tst_res TPASS "$comment test pass, expect $expect_res return $actual_res"
+    comment_fail="$@"
+    if [ "$actual_res1" != "$expect_res1" ]; then
+        tst_res TPASS "$comment_fail test pass, expect $expect_res1 return $actual_res1"
     else
-        tst_res TFAIL "$comment test fail, expect $expect_res return $actual_res"
+        tst_res TFAIL "$comment_fail test fail, expect $expect_res1 return $actual_res1"
     fi
 }
 
 get_product()
 {
-    echo `uname -a | awk '{printf $NF}'`
+    echo $(uname -a | awk '{printf $NF}')
 }
 
 if [ -z "$TST_TD" ]; then

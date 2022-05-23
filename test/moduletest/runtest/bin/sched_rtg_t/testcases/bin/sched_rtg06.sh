@@ -45,17 +45,17 @@ do_test()
 stability_test()
 {
     sh create_process.sh 40
-    if [ $1 == 'randmom' ]; then
+    if [ "$1" == "randmom" ]; then
         tst_res TINFO "All 40 porcesss join random rtg from 2 to 20"
         random_rtg
     fi
 
-    if [ $1 == 'ordered' ]; then
+    if [ "$1" == "ordered" ]; then
         tst_res TINFO "All 40 processes join rtg from 2 to 20 one by one"
         ordered_rtg
     fi
 
-    if [ $1 == 'all' ]; then
+    if [ "$1" == "all" ]; then
         tst_res TINFO "All 40 processes join rtg 2"
         all_in_one_rtg
     fi
@@ -68,7 +68,7 @@ stability_test()
     tst_res TINFO "kill process successed."
     aa start -b ohos.samples.ecg -a ohos.samples.ecg.default &&
     sleep 1 &&
-    PID=`ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}'`
+    PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
     if [ $? -eq 0 ]; then
         dmesg | grep "BUG" ||
         dmesg | grep "panic" ||
