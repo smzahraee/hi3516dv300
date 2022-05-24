@@ -64,7 +64,7 @@ write_invalid()
         else
             tst_res TFAIL "writing single MAX VALUE $max_value or  \
             MIN VALUE $min_value failed."
-            ret=$(( $ret + 1 ))
+            ((ret++))
         fi
     fi
     
@@ -82,7 +82,7 @@ write_invalid()
         else
             tst_res TFAIL "writing both MAX VALUE $max_value and  \
             MIN VALUE $min_value failed."
-            ret=$(( $ret + 1 ))
+            ((ret++))
         fi
     fi
 
@@ -99,7 +99,7 @@ check_value()
     else
         tst_res TFAIL "writing MAX VALUE $max_value and MIN VALUE $min_value , \
         value is abnormal."
-        ret=$(( $ret + 1 ))
+        ((ret++))
     fi
 }
 
@@ -121,7 +121,7 @@ do_test()
         tst_res TPASS "/sys/devices/system/cpu/cpu0/core_ctl/ node normal."
     else
         tst_res TFAIL "/sys/devices/system/cpu/cpu0/core_ctl/ node abnormal."
-        ret=$(( $ret + 1 ))
+        ((ret++))
     fi
 
     write_invalid 4 -3 1
@@ -142,7 +142,7 @@ do_test()
             tst_res TPASS "cpu$i name correct."
         else
             tst_res TFAIL "cpu$i name incorrect."
-            ret=$(( $ret + 1 ))
+            ((ret++))
         fi
 
         line=$(( $i + 1))
@@ -152,7 +152,7 @@ do_test()
             tst_res TPASS "cpu$i online."
         else
             tst_res TFAIL"cpu$i offline."
-            ret=$(( $ret + 1 ))
+            ((ret++))
         fi
 
         cpu_isolated_state=$(cat $global_state | grep 'Isolated:' | \
@@ -161,7 +161,7 @@ do_test()
             tst_res TPASS "cpu$i isolated : 0."
         else
             tst_res TFAIL "cpu$i isolated : 1."
-            ret=$(( $ret + 1 ))
+            ((ret++))
         fi
 
         cpu_is_busy_state=$(cat $global_state | grep 'Is busy:' | \
@@ -170,14 +170,16 @@ do_test()
             tst_res TPASS "cpu$i is_busy : 1."
         else
             tst_res TFAIL "cpu$i is_busy : 0."
-            ret=$(( $ret + 1 ))
+            ((ret++))
         fi
     done
 
     if [ $ret -eq 0 ];then
         tst_res TPASS "check rw nodes test about CPU isolation successfully."
+        exit 0
     else
         tst_res TFAIL "check rw nodes test about CPU isolation failed!"
+        exit 1
     fi
 }
 

@@ -32,7 +32,7 @@ uninit_platform()
     echo ${hyperhold_enable} > /proc/sys/kernel/hyperhold/enable
     echo ${zram0_group} > /sys/block/zram0/group
     echo ${zram0_disksize} > /sys/block/zram0/disksize
-    rm -rf /data/hpdisk
+    rm -rf hpdisk
     swapoff /dev/block/zram0
     echo 1 > /sys/block/zram0/reset
 }

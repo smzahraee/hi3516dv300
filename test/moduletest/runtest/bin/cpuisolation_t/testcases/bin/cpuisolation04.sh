@@ -29,8 +29,6 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkdir /data/local/pid_tmp
-    mkdir /data/local/cpuisolation
     PPID=$(ps -ef | grep "/cpuisolation04.sh"  | grep -v grep | awk '{print $3}')
 }
 
@@ -40,12 +38,9 @@ do_test()
     dir_name=/sys/devices/system/cpu/cpu0/core_ctl
     global_state=${dir_name}/global_state
     tst_res TINFO "Start to check CPU lightweight isolation stress test"
-    isolated_cpu1=/data/local/cpuisolation/isolated_cpu1.txt
-    active_cpu1=/data/local/cpuisolation/active_cpu1.txt
     active_num1=0
     isolated_num1=0
     proc_sd=/proc/sched_debug
-    cpu_log=/data/local/pid_tmp/cpu_log
 
     sh create_process.sh 40
     sleep 5
@@ -74,8 +69,8 @@ do_test()
 
 do_isolate()
 {
-    touch /data/local/cpuisolation/isolated_cpu1.txt
-    touch /data/local/cpuisolation/active_cpu1.txt
+    touch isolated_cpu1.txt
+    touch active_cpu1.txt
     for i in $(seq 0 3); do
         line=$(( $i + 1))
         cpu_isolated_state=$(cat $global_state | grep 'Isolated:'  \
@@ -83,11 +78,11 @@ do_isolate()
         if [ $cpu_isolated_state -eq 0 ]; then
             tst_res TINFO "cpu$i is active."
             active_num=$(( $active_num + 1 ))
-            echo $i >> $active_cpu1
+            echo $i >> active_cpu1.txt
         else
             tst_res TINFO "cpu$i is isolated."
             isolated_num=$(( $isolated_num + 1 ))
-            echo $i >> $isolated_cpu1
+            echo $i >> isolated_cpu1.txt
         fi
     done
 
@@ -95,7 +90,7 @@ do_isolate()
         tst_res TPASS "isolation is right."
     else
         tst_res TFAIL "the cpus state error."
-        ret=$(( $ret + 1 ))
+        ((ret++))
     fi
     active_num=0
     isolated_num=0
@@ -107,20 +102,20 @@ do_num()
     cpu_pid1=0
     cpu_pid2=0
     cpu_pid3=0
-    rm -rf $cpu_log
-    cat $proc_sd > $cpu_log
-    for i in $(cat $isolated_cpu1); do
+    echo "y" | rm cpu_log.txt
+    cat $proc_sd > cpu_log.txt
+    for i in $(cat isolated_cpu1.txt); do
         for pid in $(cat taskpid.txt); do
-        if [ $(sed -n '/^cpu#0/,/cpu#1$/p' $cpu_log  \
+        if [ $(sed -n '/^cpu#0/,/cpu#1$/p' cpu_log.txt  \
         | awk -F " " '{print $3}' | grep -w "$pid") ];then
             cpu_pid0=$(($cpu_pid0 + 1))
-        elif [ $(sed -n '/^cpu#1/,/cpu#2$/p' $cpu_log  \
+        elif [ $(sed -n '/^cpu#1/,/cpu#2$/p' cpu_log.txt  \
         | awk -F " " '{print $3}' | grep -w "$pid") ];then
             cpu_pid1=$(($cpu_pid1 + 1))
-        elif [ $(sed -n '/^cpu#2/,/cpu#3$/p' $cpu_log  \
+        elif [ $(sed -n '/^cpu#2/,/cpu#3$/p' cpu_log.txt  \
         | awk -F " " '{print $3}' | grep -w "$pid") ];then
             cpu_pid2=$(($cpu_pid2 + 1))
-        elif [ $(sed -n '/^cpu#3/,$p' $cpu_log  \
+        elif [ $(sed -n '/^cpu#3/,$p' cpu_log.txt  \
         | awk -F " " '{print $3}' | grep -w "$pid") ];then
             cpu_pid3=$(($cpu_pid3 + 1))
         fi
@@ -129,19 +124,19 @@ do_num()
             tst_res TPASS "cpu${i} process migrated."
         else
             tst_res TFAIL "cpu${i} process is not migrated."
-            ret=$(( $ret + 1 ))
+            ((ret++))
         fi
     done
     
-    rm -rf /data/local/cpuisolation/isolated_cpu1.txt
-    rm -rf /data/local/cpuisolation/active_cpu1.txt
+    echo "y" | rm isolated_cpu1.txt
+    echo "y" | rm active_cpu1.txt
 }
 
 do_clean()
 {
-    rm -rf /data/local/pid_tmp
-    rm -rf /data/local/cpuisolation
-    rm -rf /data/local/pid_tmp/cpu_log
+    echo "y" | rm cpu_log.txt
+    echo "y" | rm isolated_cpu1.txt
+    echo "y" | rm active_cpu1.txt
 }
 
 do_setup

@@ -29,14 +29,14 @@ source tst_oh.sh
 
 do_setup()
 {
-    Frame_value=$(cat /sys/kernel/debug/tracing/events/rtg/rtg_frame_sched/enable)
-    Task_value=$(cat /sys/kernel/debug/tracing/events/rtg/sched_rtg_task_each/enable)
-    Cpu_value=$(cat /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable)
-    Normalized_value=$(cat /sys/kernel/debug/tracing/events/rtg/sched_rtg_valid_normalized_util/enable)
+    frame_value=$(cat /sys/kernel/debug/tracing/events/rtg/rtg_frame_sched/enable)
+    task_value=$(cat /sys/kernel/debug/tracing/events/rtg/sched_rtg_task_each/enable)
+    cpu_value=$(cat /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable)
+    normalized_value=$(cat /sys/kernel/debug/tracing/events/rtg/sched_rtg_valid_normalized_util/enable)
 
     aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
     sleep 1
-    PID=`ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}'`
+    PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
     echo 1 > /sys/kernel/debug/tracing/events/rtg/rtg_frame_sched/enable
     echo 1 > /sys/kernel/debug/tracing/events/rtg/sched_rtg_task_each/enable
     echo 1 > /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable
@@ -57,11 +57,12 @@ do_test()
         echo 2 > $sched_group_id
     done
     sleep 50
-    cat /data/mynewtrace.ftrace | grep "sched_rtg_task_each" &&
-    cat /data/mynewtrace.ftrace | grep "find_rtg_cpu" &&
-    cat /data/mynewtrace.ftrace | grep "sched_rtg_valid_normalized_util"
+    cat rtgtrace.ftrace | grep "sched_rtg_task_each" &&
+    cat rtgtrace.ftrace | grep "find_rtg_cpu" &&
+    cat rtgtrace.ftrace | grep "sched_rtg_valid_normalized_util"
     if [ $? -eq 0 ]; then
         tst_res TPASS "trace info found."
+        rm -rf rtgtrace.ftrace
     else
         tst_res TFAIL "trace info no found!"
     fi
@@ -69,10 +70,10 @@ do_test()
 
 do_clean()
 {
-    echo $Frame_value > /sys/kernel/debug/tracing/events/rtg/rtg_frame_sched/enable &&
-    echo $Task_value > /sys/kernel/debug/tracing/events/rtg/sched_rtg_task_each/enable &&
-    echo $Cpu_value > /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable &&
-    echo $Normalized_value > /sys/kernel/debug/tracing/events/rtg/sched_rtg_valid_normalized_util/enable
+    echo $frame_value > /sys/kernel/debug/tracing/events/rtg/rtg_frame_sched/enable &&
+    echo $task_value > /sys/kernel/debug/tracing/events/rtg/sched_rtg_task_each/enable &&
+    echo $cpu_value > /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable &&
+    echo $normalized_value > /sys/kernel/debug/tracing/events/rtg/sched_rtg_valid_normalized_util/enable
     aa force-stop ohos.samples.ecg
 }
 
