@@ -81,7 +81,7 @@ do_test()
 
 do_clean()
 {
-     rm -rf log01.txt
+     rm log01.txt
      losetup -d /dev/block/loop1
      umount /mnt/f2fs_mount
 }

@@ -29,8 +29,8 @@ source tst_oh.sh
 
 state_init()
 {
-    mkfs.f2fs -d1 -t1 -O quota /data/image_f2fs
-    losetup /dev/block/loop1 /data/image_f2fs
+    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
+    losetup /dev/block/loop1 $IMG_FILE
     mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
 }
 
@@ -50,11 +50,11 @@ performance_init()
     done
     echo "end Embedded file system $(date +%Y%m%d%H%M%S)...." >> log06.txt
     local b=$(cat $segs_path | grep "valid blocks" | awk -F ' ' '{print$3}' | tr -cd "[0-9]")
-    local result_left=`echo | awk "{print $a*512-$b}"`
-    local result_right=`echo | awk "{print $a*512*0.1}"`
-    local result=`echo "$result_left $result_right"  \
-    | awk '{if ($result_left -lt $result_right) print 1; else print 0}'`
-    if [ $result ];then
+    local result_left=$(echo | awk "{print $a*512-$b}")
+    local result_right=$(echo | awk "{print $a*512*0.1}")
+    local result=$(echo "$result_left $result_right"  \
+    | awk '{if ($result_left -lt $result_right) print 1; else print 0}')
+    if [ $result -gt 0 ];then
         tst_res TPASS "Inequality holds."
     else
         tst_res TFAIL "Inequality does not hold."
