@@ -29,8 +29,8 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkfs.f2fs -d1 -t1 -O quota /data/image_f2fs
-    losetup /dev/block/loop1 /data/image_f2fs
+    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
+    losetup /dev/block/loop1 $IMG_FILE
     mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
 }
 
@@ -46,20 +46,24 @@ do_test()
     init_value3=$(cat $_ssr_path/hc_hot_node_waterline)
     init_value4=$(cat $_ssr_path/hc_warm_node_waterline)
 
-    confirm_value hc_hot_data_waterline
-    confirm_value hc_warm_data_waterline
-    confirm_value hc_hot_node_waterline
+    confirm_value hc_hot_data_waterline &&
+    confirm_value hc_warm_data_waterline &&
+    confirm_value hc_hot_node_waterline &&
     confirm_value hc_warm_node_waterline
+
+    [ $? -ne 0 ] && ret=$(( $ret + 1 ))
 
     echo 85 > $_ssr_path/hc_hot_data_waterline
     echo 85 > $_ssr_path/hc_warm_data_waterline
     echo 85 > $_ssr_path/hc_hot_node_waterline
     echo 85 > $_ssr_path/hc_warm_node_waterline
 
-    confirm_change_value hc_hot_data_waterline
-    confirm_change_value hc_warm_data_waterline
-    confirm_change_value hc_hot_data_waterline
+    confirm_change_value hc_hot_data_waterline &&
+    confirm_change_value hc_warm_data_waterline &&
+    confirm_change_value hc_hot_data_waterline &&
     confirm_change_value hc_warm_node_waterline
+
+    [ $? -ne 0 ] && ret=$(( $ret + 1 ))
 
     if [ $ret -eq 0 ];then
         tst_res TPASS "Hierarchical SSR waterline configuration interface pass."
@@ -72,9 +76,10 @@ confirm_value()
 {
     if [ $(cat $_ssr_path/$1) == '80' ];then
         tst_res TPASS "$1 Value is 80 successfully."
+        return 0
     else
         tst_res TFAIL "$1 Value not is 80 failed."
-        ret=$(( $ret + 1 ))
+        return 1
     fi
 }
 
@@ -82,9 +87,10 @@ confirm_change_value()
 {
     if [ $(cat $_ssr_path/$1) == '85' ];then
         tst_res TPASS "$1 Value is 85 successfully."
+        return 0
     else
         tst_res TFAIL "$1 Value not is 85 failed."
-        ret=$(( $ret + 1 ))
+        return 1
     fi
 }
 

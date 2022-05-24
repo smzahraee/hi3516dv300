@@ -29,8 +29,8 @@ source tst_oh.sh
 
 state_init()
 {
-    mkfs.f2fs -d1 -t1 -O quota /data/image_f2fs
-    losetup /dev/block/loop1 /data/image_f2fs
+    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
+    losetup /dev/block/loop1 $IMG_FILE
     mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
 }
 
@@ -50,14 +50,14 @@ equilibrium_init()
     done
 
     local b=$(cat $segs_path | grep "valid blocks" | awk -F ' ' '{print$3}' | tr -cd "[0-9]")
-    local result_left=`echo | awk "{peint $a*512*0.2}"`
-    local result_might=`echo | awk "{print $a*512-$b}"`
-    local result_right=`echo | awk "{print $a*512*0.1}"`
-    local result1=`echo "$result_left $result_might"  \
-    | awk '{if ($result_left -gt $result_might) print 1; else print 0}'`
-    local result2=`echo "$result_might $result_right"  \
-    | awk '{if ($result_might -gt $result_right) print 1; else print 0}'`
-    if [ $result1 ] && [ $result2 ];then
+    local result_left=$(echo | awk "{peint $a*512*0.2}")
+    local result_might=$(echo | awk "{print $a*512-$b}")
+    local result_right=$(echo | awk "{print $a*512*0.1}")
+    local result1=$(echo "$result_left $result_might"  \
+    | awk '{if ($result_left -gt $result_might) print 1; else print 0}')
+    local result2=$(echo "$result_might $result_right"  \
+    | awk '{if ($result_might -gt $result_right) print 1; else print 0}')
+    if [ $result1 -gt 0 ] && [ $result2 -gt 0 ]; then
         tst_res TPASS "Inequality holds."
     else
         tst_res TFAIL "Inequality does not hold."

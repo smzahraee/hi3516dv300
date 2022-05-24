@@ -24,6 +24,7 @@
 # History:     April 8 2022 - init scripts
 #
 ################################################################################
+export IMG_FILE=/data/image_f2fs
 
 create_catalogue()
 {
@@ -32,7 +33,7 @@ create_catalogue()
 
 enable_init()
 {
-    dd if=/dev/zero of=/data/image_f2fs bs=1M count=20480
+    dd if=/dev/zero of=$IMG_FILE bs=1M count=20480
 }
 
 echo "***************************ENHANCED INIT START***************************"

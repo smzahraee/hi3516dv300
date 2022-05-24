@@ -29,8 +29,8 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkfs.f2fs -d1 -t1 -O quota /data/image_f2fs
-    losetup /dev/block/loop1 /data/image_f2fs
+    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
+    losetup /dev/block/loop1 $IMG_FILE
     mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
 }
 
