@@ -14,18 +14,22 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: mem_debug_t
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: mem debug testcase list
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Wang Yuting - wangyuting36@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     May 24 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
-mem_debug_t
+mem_debug01 mem_debug01.sh
+mem_debug02 mem_debug02.sh
+mem_debug03 mem_debug03.sh
+mem_debug04 mem_debug04.sh
+mem_debug05 mem_debug05.sh
+mem_debug06 mem_debug06.sh
+mem_debug07 mem_debug07.sh
+mem_debug08 mem_debug08.sh
+mem_debug09 mem_debug09.sh
+mem_debug10 mem_debug10.sh

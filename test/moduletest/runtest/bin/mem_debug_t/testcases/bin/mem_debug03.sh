@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
@@ -14,18 +15,42 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: mem_debug03.sh
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description:  Dmabuf usage of process query test
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Wangyuting - wangyuting36@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 20 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
-mem_debug_t
+source tst_oh.sh
+
+do_setup()
+{
+    zcat /proc/config.gz | grep CONFIG_DMABUF_PROCESS_INFO=y ||  \
+    tst_res TCONF "CONFIG_DMABUF_PROCESS_INFO=y not satisfied!"
+}
+
+do_test()
+{
+    local result=$(cat /proc/process_dmabuf_info | grep Process | grep pid  \
+    | grep fd | grep size_bytes | grep ino | grep exp_pid | grep exp_task_comm  \
+    | grep buf_name | grep exp_name)
+
+    if [ "$result" == "" ]; then
+        tst_res TFAIL "Dmabuf usage of process query test failed!"
+    else
+        tst_res TPASS "Dmabuf usage of process query test pass."
+    fi
+}
+
+do_clean()
+{
+
+}
+
+do_setup
+do_test
+do_clean
+tst_exit
