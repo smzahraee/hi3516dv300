@@ -36,7 +36,7 @@ do_test()
     local ret=0
     local memcg_100_stat=/dev/memcg/100/memory.stat
     local memcg_stat=/dev/memcg/memory.stat
-    local avail_buffers=/dev/memcg/memory.avail_buffers
+    avail_buffers=/dev/memcg/memory.avail_buffers
     local zswapd_s=/dev/memcg/memory.zswapd_pressure_show
 
     tst_res TINFO "Start anon to zram test"
@@ -47,6 +47,12 @@ do_test()
 
     # get buffer_size
     buffer_size=$(cat $zswapd_s | grep 'buffer_size' | awk -F ':' '{print$2}')
+
+    # get init avail_buffers  values
+    avail_buffers_def=$(cat $avail_buffers | awk '$1=="avail_buffers:"{print $2}')
+    min_avail_buffers_def=$(cat $avail_buffers | awk '$1=="min_avail_buffers:"{print $2}')
+    high_avail_buffers_def=$(cat $avail_buffers | awk '$1=="high_avail_buffers:"{print $2}')
+    free_swap_threshold_def=$(cat $avail_buffers | awk '$1=="free_swap_threshold:"{print $2}')
 
     # set avail_buffers > buffer_size to swap out to zram
     echo 0 $(( $buffer_size + 50 )) $(( $buffer_size + 100 )) 0 > $avail_buffers
@@ -77,7 +83,8 @@ do_test()
 
 do_clean()
 {
-
+    # set avail_buffers_def > buffer_size
+    echo $avail_buffers_def $min_avail_buffers_def $high_avail_buffers_def $free_swap_threshold_def > $avail_buffers
 }
 
 do_setup
