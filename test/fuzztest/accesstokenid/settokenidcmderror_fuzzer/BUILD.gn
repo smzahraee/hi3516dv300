@@ -30,7 +30,7 @@ ohos_fuzztest("SetTokenidCmdErrorFuzzTest") {
   ]
 
   sources = [
-    "../src/accesstokenidcmderror.cpp",
+    "../src/accesstokenidcommon.cpp",
     "settokenidcmderror_fuzzer.cpp",
   ]
 }

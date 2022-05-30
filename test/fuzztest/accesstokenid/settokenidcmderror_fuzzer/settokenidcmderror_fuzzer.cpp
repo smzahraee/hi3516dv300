@@ -14,11 +14,11 @@
  */
 
 #include <vector>
-#include "accesstokenidcmderror.h"
-#include "settokenidcmderror_fuzzer.h"
+#define CMDERROR
+#include "accesstokenidcommon.h"
 
 using namespace std;
-using namespace OHOS::Security::AccessToken;
+using namespace OHOS::Kernel::AccessToken;
 namespace OHOS {
 bool SetTokenidCmdErrorFuzzTest(const uint8_t *data, size_t size)
 {
