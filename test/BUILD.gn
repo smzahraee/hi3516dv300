@@ -46,6 +46,7 @@ group("linuxkerneltest") {
     deps = [
       ":accesstokenid_test",
       ":init_runtest",
+      "fuzztest:fuzztest",
     ]
   }
 }
