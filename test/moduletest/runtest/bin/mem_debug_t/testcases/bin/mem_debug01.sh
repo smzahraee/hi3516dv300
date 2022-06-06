@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
@@ -14,18 +15,39 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: mem_debug01.sh
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: Static memory reservation query test
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Wangyuting - wangyuting36@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 19 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
-mem_debug_t
+source tst_oh.sh
+
+do_setup()
+{
+    zcat /proc/config.gz | grep CONFIG_DEBUG_FS=y || tst_res TCONF "CONFIG_DEBUG_FS=y not satisfied!"
+}
+
+do_test()
+{
+    local rmem_lines=$(cat /sys/kernel/debug/dt_reserved_mem/dt_reserved_memory | wc -l)
+
+    if [ $rmem_lines -gt 1 ]; then
+        tst_res TPASS "Static memory reservation query test pass."
+    else
+        tst_res TFAIL "Static memory reservation query test failed!"
+    fi
+}
+
+do_clean()
+{
+
+}
+
+do_setup
+do_test
+do_clean
+tst_exit

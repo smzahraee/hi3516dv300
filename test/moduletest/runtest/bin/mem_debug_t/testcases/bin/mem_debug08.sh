@@ -1,3 +1,4 @@
+#!/bin/sh
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
@@ -14,18 +15,40 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: mem_debug08.sh
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description:  Ashmem information display test
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Wangyuting - wangyuting36@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Mar 23 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
-mem_debug_t
+source tst_oh.sh
+
+do_setup()
+{
+
+}
+
+do_test()
+{
+    local pid=$(ps -ef | grep "com.ohos.launch" | grep -v grep | awk '{print $2}')
+    local ashmem_info_lines=$(cat /proc/$pid/smaps | grep ashmem | wc -l)
+
+    if [ $ashmem_info_lines -le 0 ]; then
+        tst_res TFAIL "Ashmem information display test failed!"
+    else
+        tst_res TPASS "Ashmem information display test pass."
+    fi
+}
+
+do_clean()
+{
+
+}
+
+do_setup
+do_test
+do_clean
+tst_exit
