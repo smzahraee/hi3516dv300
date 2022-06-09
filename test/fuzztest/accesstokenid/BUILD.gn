@@ -16,13 +16,23 @@ group("fuzztest") {
   deps = []
 
   deps += [
+    "accessftokenidgrptest_fuzzer:AccessfTokenidGrpTestFuzzTest",
+    "accessftokenidgrptestother_fuzzer:AccessfTokenidGrpTestOtherFuzzTest",
+    "accessftokenidthreadtest_fuzzer:AccessfTokenidThreadTestFuzzTest",
+    "accesstokenidgrptest_fuzzer:AccessTokenidGrpTestFuzzTest",
+    "accesstokenidgrptestother_fuzzer:AccessTokenidGrpTestOtherFuzzTest",
+    "accesstokenidthreadtest_fuzzer:AccessTokenidThreadTestFuzzTest",
     "getftokenidcmdcorrect_fuzzer:GetfTokenidCmdCorrectFuzzTest",
     "getftokenidcmderror_fuzzer:GetfTokenidCmdErrorFuzzTest",
+    "getftokenidnullptr_fuzzer:GetfTokenidNullptrFuzzTest",
     "gettokenidcmdcorrect_fuzzer:GetTokenidCmdCorrectFuzzTest",
     "gettokenidcmderror_fuzzer:GetTokenidCmdErrorFuzzTest",
+    "gettokenidnullptr_fuzzer:GetTokenidNullptrFuzzTest",
     "setftokenidcmdcorrect_fuzzer:SetfTokenidCmdCorrectFuzzTest",
     "setftokenidcmderror_fuzzer:SetfTokenidCmdErrorFuzzTest",
+    "setftokenidnullptr_fuzzer:SetfTokenidNullptrFuzzTest",
     "settokenidcmdcorrect_fuzzer:SetTokenidCmdCorrectFuzzTest",
     "settokenidcmderror_fuzzer:SetTokenidCmdErrorFuzzTest",
+    "settokenidnullptr_fuzzer:SetTokenidNullptrFuzzTest",
   ]
 }

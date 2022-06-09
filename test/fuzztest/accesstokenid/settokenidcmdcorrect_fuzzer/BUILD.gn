@@ -29,7 +29,7 @@ ohos_fuzztest("SetTokenidCmdCorrectFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
   sources = [
-    "../src/accesstokenidcmdcorrect.cpp",
+    "../src/accesstokenidcommon.cpp",
     "settokenidcmdcorrect_fuzzer.cpp",
   ]
 }

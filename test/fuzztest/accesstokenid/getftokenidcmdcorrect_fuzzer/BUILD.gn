@@ -30,7 +30,7 @@ ohos_fuzztest("GetfTokenidCmdCorrectFuzzTest") {
   ]
 
   sources = [
-    "../src/accesstokenidcmdcorrect.cpp",
+    "../src/accessftokenidcommon.cpp",
     "getftokenidcmdcorrect_fuzzer.cpp",
   ]
 }

@@ -14,11 +14,10 @@
  */
 
 #include <vector>
-#include "accesstokenidcmdcorrect.h"
-#include "setftokenidcmdcorrect_fuzzer.h"
+#include "accessftokenidcommon.h"
 
 using namespace std;
-using namespace OHOS::Security::AccessToken;
+using namespace OHOS::Kernel::AccessToken;
 namespace OHOS {
 bool SetfTokenidCmdCorrectFuzzTest(const uint8_t *data, size_t size)
 {
