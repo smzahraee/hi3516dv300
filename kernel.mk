@@ -80,7 +80,7 @@ ifeq ($(DEVICE_NAME), hispark_phoenix)
 else
 	$(hide) rm -rf $(KERNEL_SRC_TMP_PATH);mkdir -p $(KERNEL_SRC_TMP_PATH);cp -arfL $(KERNEL_SRC_PATH)/* $(KERNEL_SRC_TMP_PATH)/
 endif
-	$(hide) $(OHOS_BUILD_HOME)/drivers/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(HDF_PATCH_FILE)
+	$(hide) $(OHOS_BUILD_HOME)/drivers/hdf_core/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(HDF_PATCH_FILE)
      
 ifeq ($(PRODUCT_PATH), vendor/hisilicon/watchos)
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(PRODUCT_PATCH_FILE)
