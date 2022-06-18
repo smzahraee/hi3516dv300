@@ -65,7 +65,7 @@ stability_test()
     tst_res TINFO "kill 40 task processes...."
     ps -ef | grep "create_process" | grep -v "grep" | grep -v ${PPID} | cut -c 9-18 | xargs kill -9
     sleep 5
-    tst_res TINFO "kill process successed."
+    tst_res TINFO "kill process succeeded."
     aa start -b ohos.samples.ecg -a ohos.samples.ecg.default &&
     sleep 1 &&
     PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')

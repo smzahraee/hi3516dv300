@@ -224,7 +224,7 @@ active_cpu_online()
         isolated_num3=$(( $isolated_num3 + 1 ))
     done
     if [ $isolated_num3 -eq 2 ]; then
-        tst_res TPASS "isolated number doesnt change."
+        tst_res TPASS "isolated number does not change."
     else
         tst_res TFAIL "isolated number had been changed."
     fi

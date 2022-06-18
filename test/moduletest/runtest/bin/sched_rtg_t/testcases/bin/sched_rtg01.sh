@@ -65,7 +65,7 @@ do_test()
     fi
     local rtgid3=$(cat $sched_group_id)
     if [ $rtgid3 -eq 3 ]; then
-        tst_res TFAIL "process $PID switch rtgid 2 to 3 sucess unexpected!"
+        tst_res TFAIL "process $PID switch rtgid 2 to 3 success unexpected!"
         res=$(($res + 1))
     fi
 
