@@ -34,20 +34,20 @@ hp_init()
 {
     dd if=/dev/random of=/data/hpdisk bs=4096 count=131072
     losetup /dev/block/loop6 /data/hpdisk
-    hyperhold_device=`cat /proc/sys/kernel/hyperhold/device`
+    hyperhold_device=$(cat /proc/sys/kernel/hyperhold/device)
     echo /dev/block/loop6 > /proc/sys/kernel/hyperhold/device
 }
 
 hp_enable()
 {
-    hyperhold_enable=`cat /proc/sys/kernel/hyperhold/enable`
+    hyperhold_enable=$(cat /proc/sys/kernel/hyperhold/enable)
     echo enable > /proc/sys/kernel/hyperhold/enable
 }
 
 zram_init()
 {
-    zram0_group=`cat /sys/block/zram0/group`
-    zram0_disksize=`cat /sys/block/zram0/disksize`
+    zram0_group=$(cat /sys/block/zram0/group)
+    zram0_disksize=$(cat /sys/block/zram0/disksize)
     echo readwrite > /sys/block/zram0/group
     echo 512M > /sys/block/zram0/disksize
 }
