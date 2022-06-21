@@ -100,7 +100,7 @@ do_clean()
     echo $init_value2 > $_ssr_path/hc_warm_data_waterline
     echo $init_value3 > $_ssr_path/hc_hot_node_waterline
     echo $init_value4 > $_ssr_path/hc_warm_node_waterline
-    losetup -d /dev/block/loop1 
+    losetup -d /dev/block/loop1
     umount /mnt/f2fs_mount
 }
 
