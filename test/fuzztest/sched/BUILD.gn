@@ -16,8 +16,11 @@ group("fuzztest") {
   deps = []
 
   deps += [
-    "accesstokenid:fuzztest",
-    "hc_node:fuzztest",
-    "sched:fuzztest",
+    "addthreadtortg_fuzzer:AddThreadToRtgFuzzTest",
+    "beginframefreq_fuzzer:BeginFrameFreqFuzzTest",
+    "endframefreq_fuzzer:EndFrameFreqFuzzTest",
+    "endscene_fuzzer:EndSceneFuzzTest",
+    "searchrtgfortid_fuzzer:SearchRtgForTidFuzzTest",
+    "setmargin_fuzzer:SetMarginFuzzTest",
   ]
 }
