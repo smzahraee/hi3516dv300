@@ -11,14 +11,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//build/config/features.gni")
+import("//build/test.gni")
+
+module_output_path = "linuxkerneltest/memory"
+
+ohos_fuzztest("ZswapdSingleMemcgParamFuzzTest") {
+  module_out_path = module_output_path
+  fuzz_config_file =
+      "//kernel/linux/build/test/fuzztest/memory/zswapdsinglememcgparam_fuzzer"
+
+  cflags = [
+    "-g",
+    "-O0",
+    "-Wno-unused-variable",
+    "-fno-omit-frame-pointer",
+  ]
+  sources = [ "zswapdsinglememcgparam_fuzzer.cpp" ]
+}
+
 group("fuzztest") {
   testonly = true
   deps = []
-
-  deps += [
-    "accesstokenid:fuzztest",
-    "hc_node:fuzztest",
-    "memory:fuzztest",
-    "sched:fuzztest",
-  ]
+  deps += [ ":ZswapdSingleMemcgParamFuzzTest" ]
 }
