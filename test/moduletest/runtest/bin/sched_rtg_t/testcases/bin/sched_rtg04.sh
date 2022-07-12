@@ -31,7 +31,7 @@ do_setup()
 {
     cpu_value=$(cat /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable)
 
-    aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
+    aa start -b ohos.samples.ecg -a ohos.samples.ecg.MainAbility
     sleep 1
     PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
     echo 1 > /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable

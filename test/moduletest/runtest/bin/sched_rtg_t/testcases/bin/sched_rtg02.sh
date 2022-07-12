@@ -31,7 +31,7 @@ source tst_oh.sh
 
 do_setup()
 {
-    aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
+    aa start -b ohos.samples.ecg -a ohos.samples.ecg.MainAbility
     sleep 1
     PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
 }

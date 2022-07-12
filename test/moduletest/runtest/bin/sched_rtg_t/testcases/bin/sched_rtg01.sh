@@ -29,7 +29,7 @@ source tst_oh.sh
 
 do_setup()
 {
-    aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
+    aa start -b ohos.samples.ecg -a ohos.samples.ecg.MainAbility
     sleep 1
     PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
 }
@@ -65,7 +65,7 @@ do_test()
     fi
     local rtgid3=$(cat $sched_group_id)
     if [ $rtgid3 -eq 3 ]; then
-        tst_res TFAIL "process $PID switch rtgid 2 to 3 success unexpected!"
+        tst_res TFAIL "process $PID switch rtgid 2 to 3 sucess unexpected!"
         res=$(($res + 1))
     fi
 

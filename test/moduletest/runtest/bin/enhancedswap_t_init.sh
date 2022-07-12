@@ -30,12 +30,24 @@ pre_condition()
 
 }
 
+uninit_platform()
+{
+    losetup -d /dev/block/loop7
+    echo ${hyperhold_device} > /proc/sys/kernel/hyperhold/device
+    echo ${hyperhold_enable} > /proc/sys/kernel/hyperhold/enable
+    echo ${zram0_group} > /sys/block/zram0/group
+    echo ${zram0_disksize} > /sys/block/zram0/disksize
+    rm -rf hpdisk
+    swapoff /dev/block/zram0
+    echo 1 > /sys/block/zram0/reset
+}
+
 hp_init()
 {
     dd if=/dev/random of=hpdisk bs=4096 count=131072
-    losetup /dev/block/loop6 hpdisk
+    losetup /dev/block/loop7 hpdisk
     hyperhold_device=$(cat /proc/sys/kernel/hyperhold/device)
-    echo /dev/block/loop6 > /proc/sys/kernel/hyperhold/device
+    echo /dev/block/loop7 > /proc/sys/kernel/hyperhold/device
 }
 
 hp_enable()
@@ -58,14 +70,19 @@ zram_enable()
     swapon /dev/block/zram0
     aa start -b com.ohos.settings -a com.ohos.settings.MainAbility
     aa start -b ohos.samples.airquality -a ohos.samples.airquality.default
-    aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
+    aa start -b ohos.samples.ecg -a ohos.samples.ecg.MainAbility
     aa start -b ohos.samples.flashlight -a ohos.samples.flashlight.default
     aa start -b ohos.samples.clock -a ohos.samples.clock.default
+    aa start -b com.ohos.camera -a com.ohos.camera.MainAbility                          
+    aa start -b com.ohos.permissionmanager -a com.ohos.permissionmanager.MainAbility    
+    aa start -b ohos.sample.shopping -a com.example.entry.MainAbility                   
+    aa start -b ohos.samples.distributedcalc -a ohos.samples.distributedcalc.MainAbility
 
 }
 
 echo "***************************ESWAP INIT START***************************"
 free -m
+uninit_platform
 pre_condition
 hp_init
 hp_enable
