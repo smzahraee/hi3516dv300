@@ -58,7 +58,7 @@ zram_enable()
     swapon /dev/block/zram0
     aa start -b com.ohos.settings -a com.ohos.settings.MainAbility
     aa start -b ohos.samples.airquality -a ohos.samples.airquality.default
-    aa start -b ohos.samples.ecg -a ohos.samples.ecg.default
+    aa start -b ohos.samples.ecg -a ohos.samples.ecg.MainAbility
     aa start -b ohos.samples.flashlight -a ohos.samples.flashlight.default
     aa start -b ohos.samples.clock -a ohos.samples.clock.default
 }
