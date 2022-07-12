@@ -16,6 +16,9 @@
  */
 
 #include <vector>
+#include <cstddef>
+#include <cstdint>
+#include "__config"
 #include "accessftokenidcommon.h"
 
 using namespace std;
