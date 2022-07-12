@@ -27,7 +27,7 @@
 
 uninit_platform()
 {
-    losetup -d /dev/block/loop6
+    losetup -d /dev/block/loop7
     echo ${hyperhold_device} > /proc/sys/kernel/hyperhold/device
     echo ${hyperhold_enable} > /proc/sys/kernel/hyperhold/enable
     echo ${zram0_group} > /sys/block/zram0/group

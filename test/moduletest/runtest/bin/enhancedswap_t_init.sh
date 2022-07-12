@@ -30,12 +30,24 @@ pre_condition()
 
 }
 
+uninit_platform()
+{
+    losetup -d /dev/block/loop7
+    echo ${hyperhold_device} > /proc/sys/kernel/hyperhold/device
+    echo ${hyperhold_enable} > /proc/sys/kernel/hyperhold/enable
+    echo ${zram0_group} > /sys/block/zram0/group
+    echo ${zram0_disksize} > /sys/block/zram0/disksize
+    rm -rf hpdisk
+    swapoff /dev/block/zram0
+    echo 1 > /sys/block/zram0/reset
+}
+
 hp_init()
 {
     dd if=/dev/random of=hpdisk bs=4096 count=131072
-    losetup /dev/block/loop6 hpdisk
+    losetup /dev/block/loop7 hpdisk
     hyperhold_device=$(cat /proc/sys/kernel/hyperhold/device)
-    echo /dev/block/loop6 > /proc/sys/kernel/hyperhold/device
+    echo /dev/block/loop7 > /proc/sys/kernel/hyperhold/device
 }
 
 hp_enable()
