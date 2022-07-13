@@ -13,16 +13,13 @@
  * limitations under the License.
  */
 
-#include <cstdio>
-#include <cstdlib>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <sys/wait.h>
-#include <ctime>
 #include <fcntl.h>
 #include <pthread.h>
-#include <sys/syscall.h>
-#include <vector>
+#include <cstdint>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <bits/syscall.h>
+#include <cstdio>
 #include "accesstokenidcommon.h"
 
 namespace OHOS {
