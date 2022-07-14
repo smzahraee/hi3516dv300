@@ -33,13 +33,35 @@ do_setup()
 
 do_test()
 {
-    local pid=$(ps -ef | grep "com.ohos.launch" | grep -v grep | awk '{print $2}')
+    # find ashmem process
+    local pid=$(cat /proc/ashmem_process_info | awk 'NR>3 && $2!="" {print $2}' | sort -u)
+    local line=$(cat /proc/ashmem_process_info | awk 'NR>3 && $2!="" {print $2}' | sort -u | wc -l)
+    if [ $line -eq 0 ]; then
+        tst_res TFAIL "Cannot find program with ashmen!"
+    else
+        tst_res TPASS "The following $line ashmem processes have been found(PID): $pid."
+    fi
+
+    # Confirm that each process ashmem information is correct
+    for p in $pid
+    do
+        tst_res TINFO "now going to check $p ashmem information"
+        ash_info_check $p
+    done
+
+}
+
+ash_info_check()
+{
+    local pid=$1
+    tst_res TINFO "pid is $pid ."
+
     local ashmem_info_lines=$(cat /proc/$pid/smaps | grep ashmem | wc -l)
 
     if [ $ashmem_info_lines -le 0 ]; then
-        tst_res TFAIL "Ashmem information display test failed!"
+        tst_res TFAIL "Cannot find ashmem information of $pid .Ashmem information display test failed!"
     else
-        tst_res TPASS "Ashmem information display test pass."
+        tst_res TPASS "$pid totally found $ashmem_info_lines ashmem messages.Ashmem information display test pass."
     fi
 }
 

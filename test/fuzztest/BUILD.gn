@@ -18,6 +18,7 @@ group("fuzztest") {
   deps += [
     "accesstokenid:fuzztest",
     "hc_node:fuzztest",
+    "memory:fuzztest",
     "sched:fuzztest",
   ]
 }

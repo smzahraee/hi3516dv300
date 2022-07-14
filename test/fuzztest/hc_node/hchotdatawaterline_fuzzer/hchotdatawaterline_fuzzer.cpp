@@ -14,12 +14,11 @@
  */
 
 #include <cstddef>
-#include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 
 const char *HC_HOT_DATA_WATERLINE = "/sys/fs/f2fs/loop1/hc_hot_data_waterline";
 

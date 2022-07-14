@@ -14,6 +14,9 @@
  */
 
 #include <vector>
+#include <cstddef>
+#include <cstdint>
+#include "__config"
 #define CMDERROR
 #include "accesstokenidcommon.h"
 

@@ -321,7 +321,7 @@ HWTEST_F(AccesstokenidTest, CheckChildThreadInheritance, Function | MediumTest |
 
 /**
  * @tc.name: CheckChildThreadSetIndepent
- * @tc.desc: Test each child thread tokenid and ftokenid is indepent
+ * @tc.desc: Test each child thread tokenid and ftokenid is independent
  * @tc.desc: The tokenid and ftokenid of each child thread not equal to father process
  * @tc.type: FUNC
  */
