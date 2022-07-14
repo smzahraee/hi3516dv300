@@ -27,14 +27,19 @@ hi3516dv300_small.patch: 在Hi3516DV300芯片上支持arm架构的内核启动�
 
 ```
 kernel/linux/patches
-├── linux-4.19					# linux-4.19 相关patch
-│   └── hi3516dv300_patch		
-│   		├── hi3516dv300.patch	# linux-4.19 hi3516dv300 SOC patch
-│   		└── hdf.patch			# linux-4.19 hi3516dv300 hdf patch
+├── linux-4.19				# linux-4.19 相关patch
+│   ├── common_patch
+│   │		└── hdf.patch		# linux-4.19 HDF patches
+│   └── hi3516dv300_patch
+│   		└── hi3516dv300.patch	# linux-4.19 Hi3516D V300 SOC patches
 └── linux-5.10
-    └── hi3516dv300_patch		
-    		├── hi3516dv300.patch	# linux-5.10 hi3516dv300 SOC patch
-    		└── hdf.patch			# linux-5.10 hi3516dv300 hdf patch
+    ├── common_patch
+    │		└── hdf.patch		# linux-5.10 HDF patches
+    └── hi3516dv300_patch
+    │		└── hi3516dv300.patch	# linux-5.10 Hi3516D V300 SOC patches
+    └── rkrk3568_patch
+    		├── kernel.patch		# linux-5.10 rk3568 SOC patches
+    		└── hdf.patch		# linux-5.10 rk3568 定制 HDF patches
 ```
 
 ## 使用说明<a name="section1393789267"></a>
@@ -44,7 +49,7 @@ kernel/linux/patches
 	在kernel/linux/build仓中，按照kernel.mk中HDF的补丁合入方法，合入不同内核版本对应的HDF内核补丁：
 	
 	```
-	$(OHOS_BUILD_HOME)/drivers/hdf_core/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH)     $(HDF_PATCH_FILE)
+	$(OHOS_BUILD_HOME)/drivers/hdf_core/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(KERNEL_PATCH_PATH) $(DEVICE_NAME)
 	```
 
 2. 合入芯片平台驱动补丁
