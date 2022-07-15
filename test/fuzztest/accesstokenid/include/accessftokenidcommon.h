@@ -25,17 +25,17 @@ namespace AccessToken {
 #define ACCESS_TOKEN_ID_IOCTL_BASE    'A'
 
 #ifdef CMDERROR
-constexpr unsigned int GET_FTOKEN_ID = 0;
-constexpr unsigned int SET_FTOKEN_ID = 0;
+constexpr unsigned int get_ftoken_id = 0;
+constexpr unsigned int set_ftoken_id = 0;
 #else
-constexpr unsigned int GET_FTOKEN_ID = 3;
-constexpr unsigned int SET_FTOKEN_ID = 4;
+constexpr unsigned int get_ftoken_id = 3;
+constexpr unsigned int set_ftoken_id = 4;
 #endif
 
 #define ACCESS_TOKENID_GET_FTOKENID \
-    _IOR(ACCESS_TOKEN_ID_IOCTL_BASE, GET_FTOKEN_ID, unsigned long long)
+        _IOR(ACCESS_TOKEN_ID_IOCTL_BASE, get_ftoken_id, unsigned long long)
 #define ACCESS_TOKENID_SET_FTOKENID \
-    _IOW(ACCESS_TOKEN_ID_IOCTL_BASE, SET_FTOKEN_ID, unsigned long long)
+        _IOW(ACCESS_TOKEN_ID_IOCTL_BASE, set_ftoken_id, unsigned long long)
 
 #define LIST_NUM_1    1
 #define LIST_NUM_2    2
