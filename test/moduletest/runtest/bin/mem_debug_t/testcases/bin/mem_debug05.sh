@@ -65,11 +65,12 @@ check_reclaim_efficiency()
 {
     local mem_type=$1
 
-    local total_process_time=$(cat /proc/reclaim_efficiency | grep -A5 $mem_type | grep total_process | awk '{print $2}')
-    local drain_pages_time=$(cat /proc/reclaim_efficiency | grep -A5 $mem_type | grep drain_pages | awk '{print $2}')
-    local shrink_file_time=$(cat /proc/reclaim_efficiency | grep -A5 $mem_type | grep shrink_file | awk '{print $2}')
-    local shrink_anon_time=$(cat /proc/reclaim_efficiency | grep -A5 $mem_type | grep shrink_anon | awk '{print $2}')
-    local shrink_slab_time=$(cat /proc/reclaim_efficiency | grep -A5 $mem_type | grep shrink_slab | awk '{print $2}')
+    cat /proc/reclaim_efficiency > log.txt
+    local total_process_time=$(cat log.txt | grep -A5 $mem_type | grep total_process | awk '{print $2}')
+    local drain_pages_time=$(cat log.txt | grep -A5 $mem_type | grep drain_pages | awk '{print $2}')
+    local shrink_file_time=$(cat log.txt | grep -A5 $mem_type | grep shrink_file | awk '{print $2}')
+    local shrink_anon_time=$(cat log.txt | grep -A5 $mem_type | grep shrink_anon | awk '{print $2}')
+    local shrink_slab_time=$(cat log.txt | grep -A5 $mem_type | grep shrink_slab | awk '{print $2}')
     local sum_time_a=$(($drain_pages_time + $shrink_file_time))
     local sum_time_b=$(($shrink_anon_time + $shrink_slab_time))
     local sum_time=$(($sum_time_a + $sum_time_b))
@@ -80,9 +81,9 @@ check_reclaim_efficiency()
         tst_res TFAIL "total_process_time in $mem_type is less than sum of subprocess."
     fi
 
-    local total_process_freed=$(cat /proc/reclaim_efficiency | grep -A5 $mem_type | grep total_process | awk '{print $3}')
-    local shrink_file_freed=$(cat /proc/reclaim_efficiency | grep -A5 $mem_type | grep shrink_file | awk '{print $3}')
-    local shrink_anon_freed=$(cat /proc/reclaim_efficiency | grep -A5 $mem_type | grep shrink_anon | awk '{print $3}')
+    local total_process_freed=$(cat log.txt | grep -A5 $mem_type | grep total_process | awk '{print $3}')
+    local shrink_file_freed=$(cat log.txt | grep -A5 $mem_type | grep shrink_file | awk '{print $3}')
+    local shrink_anon_freed=$(cat log.txt | grep -A5 $mem_type | grep shrink_anon | awk '{print $3}')
     local sum_freed=$(($shrink_file_freed + $shrink_anon_freed))
 
     if [ $sum_freed -eq $total_process_freed ]; then
@@ -98,6 +99,7 @@ do_clean()
     kill -9 $pid
     echo $reclaim_acct_disable_def > $reclaim_acct_disable
     echo $avail_buffers_def $min_avail_buffers_def $high_avail_buffers_def $free_swap_threshold_def > $avail_buffers
+    rm -rf log.txt
 }
 
 do_setup
