@@ -14,40 +14,19 @@
  */
 
 #include <cstddef>
-#include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cstdint>
+#include <cstdio>
+#include "memorycommon.h"
 
 const char *ANON_REFAULT_SNAPSHOT_MIN_INTERVAL = "/dev/memcg/memory.anon_refault_snapshot_min_interval";
 
 namespace OHOS {
 bool AnonRefaultSnapshotMinIntervalFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(ANON_REFAULT_SNAPSHOT_MIN_INTERVAL, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", ANON_REFAULT_SNAPSHOT_MIN_INTERVAL);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, size);
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    bool ret = MemoryFuzzTest(data, size, ANON_REFAULT_SNAPSHOT_MIN_INTERVAL);
+    return ret;
 }
 } // namespace OHOS
 

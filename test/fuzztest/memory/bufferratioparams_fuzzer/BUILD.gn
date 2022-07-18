@@ -21,13 +21,18 @@ ohos_fuzztest("BufferRatioParamsFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/memory/bufferratioparams_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "bufferratioparams_fuzzer.cpp" ]
+  sources = [
+    "../src/memorycommon.cpp",
+    "bufferratioparams_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {

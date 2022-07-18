@@ -14,6 +14,9 @@
  */
 
 #include <vector>
+#include <cstddef>
+#include <cstdint>
+#include "__config"
 #include "rtg_interface.h"
 
 using namespace std;

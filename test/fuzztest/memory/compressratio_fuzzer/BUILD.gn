@@ -21,13 +21,18 @@ ohos_fuzztest("CompressRatioFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/memory/compressratio_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "compressratio_fuzzer.cpp" ]
+  sources = [
+    "../src/memorycommon.cpp",
+    "compressratio_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {

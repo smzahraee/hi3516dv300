@@ -17,20 +17,14 @@
 #include <cstddef>
 #include <cstdint>
 #include "__config"
-#include "accessftokenidcommon.h"
+#include "accesstokenidcommon.h"
 
 using namespace std;
 using namespace OHOS::Kernel::AccessToken;
 namespace OHOS {
 bool SetfTokenidCmdCorrectFuzzTest(const uint8_t *data, size_t size)
 {
-    bool ret = false;
-    if ((data == nullptr) || (size < sizeof(unsigned long long))) {
-        return ret;
-    } else {
-        unsigned long long tokenId = *(reinterpret_cast<const unsigned long long *>(data));
-        ret = SetfTokenid(&tokenId);
-    }
+    bool ret = SetfTokenidCmdFuzzTest(data, size);
     return ret;
 }
 }

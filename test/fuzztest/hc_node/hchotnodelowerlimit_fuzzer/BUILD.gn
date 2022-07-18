@@ -21,13 +21,18 @@ ohos_fuzztest("HcHotNodeLowerLimitFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/hc_node/hchotnodelowerlimit_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "hchotnodelowerlimit_fuzzer.cpp" ]
+  sources = [
+    "../src/hccommon.cpp",
+    "hchotnodelowerlimit_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {

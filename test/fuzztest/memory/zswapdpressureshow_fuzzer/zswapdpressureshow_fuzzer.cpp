@@ -14,40 +14,19 @@
  */
 
 #include <cstddef>
-#include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cstdint>
+#include <cstdio>
+#include "memorycommon.h"
 
 const char *ZSWAPD_PRESSURE_SHOW = "/dev/memcg/memory.zswapd_pressure_show";
 
 namespace OHOS {
 bool ZswapdPressureShowFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(ZSWAPD_PRESSURE_SHOW, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", ZSWAPD_PRESSURE_SHOW);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, sizeof(uint8_t));
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    bool ret = MemoryFuzzTest(data, size, ZSWAPD_PRESSURE_SHOW);
+    return ret;
 }
 } // namespace OHOS
 

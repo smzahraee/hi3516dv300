@@ -17,7 +17,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "__config"
-#include "accessftokenidcommon.h"
+#include "accesstokenidcommon.h"
 
 using namespace std;
 using namespace OHOS::Kernel::AccessToken;
