@@ -30,7 +30,7 @@ ohos_fuzztest("GetfTokenidNullptrFuzzTest") {
   ]
 
   sources = [
-    "../src/accessftokenidcommon.cpp",
+    "../src/accesstokenidcommon.cpp",
     "getftokenidnullptr_fuzzer.cpp",
   ]
 }

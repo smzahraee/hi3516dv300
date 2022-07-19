@@ -21,13 +21,18 @@ ohos_fuzztest("EmptyRoundSkipIntervalFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/memory/emptyroundskipinterval_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "emptyroundskipinterval_fuzzer.cpp" ]
+  sources = [
+    "../src/memorycommon.cpp",
+    "emptyroundskipinterval_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {

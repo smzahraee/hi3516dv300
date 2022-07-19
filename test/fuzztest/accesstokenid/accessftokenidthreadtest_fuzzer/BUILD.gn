@@ -31,7 +31,7 @@ ohos_fuzztest("AccessfTokenidThreadTestFuzzTest") {
   ]
 
   sources = [
-    "../src/accessftokenidcommon.cpp",
+    "../src/accesstokenidcommon.cpp",
     "accessftokenidthreadtest_fuzzer.cpp",
   ]
 }

@@ -14,40 +14,19 @@
  */
 
 #include <cstddef>
-#include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cstdint>
+#include <cstdio>
+#include "memorycommon.h"
 
 const char *ZSWAPD_MEMCGS_PARAM = "/dev/memcg/memory.zswapd_memcgs_param";
 
 namespace OHOS {
 bool ZswapdMemcgsParamFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(ZSWAPD_MEMCGS_PARAM, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", ZSWAPD_MEMCGS_PARAM);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, size);
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    bool ret = MemoryFuzzTest(data, size, ZSWAPD_MEMCGS_PARAM);
+    return ret;
 }
 } // namespace OHOS
 

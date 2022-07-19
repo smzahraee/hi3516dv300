@@ -14,6 +14,9 @@
  */
 
 #include <vector>
+#include <cstddef>
+#include <cstdint>
+#include "__config"
 #define CMDERROR
 #include "accesstokenidcommon.h"
 
@@ -22,13 +25,7 @@ using namespace OHOS::Kernel::AccessToken;
 namespace OHOS {
 bool SetTokenidCmdErrorFuzzTest(const uint8_t *data, size_t size)
 {
-    bool ret = false;
-    if ((data == nullptr) || (size < sizeof(unsigned long long))) {
-        return ret;
-    } else {
-        unsigned long long tokenId = *(reinterpret_cast<const unsigned long long *>(data));
-        ret = SetTokenid(&tokenId);
-    }
+    bool ret = SetTokenidCmdFuzzTest(data, size);
     return ret;
 }
 }

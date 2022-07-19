@@ -20,13 +20,18 @@ ohos_fuzztest("HcWarmDataLowerLimitFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/hc_node/hcwarmdatalowerlimit_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "hcwarmdatalowerlimit_fuzzer.cpp" ]
+  sources = [
+    "../src/hccommon.cpp",
+    "hcwarmdatalowerlimit_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {
