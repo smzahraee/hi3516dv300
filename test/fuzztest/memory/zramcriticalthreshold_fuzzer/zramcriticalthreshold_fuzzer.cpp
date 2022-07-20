@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *ZRAM_CRITICAL_THRESHOLD = "/dev/memcg/memory.zram_critical_threshold";

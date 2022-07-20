@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *ZSWAPD_PRESSURE_SHOW = "/dev/memcg/memory.zswapd_pressure_show";

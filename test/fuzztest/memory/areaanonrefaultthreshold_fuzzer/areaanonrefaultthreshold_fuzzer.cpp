@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *AREA_ANON_REFAULT_THRESHOLD = "/dev/memcg/memory.area_anon_refault_threshold";

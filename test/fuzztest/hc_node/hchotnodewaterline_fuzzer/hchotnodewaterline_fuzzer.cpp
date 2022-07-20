@@ -14,11 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
-#include <cstdlib>
 #include "hccommon.h"
 
 const char *HC_HOT_NODE_WATERLINE = "/sys/fs/f2fs/loop1/hc_hot_node_waterline";

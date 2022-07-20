@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *UB_UFS2ZRAM_RATIO = "/dev/memcg/memory.ub_ufs2zram_ratio";
