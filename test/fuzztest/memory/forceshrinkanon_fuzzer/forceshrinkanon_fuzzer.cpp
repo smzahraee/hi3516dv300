@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-#include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
-#include <cstdint>
 #include <cstdio>
+#include <cstddef>
+#include <cstdint>
+#include <unistd.h>
+#include <fcntl.h>
 #include "memorycommon.h"
 
 const char *FORCE_SHRINK_ANON = "/dev/memcg/memory.force_shrink_anon";

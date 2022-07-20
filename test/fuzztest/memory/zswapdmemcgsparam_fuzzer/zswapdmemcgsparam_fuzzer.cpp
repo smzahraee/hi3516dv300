@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *ZSWAPD_MEMCGS_PARAM = "/dev/memcg/memory.zswapd_memcgs_param";

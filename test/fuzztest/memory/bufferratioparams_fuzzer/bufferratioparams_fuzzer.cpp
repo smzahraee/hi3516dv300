@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *BUFFER_RATIO_PARAMS = "/dev/memcg/memory.buffer_ratio_params";

@@ -15,6 +15,7 @@
 
 #ifndef ACCESSTOKENIDCOMMON_H
 #define ACCESSTOKENIDCOMMON_H
+#include <cstddef>
 #include <cstdint>
 
 #define FUZZ_PROJECT_NAME "accesstokenidcommon"

@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *EMPTY_ROUND_CHECK_THRESHOLD = "/dev/memcg/memory.empty_round_check_threshold";

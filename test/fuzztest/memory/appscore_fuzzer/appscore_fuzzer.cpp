@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *APP_SCORE = "/dev/memcg/memory.app_score";

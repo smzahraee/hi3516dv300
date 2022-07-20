@@ -14,11 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
-#include <cstdlib>
 #include "hccommon.h"
 
 const char *HC_WARM_NODE_LOWER_LIMIT = "/sys/fs/f2fs/loop1/hc_warm_node_lower_limit";

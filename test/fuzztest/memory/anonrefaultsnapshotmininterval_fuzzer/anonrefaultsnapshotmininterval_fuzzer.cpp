@@ -14,10 +14,7 @@
  */
 
 #include <cstddef>
-#include <fcntl.h>
-#include <unistd.h>
 #include <cstdint>
-#include <cstdio>
 #include "memorycommon.h"
 
 const char *ANON_REFAULT_SNAPSHOT_MIN_INTERVAL = "/dev/memcg/memory.anon_refault_snapshot_min_interval";
