@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *UB_UFS2ZRAM_RATIO = "/dev/memcg/memory.ub_ufs2zram_ratio";
-
 namespace OHOS {
 bool UbUfs2zramRatioFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, UB_UFS2ZRAM_RATIO);
+    const char *ub_ufs2zram_ratio = "/dev/memcg/memory.ub_ufs2zram_ratio";
+    bool ret = MemoryFuzzTest(data, size, ub_ufs2zram_ratio);
     return ret;
 }
 } // namespace OHOS

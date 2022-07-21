@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *ZSWAPD_SINGLE_MEMCG_PARAM = "/dev/memcg/memory.zswapd_single_memcg_param";
-
 namespace OHOS {
 bool ZswapdSingleMemcgParamFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, ZSWAPD_SINGLE_MEMCG_PARAM);
+    const char *zswapd_single_memcg_param = "/dev/memcg/memory.zswapd_single_memcg_param";
+    bool ret = MemoryFuzzTest(data, size, zswapd_single_memcg_param);
     return ret;
 }
 } // namespace OHOS

@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *ZSWAPD_PRESSURE_SHOW = "/dev/memcg/memory.zswapd_pressure_show";
-
 namespace OHOS {
 bool ZswapdPressureShowFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, ZSWAPD_PRESSURE_SHOW);
+    const char *zswapd_pressure_show = "/dev/memcg/memory.zswapd_pressure_show";
+    bool ret = MemoryFuzzTest(data, size, zswapd_pressure_show);
     return ret;
 }
 } // namespace OHOS

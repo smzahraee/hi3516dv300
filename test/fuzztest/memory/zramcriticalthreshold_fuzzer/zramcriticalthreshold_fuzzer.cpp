@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *ZRAM_CRITICAL_THRESHOLD = "/dev/memcg/memory.zram_critical_threshold";
-
 namespace OHOS {
 bool ZramCriticalThresholdFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, ZRAM_CRITICAL_THRESHOLD);
+    const char *zram_critical_threshold = "/dev/memcg/memory.zram_critical_threshold";
+    bool ret = MemoryFuzzTest(data, size, zram_critical_threshold);
     return ret;
 }
 } // namespace OHOS

@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *APP_SCORE = "/dev/memcg/memory.app_score";
-
 namespace OHOS {
 bool AppScoreFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, APP_SCORE);
+    const char *app_score = "/dev/memcg/memory.app_score";
+    bool ret = MemoryFuzzTest(data, size, app_score);
     return ret;
 }
 } // namespace OHOS

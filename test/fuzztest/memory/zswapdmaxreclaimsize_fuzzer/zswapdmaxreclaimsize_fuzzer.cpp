@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *ZSWAPD_MAX_RECLAIM_SIZE = "/dev/memcg/memory.zswapd_max_reclaim_size";
-
 namespace OHOS {
 bool ZswapdMaxReclaimSizeFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, ZSWAPD_MAX_RECLAIM_SIZE);
+    const char *zswapd_max_reclaim_size = "/dev/memcg/memory.zswapd_max_reclaim_size";
+    bool ret = MemoryFuzzTest(data, size, zswapd_max_reclaim_size);
     return ret;
 }
 } // namespace OHOS

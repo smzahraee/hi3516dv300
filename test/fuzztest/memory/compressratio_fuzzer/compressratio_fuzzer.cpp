@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *COMPRESS_RATIO = "/dev/memcg/memory.compress_ratio";
-
 namespace OHOS {
 bool CompressRatioFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, COMPRESS_RATIO);
+    const char *compress_ratio = "/dev/memcg/memory.compress_ratio";
+    bool ret = MemoryFuzzTest(data, size, compress_ratio);
     return ret;
 }
 } // namespace OHOS
