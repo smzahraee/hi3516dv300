@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *NAME = "/dev/memcg/memory.name";
-
 namespace OHOS {
 bool NameFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, NAME);
+    const char *name = "/dev/memcg/memory.name";
+    bool ret = MemoryFuzzTest(data, size, name);
     return ret;
 }
 } // namespace OHOS

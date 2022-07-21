@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *EMPTY_ROUND_CHECK_THRESHOLD = "/dev/memcg/memory.empty_round_check_threshold";
-
 namespace OHOS {
 bool EmptyRoundCheckThresholdFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, EMPTY_ROUND_CHECK_THRESHOLD);
+    const char *empty_round_check_threshold = "/dev/memcg/memory.empty_round_check_threshold";
+    bool ret = MemoryFuzzTest(data, size, empty_round_check_threshold);
     return ret;
 }
 } // namespace OHOS

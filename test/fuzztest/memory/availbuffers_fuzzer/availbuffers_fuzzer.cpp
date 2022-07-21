@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *AVAIL_BUFFERS = "/dev/memcg/memory.avail_buffers";
-
 namespace OHOS {
 bool AvailBuffersFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, AVAIL_BUFFERS);
+    const char *avail_buffers = "/dev/memcg/memory.avail_buffers";
+    bool ret = MemoryFuzzTest(data, size, avail_buffers);
     return ret;
 }
 } // namespace OHOS

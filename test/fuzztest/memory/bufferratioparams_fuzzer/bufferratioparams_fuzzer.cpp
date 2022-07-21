@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *BUFFER_RATIO_PARAMS = "/dev/memcg/memory.buffer_ratio_params";
-
 namespace OHOS {
 bool BufferRatioParamsFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, BUFFER_RATIO_PARAMS);
+    const char *buffer_ratio_params = "/dev/memcg/memory.buffer_ratio_params";
+    bool ret = MemoryFuzzTest(data, size, buffer_ratio_params);
     return ret;
 }
 } // namespace OHOS

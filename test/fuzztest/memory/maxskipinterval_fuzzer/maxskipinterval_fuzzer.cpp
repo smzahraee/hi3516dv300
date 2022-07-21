@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *MAX_SKIP_INTERVAL = "/dev/memcg/memory.max_skip_interval";
-
 namespace OHOS {
 bool MaxSkipIntervalFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, MAX_SKIP_INTERVAL);
+    const char *max_skip_interval = "/dev/memcg/memory.max_skip_interval";
+    bool ret = MemoryFuzzTest(data, size, max_skip_interval);
     return ret;
 }
 } // namespace OHOS

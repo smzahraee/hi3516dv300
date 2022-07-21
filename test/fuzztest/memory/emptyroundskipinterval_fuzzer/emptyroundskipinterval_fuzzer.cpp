@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *EMPTY_ROUND_SKIP_INTERVAL = "/dev/memcg/memory.empty_round_skip_interval";
-
 namespace OHOS {
 bool EmptyRoundSkipIntervalFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, EMPTY_ROUND_SKIP_INTERVAL);
+    const char *empty_round_skip_interval = "/dev/memcg/memory.empty_round_skip_interval";
+    bool ret = MemoryFuzzTest(data, size, empty_round_skip_interval);
     return ret;
 }
 } // namespace OHOS

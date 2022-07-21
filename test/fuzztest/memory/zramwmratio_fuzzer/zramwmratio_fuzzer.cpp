@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *ZRAM_WR_RATIO = "/dev/memcg/memory.zram_wm_ratio";
-
 namespace OHOS {
 bool ZramWmRatioFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, ZRAM_WR_RATIO);
+    const char *zram_wr_ratio = "/dev/memcg/memory.zram_wm_ratio";
+    bool ret = MemoryFuzzTest(data, size, zram_wr_ratio);
     return ret;
 }
 } // namespace OHOS

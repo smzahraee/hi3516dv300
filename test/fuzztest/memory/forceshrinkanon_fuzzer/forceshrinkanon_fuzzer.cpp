@@ -20,19 +20,18 @@
 #include <fcntl.h>
 #include "memorycommon.h"
 
-const char *FORCE_SHRINK_ANON = "/dev/memcg/memory.force_shrink_anon";
-
 namespace OHOS {
 bool ForceShrinkAnonFuzzer(const uint8_t *data, size_t size)
 {
-    int fd = open(FORCE_SHRINK_ANON, O_RDWR);
+    const char *force_shrink_anon = "/dev/memcg/memory.force_shrink_anon";
+    int fd = open(force_shrink_anon, O_RDWR);
     if (fd < 0) {
         return false;
     }
 
     int ret = write(fd, data, size);
     if (ret < 0) {
-        printf("%s write fail\n", FORCE_SHRINK_ANON);
+        printf("%s write fail\n", force_shrink_anon);
         close(fd);
         return false;
     }

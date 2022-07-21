@@ -17,12 +17,11 @@
 #include <cstdint>
 #include "memorycommon.h"
 
-const char *AREA_ANON_REFAULT_THRESHOLD = "/dev/memcg/memory.area_anon_refault_threshold";
-
 namespace OHOS {
 bool AreaAnonRefaultThresholdFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = MemoryFuzzTest(data, size, AREA_ANON_REFAULT_THRESHOLD);
+    const char *area_anon_refault_threshold = "/dev/memcg/memory.area_anon_refault_threshold";
+    bool ret = MemoryFuzzTest(data, size, area_anon_refault_threshold);
     return ret;
 }
 } // namespace OHOS

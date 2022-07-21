@@ -25,14 +25,14 @@ namespace OHOS {
 bool BeginFrameFreqFuzzTest(const uint8_t *data, size_t size)
 {
     bool ret = false;
-    constexpr int MARGIN_UPPER_LIMIT_TIME = 32000;
-    constexpr int MARGIN_LOWER_LIMIT_TIME = -32000;
+    constexpr int margin_upper_limit_time = 32000;
+    constexpr int margin_lower_limit_time = -32000;
     if (data == nullptr) {
         return ret;
     } else {
         uint8_t *countData = const_cast<uint8_t *>(data);
         int margin = *(reinterpret_cast<int *>(countData));
-        if (margin < MARGIN_LOWER_LIMIT_TIME || margin > MARGIN_UPPER_LIMIT_TIME) {
+        if (margin < margin_lower_limit_time || margin > margin_upper_limit_time) {
             return ret;
         }
         int grpId = 2;
