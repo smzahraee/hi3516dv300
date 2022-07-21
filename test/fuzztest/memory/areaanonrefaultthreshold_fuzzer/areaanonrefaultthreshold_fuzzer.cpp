@@ -15,39 +15,14 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const char *AREA_ANON_REFAULT_THRESHOLD = "/dev/memcg/memory.area_anon_refault_threshold";
+#include "memorycommon.h"
 
 namespace OHOS {
 bool AreaAnonRefaultThresholdFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(AREA_ANON_REFAULT_THRESHOLD, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", AREA_ANON_REFAULT_THRESHOLD);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, size);
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    const char *area_anon_refault_threshold = "/dev/memcg/memory.area_anon_refault_threshold";
+    bool ret = MemoryFuzzTest(data, size, area_anon_refault_threshold);
+    return ret;
 }
 } // namespace OHOS
 

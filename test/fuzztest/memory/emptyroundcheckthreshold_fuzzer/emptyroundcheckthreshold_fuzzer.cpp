@@ -15,39 +15,14 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const char *EMPTY_ROUND_CHECK_THRESHOLD = "/dev/memcg/memory.empty_round_check_threshold";
+#include "memorycommon.h"
 
 namespace OHOS {
 bool EmptyRoundCheckThresholdFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(EMPTY_ROUND_CHECK_THRESHOLD, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", EMPTY_ROUND_CHECK_THRESHOLD);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, size);
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    const char *empty_round_check_threshold = "/dev/memcg/memory.empty_round_check_threshold";
+    bool ret = MemoryFuzzTest(data, size, empty_round_check_threshold);
+    return ret;
 }
 } // namespace OHOS
 

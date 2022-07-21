@@ -15,39 +15,14 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const char *UB_UFS2ZRAM_RATIO = "/dev/memcg/memory.ub_ufs2zram_ratio";
+#include "memorycommon.h"
 
 namespace OHOS {
 bool UbUfs2zramRatioFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(UB_UFS2ZRAM_RATIO, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", UB_UFS2ZRAM_RATIO);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, sizeof(uint8_t));
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    const char *ub_ufs2zram_ratio = "/dev/memcg/memory.ub_ufs2zram_ratio";
+    bool ret = MemoryFuzzTest(data, size, ub_ufs2zram_ratio);
+    return ret;
 }
 } // namespace OHOS
 

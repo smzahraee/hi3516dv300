@@ -15,39 +15,14 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const char *ZRAM_CRITICAL_THRESHOLD = "/dev/memcg/memory.zram_critical_threshold";
+#include "memorycommon.h"
 
 namespace OHOS {
 bool ZramCriticalThresholdFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(ZRAM_CRITICAL_THRESHOLD, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", ZRAM_CRITICAL_THRESHOLD);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, size);
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    const char *zram_critical_threshold = "/dev/memcg/memory.zram_critical_threshold";
+    bool ret = MemoryFuzzTest(data, size, zram_critical_threshold);
+    return ret;
 }
 } // namespace OHOS
 

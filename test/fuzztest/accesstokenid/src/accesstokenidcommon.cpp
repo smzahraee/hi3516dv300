@@ -13,16 +13,13 @@
  * limitations under the License.
  */
 
-#include <cstdio>
-#include <cstdlib>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <sys/wait.h>
-#include <ctime>
 #include <fcntl.h>
 #include <pthread.h>
-#include <sys/syscall.h>
-#include <vector>
+#include <cstdint>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <bits/syscall.h>
+#include <cstdio>
 #include "accesstokenidcommon.h"
 
 namespace OHOS {
@@ -186,6 +183,148 @@ int AccessTokenidGrpTestOther(uint8_t *data_token)
     TokenTest(static_cast<void *>(data_token));
     ThreadTest(static_cast<void *>(data_token));
     return 0;
+}
+
+int GetfTokenid(unsigned long long *ftoken)
+{
+    int fd = open(DEVACCESSTOKENID, O_RDWR);
+    if (fd < 0) {
+        return -1;
+    }
+
+    int ret = ioctl(fd, ACCESS_TOKENID_GET_FTOKENID, ftoken);
+    if (ret) {
+        close(fd);
+        return -1;
+    }
+
+    close(fd);
+    return 0;
+}
+
+int SetfTokenid(unsigned long long *ftoken)
+{
+    int fd = open(DEVACCESSTOKENID, O_RDWR);
+    if (fd < 0) {
+        return -1;
+    }
+
+    int ret = ioctl(fd, ACCESS_TOKENID_SET_FTOKENID, ftoken);
+    if (ret) {
+        close(fd);
+        return -1;
+    }
+
+    close(fd);
+    return 0;
+}
+
+void SetRandfTokenAndCheck(unsigned long long *data_ftoken)
+{
+    pid_t pid = getpid();
+    pid_t tid = syscall(__NR_gettid);
+    unsigned long long ftoken = INVAL_TOKEN;
+    unsigned long long ftokenSet = *data_ftoken;
+
+    SetfTokenid(&ftokenSet);
+    GetfTokenid(&ftoken);
+
+    if (ftoken != ftokenSet) {
+        printf("pid:%d tid:%d ftoken test failed, ftoken:%llu ftokenSet:%llu\n",
+               pid, tid, ftoken, ftokenSet);
+    } else {
+        printf("pid:%d tid:%d ftoken test succeed, ftoken:%llu ftokenSet:%llu\n",
+               pid, tid, ftoken, ftokenSet);
+    }
+
+    sleep(WAIT_FOR_SHELL_OP_TIME);
+
+    GetfTokenid(&ftoken);
+    if (ftoken != ftokenSet) {
+        printf("pid:%d tid:%d ftoken test failed, ftoken:%llu ftokenSet:%llu\n",
+               pid, tid, ftoken, ftokenSet);
+    } else {
+        printf("pid:%d tid:%d ftoken test succeed, ftoken:%llu ftokenSet:%llu\n",
+               pid, tid, ftoken, ftokenSet);
+    }
+    return;
+}
+
+void *fTokenTest(void *data_ftoken)
+{
+    SetRandfTokenAndCheck(static_cast<unsigned long long *>(data_ftoken));
+    return nullptr;
+}
+
+int AccessfTokenidThreadTest(uint8_t *data_ftoken)
+{
+    fTokenTest(static_cast<void *>(data_ftoken));
+    ThreadTest(static_cast<void *>(data_ftoken));
+    return 0;
+}
+
+int AccessfTokenidGrpTest(uint8_t *data_ftoken)
+{
+    SetUidAndGrp();
+    fTokenTest(static_cast<void *>(data_ftoken));
+    ThreadTest(static_cast<void *>(data_ftoken));
+    return 0;
+}
+
+int AccessfTokenidGrpTestOther(uint8_t *data_ftoken)
+{
+    SetUidAndGrpOther();
+    fTokenTest(static_cast<void *>(data_ftoken));
+    ThreadTest(static_cast<void *>(data_ftoken));
+    return 0;
+}
+
+bool SetfTokenidCmdFuzzTest(const uint8_t *data, size_t size)
+{
+    bool ret = false;
+    if ((data == nullptr) || (size < sizeof(unsigned long long))) {
+        return ret;
+    } else {
+        unsigned long long tokenId = *(reinterpret_cast<const unsigned long long *>(data));
+        ret = SetfTokenid(&tokenId);
+    }
+    return ret;
+}
+
+bool GetfTokenidCmdFuzzTest(const uint8_t *data, size_t size)
+{
+    bool ret = false;
+    if ((data == nullptr) || (size < sizeof(unsigned long long))) {
+        return ret;
+    } else {
+        unsigned long long tokenId = *(reinterpret_cast<const unsigned long long *>(data));
+        ret = GetfTokenid(&tokenId);
+    }
+    return ret;
+}
+
+bool GetTokenidCmdFuzzTest(const uint8_t *data, size_t size)
+{
+    bool ret = false;
+    if ((data == nullptr) || (size < sizeof(unsigned long long))) {
+        return ret;
+    } else {
+        unsigned long long tokenId = *(reinterpret_cast<const unsigned long long *>(data));
+        ret = GetTokenid(&tokenId);
+    }
+    return ret;
+}
+
+bool SetTokenidCmdFuzzTest(const uint8_t *data, size_t size)
+{
+    bool ret = false;
+    if ((data == nullptr) || (size < sizeof(unsigned long long))) {
+        return ret;
+    } else {
+        unsigned long long tokenId = *(reinterpret_cast<const unsigned long long *>(data));
+        ret = SetTokenid(&tokenId);
+    }
+    return ret;
 }
 } // namespace AccessToken
 } // namespace Kernel

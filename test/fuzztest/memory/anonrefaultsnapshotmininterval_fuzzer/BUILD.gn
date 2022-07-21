@@ -20,13 +20,18 @@ ohos_fuzztest("AnonRefaultSnapshotMinIntervalFuzzTest") {
   module_out_path = module_output_path
   fuzz_config_file = "//kernel/linux/build/test/fuzztest/memory/anonrefaultsnapshotmininterval_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "anonrefaultsnapshotmininterval_fuzzer.cpp" ]
+  sources = [
+    "../src/memorycommon.cpp",
+    "anonrefaultsnapshotmininterval_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {

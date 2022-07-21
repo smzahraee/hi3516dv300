@@ -20,13 +20,18 @@ ohos_fuzztest("HcWarmNodeWaterLineFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/hc_node/hcwarmnodewaterline_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "hcwarmnodewaterline_fuzzer.cpp" ]
+  sources = [
+    "../src/hccommon.cpp",
+    "hcwarmnodewaterline_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {
