@@ -15,39 +15,14 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const char *MAX_SKIP_INTERVAL = "/dev/memcg/memory.max_skip_interval";
+#include "memorycommon.h"
 
 namespace OHOS {
 bool MaxSkipIntervalFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(MAX_SKIP_INTERVAL, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", MAX_SKIP_INTERVAL);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, size);
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    const char *max_skip_interval = "/dev/memcg/memory.max_skip_interval";
+    bool ret = MemoryFuzzTest(data, size, max_skip_interval);
+    return ret;
 }
 } // namespace OHOS
 

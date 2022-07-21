@@ -15,39 +15,14 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const char *AVAIL_BUFFERS = "/dev/memcg/memory.avail_buffers";
+#include "memorycommon.h"
 
 namespace OHOS {
 bool AvailBuffersFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(AVAIL_BUFFERS, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", AVAIL_BUFFERS);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, size);
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    const char *avail_buffers = "/dev/memcg/memory.avail_buffers";
+    bool ret = MemoryFuzzTest(data, size, avail_buffers);
+    return ret;
 }
 } // namespace OHOS
 

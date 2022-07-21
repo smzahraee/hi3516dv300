@@ -15,6 +15,8 @@
 
 #ifndef ACCESSTOKENIDCOMMON_H
 #define ACCESSTOKENIDCOMMON_H
+#include <cstddef>
+#include <cstdint>
 
 #define FUZZ_PROJECT_NAME "accesstokenidcommon"
 
@@ -24,17 +26,25 @@ namespace AccessToken {
 #define ACCESS_TOKEN_ID_IOCTL_BASE    'A'
 
 #ifdef CMDERROR
-constexpr unsigned int GET_TOKEN_ID = 0;
-constexpr unsigned int SET_TOKEN_ID = 0;
+constexpr unsigned int get_token_id = 0;
+constexpr unsigned int set_token_id = 0;
+constexpr unsigned int get_ftoken_id = 0;
+constexpr unsigned int set_ftoken_id = 0;
 #else
-constexpr unsigned int GET_TOKEN_ID = 1;
-constexpr unsigned int SET_TOKEN_ID = 2;
+constexpr unsigned int get_token_id = 1;
+constexpr unsigned int set_token_id = 2;
+constexpr unsigned int get_ftoken_id = 3;
+constexpr unsigned int set_ftoken_id = 4;
 #endif
 
 #define ACCESS_TOKENID_GET_TOKENID \
-    _IOR(ACCESS_TOKEN_ID_IOCTL_BASE, GET_TOKEN_ID, unsigned long long)
+        _IOR(ACCESS_TOKEN_ID_IOCTL_BASE, get_token_id, unsigned long long)
 #define ACCESS_TOKENID_SET_TOKENID \
-    _IOW(ACCESS_TOKEN_ID_IOCTL_BASE, SET_TOKEN_ID, unsigned long long)
+        _IOW(ACCESS_TOKEN_ID_IOCTL_BASE, set_token_id, unsigned long long)
+#define ACCESS_TOKENID_GET_FTOKENID \
+        _IOR(ACCESS_TOKEN_ID_IOCTL_BASE, get_ftoken_id, unsigned long long)
+#define ACCESS_TOKENID_SET_FTOKENID \
+        _IOW(ACCESS_TOKEN_ID_IOCTL_BASE, set_ftoken_id, unsigned long long)
 
 #define LIST_NUM_1    1
 #define LIST_NUM_2    2
@@ -53,6 +63,8 @@ constexpr unsigned int SET_TOKEN_ID = 2;
 
 int GetTokenid(unsigned long long *token);
 int SetTokenid(unsigned long long *token);
+int GetfTokenid(unsigned long long *ftoken);
+int SetfTokenid(unsigned long long *ftoken);
 
 void SetUidAndGrp();
 void SetUidAndGrpOther();
@@ -63,6 +75,18 @@ void ThreadTest(unsigned long long *data_token);
 int AccessTokenidThreadTest(uint8_t *data_token);
 int AccessTokenidGrpTest(uint8_t *data_token);
 int AccessTokenidGrpTestOther(uint8_t *data_token);
+
+void GetCurfToken(unsigned long long *ftoken);
+void SetRandfTokenAndCheck(unsigned long long *data_ftoken);
+void fTokenTest(unsigned long long *data_ftoken);
+void ThreadTest(unsigned long long *data_ftoken);
+int AccessfTokenidThreadTest(uint8_t *data_ftoken);
+int AccessfTokenidGrpTest(uint8_t *data_ftoken);
+int AccessfTokenidGrpTestOther(uint8_t *data_ftoken);
+bool SetfTokenidCmdFuzzTest(const uint8_t *data, size_t size);
+bool GetfTokenidCmdFuzzTest(const uint8_t *data, size_t size);
+bool SetTokenidCmdFuzzTest(const uint8_t *data, size_t size);
+bool GetTokenidCmdFuzzTest(const uint8_t *data, size_t size);
 } // namespace AccessToken
 } // namespace Kernel
 } // namespace OHOS

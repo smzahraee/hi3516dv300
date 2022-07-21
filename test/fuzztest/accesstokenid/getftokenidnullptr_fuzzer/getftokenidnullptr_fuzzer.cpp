@@ -16,7 +16,10 @@
  */
 
 #include <vector>
-#include "accessftokenidcommon.h"
+#include <cstddef>
+#include <cstdint>
+#include "__config"
+#include "accesstokenidcommon.h"
 
 using namespace std;
 using namespace OHOS::Kernel::AccessToken;

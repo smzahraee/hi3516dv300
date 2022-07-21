@@ -13,9 +13,11 @@
  * limitations under the License.
  */
 
-#ifndef TEST_FUZZTEST_GETTOKENIDCMDERROR_FUZZER_H
-#define TEST_FUZZTEST_GETTOKENIDCMDERROR_FUZZER_H
+#ifndef HCCOMMON_H
+#define HCCOMMON_H
 
-#define FUZZ_PROJECT_NAME "gettokenidcmderror_fuzzer"
+namespace OHOS {
+bool HcFuzzTest(const uint8_t *data, const char *pathname, size_t size);
+}
 
-#endif // TEST_FUZZTEST_GETTOKENIDCMDERROR_FUZZER_H
+#endif

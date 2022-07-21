@@ -13,9 +13,35 @@
  * limitations under the License.
  */
 
-#ifndef TEST_FUZZTEST_GETTOKENIDCMDCORRECT_FUZZER_H
-#define TEST_FUZZTEST_GETTOKENIDCMDCORRECT_FUZZER_H
+#include <cstddef>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstdint>
+#include "memorycommon.h"
 
-#define FUZZ_PROJECT_NAME "gettokenidcmdcorrect_fuzzer"
+namespace OHOS {
+bool MemoryFuzzTest(const uint8_t *data, size_t size, const char *pathname)
+{
+    uint32_t value = 0;
 
-#endif // TEST_FUZZTEST_GETTOKENIDCMDCORRECT_FUZZER_H
+    int fd = open(pathname, O_RDWR);
+    if (fd < 0) {
+        return false;
+    }
+
+    int ret = read(fd, &value, sizeof(value));
+    if (ret < 0) {
+        close(fd);
+        return false;
+    }
+
+    ret = write(fd, data, size);
+    if (ret < 0) {
+        close(fd);
+        return false;
+    }
+
+    close(fd);
+    return true;
+}
+}

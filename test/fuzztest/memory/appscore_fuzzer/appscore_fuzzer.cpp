@@ -15,39 +15,14 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const char *APP_SCORE = "/dev/memcg/memory.app_score";
+#include "memorycommon.h"
 
 namespace OHOS {
 bool AppScoreFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(APP_SCORE, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", APP_SCORE);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, size);
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    const char *app_score = "/dev/memcg/memory.app_score";
+    bool ret = MemoryFuzzTest(data, size, app_score);
+    return ret;
 }
 } // namespace OHOS
 

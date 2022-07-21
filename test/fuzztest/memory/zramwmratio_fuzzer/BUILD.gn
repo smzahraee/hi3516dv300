@@ -21,13 +21,18 @@ ohos_fuzztest("ZramWmRatioFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/memory/zramwmratio_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "zramwmratio_fuzzer.cpp" ]
+  sources = [
+    "../src/memorycommon.cpp",
+    "zramwmratio_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {

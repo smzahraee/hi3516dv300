@@ -21,13 +21,18 @@ ohos_fuzztest("ZswapdPressureShowFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/memory/zswapdpressureshow_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "zswapdpressureshow_fuzzer.cpp" ]
+  sources = [
+    "../src/memorycommon.cpp",
+    "zswapdpressureshow_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {

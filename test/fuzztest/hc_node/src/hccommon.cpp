@@ -13,36 +13,43 @@
  * limitations under the License.
  */
 
-#include <cstdio>
 #include <cstddef>
-#include <cstdint>
-#include <unistd.h>
 #include <fcntl.h>
-#include "memorycommon.h"
+#include <unistd.h>
+#include <cstdint>
+#include <cstdlib>
+#include "hccommon.h"
 
 namespace OHOS {
-bool ForceShrinkAnonFuzzer(const uint8_t *data, size_t size)
+bool HcFuzzTest(const uint8_t *data, const char *pathname, size_t size)
 {
-    const char *force_shrink_anon = "/dev/memcg/memory.force_shrink_anon";
-    int fd = open(force_shrink_anon, O_RDWR);
+    uint32_t value = 0;
+    uint32_t length = size > sizeof(uint32_t) ? sizeof(uint32_t) : size;
+    int ret = access("/mnt/f2fs_mount/", F_OK);
+    if (ret < 0) {
+        system("mkdir -p /mnt/f2fs_mount/");
+        system("mkfs.f2fs -d1 -t1 -O quota /data/image_f2fs");
+        system("losetup /dev/block/loop1 /data/image_f2fs");
+        system("mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/");
+    }
+
+    int fd = open(pathname, O_RDWR);
     if (fd < 0) {
         return false;
     }
 
-    int ret = write(fd, data, size);
+    ret = read(fd, &value, sizeof(value));
     if (ret < 0) {
-        printf("%s write fail\n", force_shrink_anon);
         close(fd);
         return false;
     }
 
+    ret = write(fd, data, length);
+    if (ret < 0) {
+        close(fd);
+        return false;
+    }
     close(fd);
     return true;
 }
-} // namespace OHOS
-
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
-{
-    OHOS::ForceShrinkAnonFuzzer(data, size);
-    return 0;
 }

@@ -15,39 +15,14 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <cstdio>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const char *BUFFER_RATIO_PARAMS = "/dev/memcg/memory.buffer_ratio_params";
+#include "memorycommon.h"
 
 namespace OHOS {
 bool BufferRatioParamsFuzzer(const uint8_t *data, size_t size)
 {
-    uint32_t value = 0;
-
-    int fd = open(BUFFER_RATIO_PARAMS, O_RDWR);
-    if (fd < 0) {
-        return false;
-    }
-
-    int ret = read(fd, &value, sizeof(value));
-    if (ret < 0) {
-        printf("%s read fail\n", BUFFER_RATIO_PARAMS);
-        close(fd);
-        return false;
-    }
-
-    ret = write(fd, data, sizeof(uint8_t));
-    if (ret < 0) {
-        close(fd);
-        return false;
-    }
-
-    close(fd);
-    return true;
+    const char *buffer_ratio_params = "/dev/memcg/memory.buffer_ratio_params";
+    bool ret = MemoryFuzzTest(data, size, buffer_ratio_params);
+    return ret;
 }
 } // namespace OHOS
 

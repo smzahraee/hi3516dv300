@@ -13,9 +13,11 @@
  * limitations under the License.
  */
 
-#ifndef TEST_FUZZTEST_SETFTOKENIDCMDCORRECT_FUZZER_H
-#define TEST_FUZZTEST_SETFTOKENIDCMDCORRECT_FUZZER_H
+#ifndef MEMORYCOMMON_H
+#define MEMORYCOMMON_H
 
-#define FUZZ_PROJECT_NAME "setftokenidcmdcorrect_fuzzer"
+namespace OHOS {
+bool MemoryFuzzTest(const uint8_t *data, size_t size, const char *pathname);
+}
 
-#endif // TEST_FUZZTEST_SETFTOKENIDCMDCORRECT_FUZZER_H
+#endif

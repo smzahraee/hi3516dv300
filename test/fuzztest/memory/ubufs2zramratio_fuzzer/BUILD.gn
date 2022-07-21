@@ -21,13 +21,18 @@ ohos_fuzztest("UbUfs2zramRatioFuzzTest") {
   fuzz_config_file =
       "//kernel/linux/build/test/fuzztest/memory/ubufs2zramratio_fuzzer"
 
+  include_dirs = [ "../include" ]
+
   cflags = [
     "-g",
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
   ]
-  sources = [ "ubufs2zramratio_fuzzer.cpp" ]
+  sources = [
+    "../src/memorycommon.cpp",
+    "ubufs2zramratio_fuzzer.cpp",
+  ]
 }
 
 group("fuzztest") {
