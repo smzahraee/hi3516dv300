@@ -20,8 +20,8 @@
 namespace OHOS {
 bool AppScoreFuzzer(const uint8_t *data, size_t size)
 {
-    const char *app_score = "/dev/memcg/memory.app_score";
-    bool ret = MemoryFuzzTest(data, size, app_score);
+    const char *appScore = "/dev/memcg/memory.app_score";
+    bool ret = MemoryFuzzTest(data, size, appScore);
     return ret;
 }
 } // namespace OHOS

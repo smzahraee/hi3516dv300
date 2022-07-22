@@ -20,8 +20,8 @@
 namespace OHOS {
 bool ZswapdSingleMemcgParamFuzzer(const uint8_t *data, size_t size)
 {
-    const char *zswapd_single_memcg_param = "/dev/memcg/memory.zswapd_single_memcg_param";
-    bool ret = MemoryFuzzTest(data, size, zswapd_single_memcg_param);
+    const char *zswapdSingleMemcgParam = "/dev/memcg/memory.zswapd_single_memcg_param";
+    bool ret = MemoryFuzzTest(data, size, zswapdSingleMemcgParam);
     return ret;
 }
 } // namespace OHOS

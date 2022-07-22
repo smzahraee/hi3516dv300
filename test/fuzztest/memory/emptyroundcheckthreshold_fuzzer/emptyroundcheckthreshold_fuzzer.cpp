@@ -20,8 +20,8 @@
 namespace OHOS {
 bool EmptyRoundCheckThresholdFuzzer(const uint8_t *data, size_t size)
 {
-    const char *empty_round_check_threshold = "/dev/memcg/memory.empty_round_check_threshold";
-    bool ret = MemoryFuzzTest(data, size, empty_round_check_threshold);
+    const char *emptyRoundCheckThreshold = "/dev/memcg/memory.empty_round_check_threshold";
+    bool ret = MemoryFuzzTest(data, size, emptyRoundCheckThreshold);
     return ret;
 }
 } // namespace OHOS

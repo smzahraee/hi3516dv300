@@ -20,8 +20,8 @@
 namespace OHOS {
 bool AnonRefaultSnapshotMinIntervalFuzzer(const uint8_t *data, size_t size)
 {
-    const char *anon_refault_snapshot_min_interval = "/dev/memcg/memory.anon_refault_snapshot_min_interval";
-    bool ret = MemoryFuzzTest(data, size, anon_refault_snapshot_min_interval);
+    const char *anonRefaultSnapshotMinInterval = "/dev/memcg/memory.anon_refault_snapshot_min_interval";
+    bool ret = MemoryFuzzTest(data, size, anonRefaultSnapshotMinInterval);
     return ret;
 }
 } // namespace OHOS

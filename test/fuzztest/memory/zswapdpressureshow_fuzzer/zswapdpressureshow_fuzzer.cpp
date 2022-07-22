@@ -20,8 +20,8 @@
 namespace OHOS {
 bool ZswapdPressureShowFuzzer(const uint8_t *data, size_t size)
 {
-    const char *zswapd_pressure_show = "/dev/memcg/memory.zswapd_pressure_show";
-    bool ret = MemoryFuzzTest(data, size, zswapd_pressure_show);
+    const char *zswapdPressureShow = "/dev/memcg/memory.zswapd_pressure_show";
+    bool ret = MemoryFuzzTest(data, size, zswapdPressureShow);
     return ret;
 }
 } // namespace OHOS

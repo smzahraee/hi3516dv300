@@ -20,8 +20,8 @@
 namespace OHOS {
 bool UbUfs2zramRatioFuzzer(const uint8_t *data, size_t size)
 {
-    const char *ub_ufs2zram_ratio = "/dev/memcg/memory.ub_ufs2zram_ratio";
-    bool ret = MemoryFuzzTest(data, size, ub_ufs2zram_ratio);
+    const char *ubUfs2zramRatio = "/dev/memcg/memory.ub_ufs2zram_ratio";
+    bool ret = MemoryFuzzTest(data, size, ubUfs2zramRatio);
     return ret;
 }
 } // namespace OHOS

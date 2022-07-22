@@ -20,8 +20,8 @@
 namespace OHOS {
 bool ZramWmRatioFuzzer(const uint8_t *data, size_t size)
 {
-    const char *zram_wr_ratio = "/dev/memcg/memory.zram_wm_ratio";
-    bool ret = MemoryFuzzTest(data, size, zram_wr_ratio);
+    const char *zramWrRatio = "/dev/memcg/memory.zram_wm_ratio";
+    bool ret = MemoryFuzzTest(data, size, zramWrRatio);
     return ret;
 }
 } // namespace OHOS

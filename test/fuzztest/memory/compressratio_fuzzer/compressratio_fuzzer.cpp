@@ -20,8 +20,8 @@
 namespace OHOS {
 bool CompressRatioFuzzer(const uint8_t *data, size_t size)
 {
-    const char *compress_ratio = "/dev/memcg/memory.compress_ratio";
-    bool ret = MemoryFuzzTest(data, size, compress_ratio);
+    const char *compressRatio = "/dev/memcg/memory.compress_ratio";
+    bool ret = MemoryFuzzTest(data, size, compressRatio);
     return ret;
 }
 } // namespace OHOS
