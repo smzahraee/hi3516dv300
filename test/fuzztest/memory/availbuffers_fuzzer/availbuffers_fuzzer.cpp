@@ -20,8 +20,8 @@
 namespace OHOS {
 bool AvailBuffersFuzzer(const uint8_t *data, size_t size)
 {
-    const char *avail_buffers = "/dev/memcg/memory.avail_buffers";
-    bool ret = MemoryFuzzTest(data, size, avail_buffers);
+    const char *availBuffers = "/dev/memcg/memory.avail_buffers";
+    bool ret = MemoryFuzzTest(data, size, availBuffers);
     return ret;
 }
 } // namespace OHOS

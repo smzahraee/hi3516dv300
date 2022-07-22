@@ -28,8 +28,8 @@ bool AccessfTokenidThreadTestFuzzTest(const uint8_t *data, size_t size)
     if ((data == nullptr) || (size < sizeof(unsigned long long))) {
         return ret;
     } else {
-        uint8_t *data_ftoken = const_cast<uint8_t *>(data);
-        ret = AccessfTokenidThreadTest(data_ftoken);
+        uint8_t *dataFtoken = const_cast<uint8_t *>(data);
+        ret = AccessfTokenidThreadTest(dataFtoken);
     }
     return ret;
 }

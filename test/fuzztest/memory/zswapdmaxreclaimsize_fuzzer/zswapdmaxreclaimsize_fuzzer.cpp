@@ -20,8 +20,8 @@
 namespace OHOS {
 bool ZswapdMaxReclaimSizeFuzzer(const uint8_t *data, size_t size)
 {
-    const char *zswapd_max_reclaim_size = "/dev/memcg/memory.zswapd_max_reclaim_size";
-    bool ret = MemoryFuzzTest(data, size, zswapd_max_reclaim_size);
+    const char *zswapdMaxReclaimSize = "/dev/memcg/memory.zswapd_max_reclaim_size";
+    bool ret = MemoryFuzzTest(data, size, zswapdMaxReclaimSize);
     return ret;
 }
 } // namespace OHOS

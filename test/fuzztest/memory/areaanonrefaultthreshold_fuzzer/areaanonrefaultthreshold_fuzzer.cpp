@@ -20,8 +20,8 @@
 namespace OHOS {
 bool AreaAnonRefaultThresholdFuzzer(const uint8_t *data, size_t size)
 {
-    const char *area_anon_refault_threshold = "/dev/memcg/memory.area_anon_refault_threshold";
-    bool ret = MemoryFuzzTest(data, size, area_anon_refault_threshold);
+    const char *areaAnonRefaultThreshold = "/dev/memcg/memory.area_anon_refault_threshold";
+    bool ret = MemoryFuzzTest(data, size, areaAnonRefaultThreshold);
     return ret;
 }
 } // namespace OHOS
