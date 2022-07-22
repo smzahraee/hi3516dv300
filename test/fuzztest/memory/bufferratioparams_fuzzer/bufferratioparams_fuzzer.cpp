@@ -20,8 +20,8 @@
 namespace OHOS {
 bool BufferRatioParamsFuzzer(const uint8_t *data, size_t size)
 {
-    const char *buffer_ratio_params = "/dev/memcg/memory.buffer_ratio_params";
-    bool ret = MemoryFuzzTest(data, size, buffer_ratio_params);
+    const char *bufferRatioParams = "/dev/memcg/memory.buffer_ratio_params";
+    bool ret = MemoryFuzzTest(data, size, bufferRatioParams);
     return ret;
 }
 } // namespace OHOS
