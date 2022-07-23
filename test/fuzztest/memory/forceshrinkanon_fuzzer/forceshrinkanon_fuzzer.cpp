@@ -14,24 +14,22 @@
  */
 
 #include <cstdio>
-#include <cstddef>
 #include <cstdint>
 #include <unistd.h>
 #include <fcntl.h>
-#include "memorycommon.h"
 
 namespace OHOS {
 bool ForceShrinkAnonFuzzer(const uint8_t *data, size_t size)
 {
-    const char *force_shrink_anon = "/dev/memcg/memory.force_shrink_anon";
-    int fd = open(force_shrink_anon, O_RDWR);
+    const char *forceShrinkAnon = "/dev/memcg/memory.force_shrink_anon";
+    int fd = open(forceShrinkAnon, O_RDWR);
     if (fd < 0) {
         return false;
     }
 
     int ret = write(fd, data, size);
     if (ret < 0) {
-        printf("%s write fail\n", force_shrink_anon);
+        printf("%s write fail\n", forceShrinkAnon);
         close(fd);
         return false;
     }

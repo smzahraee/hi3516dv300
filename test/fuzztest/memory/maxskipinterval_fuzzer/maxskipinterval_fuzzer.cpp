@@ -20,8 +20,8 @@
 namespace OHOS {
 bool MaxSkipIntervalFuzzer(const uint8_t *data, size_t size)
 {
-    const char *max_skip_interval = "/dev/memcg/memory.max_skip_interval";
-    bool ret = MemoryFuzzTest(data, size, max_skip_interval);
+    const char *maxSkipInterval = "/dev/memcg/memory.max_skip_interval";
+    bool ret = MemoryFuzzTest(data, size, maxSkipInterval);
     return ret;
 }
 } // namespace OHOS

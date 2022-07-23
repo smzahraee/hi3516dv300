@@ -28,8 +28,8 @@ bool AccessTokenidGrpTestOtherFuzzTest(const uint8_t *data, size_t size)
     if ((data == nullptr) || (size < sizeof(unsigned long long))) {
         return ret;
     } else {
-        uint8_t *data_token = const_cast<uint8_t *>(data);
-        ret = AccessTokenidGrpTestOther(data_token);
+        uint8_t *dataToken = const_cast<uint8_t *>(data);
+        ret = AccessTokenidGrpTestOther(dataToken);
     }
     return ret;
 }

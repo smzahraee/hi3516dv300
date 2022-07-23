@@ -34,7 +34,7 @@ int GetTokenid(unsigned long long *token)
         return -1;
     }
     int ret = ioctl(fd, ACCESS_TOKENID_GET_TOKENID, token);
-    if (ret) {
+    if (ret != 0) {
         close(fd);
         return -1;
     }
@@ -49,7 +49,7 @@ int SetTokenid(unsigned long long *token)
         return -1;
     }
     int ret = ioctl(fd, ACCESS_TOKENID_SET_TOKENID, token);
-    if (ret) {
+    if (ret != 0) {
         close(fd);
         return -1;
     }
@@ -95,12 +95,12 @@ void SetUidAndGrpOther()
     return;
 }
 
-void SetRandTokenAndCheck(unsigned long long *data_token)
+void SetRandTokenAndCheck(unsigned long long *dataToken)
 {
     pid_t pid = getpid();
     pid_t tid = syscall(__NR_gettid);
     unsigned long long token = INVAL_TOKEN;
-    unsigned long long tokenSet = *data_token;
+    unsigned long long tokenSet = *dataToken;
 
     SetTokenid(&tokenSet);
     GetTokenid(&token);
@@ -126,62 +126,61 @@ void SetRandTokenAndCheck(unsigned long long *data_token)
     return;
 }
 
-void *TokenTest(void *data_token)
+void *TokenTest(void *dataToken)
 {
-    SetRandTokenAndCheck(static_cast<unsigned long long *>(data_token));
-
+    SetRandTokenAndCheck(static_cast<unsigned long long *>(dataToken));
     return nullptr;
 }
 
-void ThreadTest(void *data_token)
+void ThreadTest(void *dataToken)
 {
-    pthread_t id_1;
-    pthread_t id_2;
-    pthread_t id_3;
+    pthread_t tid1;
+    pthread_t tid2;
+    pthread_t tid3;
     int ret = 0;
 
-    ret = pthread_create(&id_1, nullptr, TokenTest, data_token);
+    ret = pthread_create(&tid1, nullptr, TokenTest, dataToken);
     if (ret != 0) {
         return;
     }
   
-    ret = pthread_create(&id_2, nullptr, TokenTest, data_token);
+    ret = pthread_create(&tid2, nullptr, TokenTest, dataToken);
     if (ret != 0) {
         return;
     }
 
-    ret = pthread_create(&id_3, nullptr, TokenTest, data_token);
+    ret = pthread_create(&tid3, nullptr, TokenTest, dataToken);
     if (ret != 0) {
         return;
     }
 
-    pthread_join(id_1, nullptr);
-    pthread_join(id_2, nullptr);
-    pthread_join(id_3, nullptr);
+    pthread_join(tid1, nullptr);
+    pthread_join(tid2, nullptr);
+    pthread_join(tid3, nullptr);
 
     return;
 }
 
-int AccessTokenidThreadTest(uint8_t *data_token)
+int AccessTokenidThreadTest(uint8_t *dataToken)
 {
-    TokenTest(static_cast<void *>(data_token));
-    ThreadTest(static_cast<void *>(data_token));
+    TokenTest(static_cast<void *>(dataToken));
+    ThreadTest(static_cast<void *>(dataToken));
     return 0;
 }
 
-int AccessTokenidGrpTest(uint8_t *data_token)
+int AccessTokenidGrpTest(uint8_t *dataToken)
 {
     SetUidAndGrp();
-    TokenTest(static_cast<void *>(data_token));
-    ThreadTest(static_cast<void *>(data_token));
+    TokenTest(static_cast<void *>(dataToken));
+    ThreadTest(static_cast<void *>(dataToken));
     return 0;
 }
 
-int AccessTokenidGrpTestOther(uint8_t *data_token)
+int AccessTokenidGrpTestOther(uint8_t *dataToken)
 {
     SetUidAndGrpOther();
-    TokenTest(static_cast<void *>(data_token));
-    ThreadTest(static_cast<void *>(data_token));
+    TokenTest(static_cast<void *>(dataToken));
+    ThreadTest(static_cast<void *>(dataToken));
     return 0;
 }
 
@@ -193,7 +192,7 @@ int GetfTokenid(unsigned long long *ftoken)
     }
 
     int ret = ioctl(fd, ACCESS_TOKENID_GET_FTOKENID, ftoken);
-    if (ret) {
+    if (ret != 0) {
         close(fd);
         return -1;
     }
@@ -210,7 +209,7 @@ int SetfTokenid(unsigned long long *ftoken)
     }
 
     int ret = ioctl(fd, ACCESS_TOKENID_SET_FTOKENID, ftoken);
-    if (ret) {
+    if (ret != 0) {
         close(fd);
         return -1;
     }
@@ -219,12 +218,12 @@ int SetfTokenid(unsigned long long *ftoken)
     return 0;
 }
 
-void SetRandfTokenAndCheck(unsigned long long *data_ftoken)
+void SetRandfTokenAndCheck(unsigned long long *dataFtoken)
 {
     pid_t pid = getpid();
     pid_t tid = syscall(__NR_gettid);
     unsigned long long ftoken = INVAL_TOKEN;
-    unsigned long long ftokenSet = *data_ftoken;
+    unsigned long long ftokenSet = *dataFtoken;
 
     SetfTokenid(&ftokenSet);
     GetfTokenid(&ftoken);
@@ -250,32 +249,32 @@ void SetRandfTokenAndCheck(unsigned long long *data_ftoken)
     return;
 }
 
-void *fTokenTest(void *data_ftoken)
+void *FTokenTest(void *dataFtoken)
 {
-    SetRandfTokenAndCheck(static_cast<unsigned long long *>(data_ftoken));
+    SetRandfTokenAndCheck(static_cast<unsigned long long *>(dataFtoken));
     return nullptr;
 }
 
-int AccessfTokenidThreadTest(uint8_t *data_ftoken)
+int AccessfTokenidThreadTest(uint8_t *dataFtoken)
 {
-    fTokenTest(static_cast<void *>(data_ftoken));
-    ThreadTest(static_cast<void *>(data_ftoken));
+    FTokenTest(static_cast<void *>(dataFtoken));
+    ThreadTest(static_cast<void *>(dataFtoken));
     return 0;
 }
 
-int AccessfTokenidGrpTest(uint8_t *data_ftoken)
+int AccessfTokenidGrpTest(uint8_t *dataFtoken)
 {
     SetUidAndGrp();
-    fTokenTest(static_cast<void *>(data_ftoken));
-    ThreadTest(static_cast<void *>(data_ftoken));
+    FTokenTest(static_cast<void *>(dataFtoken));
+    ThreadTest(static_cast<void *>(dataFtoken));
     return 0;
 }
 
-int AccessfTokenidGrpTestOther(uint8_t *data_ftoken)
+int AccessfTokenidGrpTestOther(uint8_t *dataFtoken)
 {
     SetUidAndGrpOther();
-    fTokenTest(static_cast<void *>(data_ftoken));
-    ThreadTest(static_cast<void *>(data_ftoken));
+    FTokenTest(static_cast<void *>(dataFtoken));
+    ThreadTest(static_cast<void *>(dataFtoken));
     return 0;
 }
 

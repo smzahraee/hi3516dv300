@@ -20,8 +20,8 @@
 namespace OHOS {
 bool EmptyRoundSkipIntervalFuzzer(const uint8_t *data, size_t size)
 {
-    const char *empty_round_skip_interval = "/dev/memcg/memory.empty_round_skip_interval";
-    bool ret = MemoryFuzzTest(data, size, empty_round_skip_interval);
+    const char *emptyRoundSkipInterval = "/dev/memcg/memory.empty_round_skip_interval";
+    bool ret = MemoryFuzzTest(data, size, emptyRoundSkipInterval);
     return ret;
 }
 } // namespace OHOS
