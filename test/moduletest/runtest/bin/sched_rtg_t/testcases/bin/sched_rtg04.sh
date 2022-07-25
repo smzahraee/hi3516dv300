@@ -29,41 +29,23 @@ source tst_oh.sh
 
 do_setup()
 {
-    cpu_value=$(cat /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable)
-
-    aa start -b ohos.samples.ecg -a ohos.samples.ecg.MainAbility
-    sleep 1
-    PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
-    echo 1 > /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable
 }
 
 do_test()
 {
-    local res=0
-    local sched_group_id=/proc/$PID/sched_group_id
-
-    tst_res TINFO "Start sched RTG trace catching test ..."
-    bytrace -t 10 -b 32000 --overwrite sched ace app disk ohos graphic sync workq ability > rtgtrace.ftrace &
-    tst_res TINFO "Checking sched RTG trace ..."
-    sleep 3
-    for i in $(seq 1 50);do
-        echo 0 > $sched_group_id
-        echo 2 > $sched_group_id
-    done
-    sleep 50
-    cat rtgtrace.ftrace | grep "find_rtg_cpu" 
+    ls /sys/kernel/debug/tracing/events/rtg/ | grep find_rtg_cpu &&
+    ls /sys/kernel/debug/tracing/events/rtg/ | grep sched_rtg_task_each &&
+    ls /sys/kernel/debug/tracing/events/rtg/ | grep sched_rtg_valid_normalized_util
     if [ $? -eq 0 ]; then
-        tst_res TPASS "trace info found."
-        rm -rf rtgtrace.ftrace
+        tst_res TPASS "trace nodes are existed"
     else
-        tst_res TFAIL "trace info no found!"
+        tst_res TFAIL "trace nodes are not existed"
     fi
 }
 
 do_clean()
 {
-    echo $cpu_value > /sys/kernel/debug/tracing/events/rtg/find_rtg_cpu/enable 
-    aa force-stop ohos.samples.ecg
+
 }
 
 do_setup
