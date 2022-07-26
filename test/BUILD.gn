@@ -32,10 +32,10 @@ if (is_standard_system) {
   script_dir = "kernel/linux/build/test/moduletest/runtest"
   action("init_runtest") {
     script = "init_runtest.sh"
-    outputs = [ "$root_build_dir/tests/moduletest/runtest.timestamp" ]
+    outputs = [ "$root_build_dir/tests/kernel_shelltest/runtest.timestamp" ]
     args = [
       rebase_path("$root_build_dir/../../$script_dir"),
-      rebase_path("$root_build_dir/tests/moduletest"),
+      rebase_path("$root_build_dir/tests/kernel_shelltest"),
     ]
   }
 }
