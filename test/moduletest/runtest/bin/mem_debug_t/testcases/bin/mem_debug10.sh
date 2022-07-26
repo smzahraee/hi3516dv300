@@ -39,7 +39,7 @@ do_setup()
 
 do_test()
 {
-    set_check_lmkd_oom_score_adj -1001 1 0
+    set_check_lmkd_oom_score_adj -1001 1 $lmkd_oom_score_adj_def
     set_check_lmkd_oom_score_adj -1000 0 -1000
     set_check_lmkd_oom_score_adj 1 0 1
     set_check_lmkd_oom_score_adj 1000 0 1000
