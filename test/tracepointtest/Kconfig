@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: GPL-2.0-only
+#
+# Kconfig for tracepoint test
+#
+
+menu "tracepoint test"
+
+source "drivers/tracepointtest/vendordommap_test/Kconfig"
+
+source "drivers/tracepointtest/vendordomprotectpkey_test/Kconfig"
+
+source "drivers/tracepointtest/tracepoint_test/Kconfig"
+
+source "drivers/tracepointtest/vendoramlemmcpartition_test/Kconfig"
+
+source "drivers/tracepointtest/vendorfakebootpartition_test/Kconfig"
+
+endmenu
