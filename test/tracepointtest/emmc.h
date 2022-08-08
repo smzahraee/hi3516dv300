@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* SPDX-License-Identifier: GPL-2.0 */
 
 #undef TRACE_SYSTEM
 #define TRACE_SYSTEM emmc
