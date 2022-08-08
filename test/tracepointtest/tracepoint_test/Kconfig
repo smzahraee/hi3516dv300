@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: GPL-2.0
+
+config TRACEPOINT_TEST
+  tristate "Test Tracepoint For Vendor Hooks"
+  default m
+  help
+    Enable test tracepoint for vendor hooks
+    Allow vendor modules to attach driver hooks defined via
+    DECLARE_HOOK or DECLARE_RESTRICTED_HOOK
