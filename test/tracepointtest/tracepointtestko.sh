@@ -26,17 +26,22 @@
 ################################################################################
 
 CURRENT_DIR=$(pwd)
-KO_DIR=$CURRENT_DIR/kofile
+KO_DIR=${CURRENT_DIR}/kofile
 
 insmod_ko() {
-  for dir in $(ls $KO_DIR); do
-    if [[ "$dir" != "tracepoint_test.ko" ]]; then
-      insmod $KO_DIR/$dir
-      echo "$KO_DIR/$dir is loaded"
+  for file in $(ls ${KO_DIR}); do
+    if [[ "${file}" != "tracepoint_test.ko" ]]; then
+      insmod ${KO_DIR}/${file}
+      echo "${KO_DIR}/${file} is loaded"
     fi
   done
 
-  insmod $KO_DIR/tracepoint_test.ko
+  if [ -e ${KO_DIR}/tracepoint_test.ko ]; then
+    insmod ${KO_DIR}/tracepoint_test.ko
+  else
+    echo "no such file tracepoint_test.ko"
+    exit 1
+  fi
 
   arr=(vendor_do_mmap vendor_do_mprotect_pkey vendor_aml_emmc_partition vendor_fake_boot_partition)
   for i in ${arr[@]}; do
@@ -50,9 +55,9 @@ insmod_ko() {
 }
 
 rmmod_ko() {
-  for dir in $(ls $KO_DIR); do
-      rmmod $KO_DIR/$dir
-      echo "$KO_DIR/$dir is removed"
+  for dir in $(ls ${KO_DIR}); do
+      rmmod ${KO_DIR}/${dir}
+      echo "${KO_DIR}/${dir} is removed"
   done
 }
 
