@@ -36,28 +36,32 @@ DRIVERS_TRACEPOINT_DIR=${ROOT_DIR}/out/kernel/src_tmp/linux-5.10/drivers/tracepo
 CONFIG_DIR=${ROOT_DIR}/out/kernel/src_tmp/linux-5.10/arch/arm64/configs
 
 copy() {
-  echo "copy $1 to $2"
-  cp -rf $1 $2
+  SOURCE_PATH=$1
+  TARGET_PATH=$2
+  echo "copy ${SOURCE_PATH} to ${TARGET_PATH}"
+  cp -rf ${SOURCE_PATH} ${TARGET_PATH}
 }
 
 modify_config() {
+  SOURCE_FILE=$1
+  TARGET_FILE=$2
   if [ -e ${CONFIG_DIR}/tmp ]; then
     rm -f ${CONFIG_DIR}/tmp
   fi
 
-  cp -f ${CONFIG_DIR}/$2 ${CONFIG_DIR}/$2_tmpfile
+  cp -f ${CONFIG_DIR}/${TARGET_FILE} ${CONFIG_DIR}/${TARGET_FILE}_tmpfile
 
   while read line; do
     echo "$line" >>${CONFIG_DIR}/tmp
-  done <${CONFIG_DIR}/$2
+  done <${CONFIG_DIR}/${TARGET_FILE}
 
   while read line; do
     if [[ "$line" != "#"* ]]; then
       echo "$line" >>${CONFIG_DIR}/tmp
     fi
-  done <$1
+  done <${SOURCE_FILE}
 
-  mv ${CONFIG_DIR}/tmp ${CONFIG_DIR}/$2
+  mv ${CONFIG_DIR}/tmp ${CONFIG_DIR}/${TARGET_FILE}
 }
 
 modify_files() {
@@ -104,7 +108,7 @@ compile() {
   export DEVICE_NAME=rk3568
   export DEVICE_COMPANY=rockchip
   export PRODUCT_PATH=${ROOT_DIR}/out/kernel/vendor/hihope/rk3568
-  bash -c ./make-ohos.sh TB-RK3568X0 >null
+  ./make-ohos.sh TB-RK3568X0 >null
   if [ $? -ne 0 ]; then
     echo "compile failed"
     exit 1
@@ -128,9 +132,11 @@ restore() {
   CONFIGNAME=rockchip_linux_defconfig
   KCONFIG=${DRIVERS_DIR}/Kconfig
   MAKEFILE=${DRIVERS_DIR}/Makefile
+  HEADERFILE=${TRACEPOINT_INCLUDE_DIR}/emmc.h
   VENDOR_HOOKS=${DRIVERS_DIR}/hooks/vendor_hooks.c
 
   rm -rf ${DRIVERS_TRACEPOINT_DIR}
+  rm -rf ${HEADERFILE}
   mv -f ${CONFIG_DIR}/${CONFIGNAME}_tmpfile ${CONFIG_DIR}/${CONFIGNAME}
   mv -f ${KCONFIG}_tmpfile ${KCONFIG}
   mv -f ${MAKEFILE}_tmpfile ${MAKEFILE}
