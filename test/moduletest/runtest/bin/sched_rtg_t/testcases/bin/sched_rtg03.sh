@@ -29,9 +29,9 @@ source tst_oh.sh
 
 do_setup()
 {
-    aa start -b ohos.samples.ecg -a ohos.samples.ecg.MainAbility
+    sh create_process.sh 1
     sleep 1
-    PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
+    PID=$(ps -ef | grep "create_process" | grep -v grep | awk '{print $2}')
 }
 
 do_test()
@@ -72,20 +72,20 @@ set_check_rtgid_debug()
     fi
 
     local _rtg_id=$(cat /proc/sched_rtg_debug | grep RTG_ID | grep -v grep | awk '{print $3}')
-    local _rtg_pid=$(cat /proc/sched_rtg_debug | grep ohos.samples.ec | grep -v grep | awk '{print $3}')
+    local _rtg_pid=$(cat /proc/sched_rtg_debug | grep $PID | grep -v grep | awk '{print $3}')
     if [ $_set_rtgid -ne 0 ]; then
         if [ $_rtg_id -eq $_expect_rtgid ]; then
             tst_res TPASS "RTG_ID $_rtg_id exists in $_sched_rtg_debug expected."
             if [ $_rtg_pid -eq $PID ]; then
-                tst_res TPASS "PID $_pid exists in $rtg_pid expected."
+                tst_res TPASS "PID $_pid exists in $_sched_rtg_debug expected."
             else
-                tst_res TFAIL "PID $_pid not exists in $rtg_pid unexpected!"
+                tst_res TFAIL "PID $_pid not exists in $_sched_rtg_debug unexpected!"
             fi
         else
             tst_res TFAIL "RTG_ID $_rtg_id not exists in $_sched_rtg_debug unexpected!"
         fi
     else
-        cat $_sched_rtg_debug | grep ohos.samples.ec
+        cat $_sched_rtg_debug | grep $PID
         if [ $? -ne 0 ]; then
             tst_res TPASS "process $_pid rtgid set to 0 expected."
         else
@@ -96,7 +96,8 @@ set_check_rtgid_debug()
 
 do_clean()
 {
-    aa force-stop ohos.samples.ecg
+    ps -ef | grep "create_process" | grep -v "grep" | cut -c 9-18  \
+    | xargs kill -9
 }
 
 do_setup

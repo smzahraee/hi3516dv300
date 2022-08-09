@@ -29,9 +29,9 @@ source tst_oh.sh
 
 do_setup()
 {
-    aa start -b ohos.samples.ecg -a ohos.samples.ecg.MainAbility
+    sh create_process.sh 1
     sleep 1
-    PID=$(ps -ef | grep ohos.samples.ecg | grep -v grep | awk '{print $2}')
+    PID=$(ps -ef | grep "create_process" | grep -v grep | awk '{print $2}')
 }
 
 do_test()
@@ -90,7 +90,8 @@ do_test()
 
 do_clean()
 {
-    aa force-stop ohos.samples.ecg
+    ps -ef | grep "create_process" | grep -v "grep" | cut -c 9-18  \
+    | xargs kill -9
 }
 
 do_setup
