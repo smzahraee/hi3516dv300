@@ -47,6 +47,8 @@ group("linuxkerneltest") {
       ":accesstokenid_test",
       ":init_runtest",
       "fuzztest:fuzztest",
+
+      #"kernel_ltp:HatsKernelTest",
     ]
     if ("$device_name" == "rk3568") {
       deps += [ "tracepointtest:tracepointtest" ]
