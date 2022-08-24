@@ -48,8 +48,5 @@ group("linuxkerneltest") {
       ":init_runtest",
       "fuzztest:fuzztest",
     ]
-    if ("$device_name" == "rk3568") {
-      deps += [ "tracepointtest:tracepointtest" ]
-    }
   }
 }
