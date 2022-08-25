@@ -25,6 +25,8 @@
 #
 ################################################################################
 
+set -e
+
 CURRENT_DIR=$(pwd)
 KO_DIR=${CURRENT_DIR}/kofile
 
@@ -36,7 +38,7 @@ insmod_ko() {
     fi
   done
 
-  if [ -e ${KO_DIR}/tracepoint_test.ko ]; then
+  if [ -e "${KO_DIR}/tracepoint_test.ko" ]; then
     insmod ${KO_DIR}/tracepoint_test.ko
   else
     echo "no such file tracepoint_test.ko"
@@ -44,6 +46,7 @@ insmod_ko() {
   fi
 
   arr=(vendor_do_mmap vendor_do_mprotect_pkey vendor_aml_emmc_partition vendor_fake_boot_partition)
+  set +e
   for i in ${arr[@]}; do
     dmesg | grep $i >/dev/null
     if [ $? -eq 0 ]; then
@@ -52,6 +55,7 @@ insmod_ko() {
       echo "tracepoint $i failed"
     fi
   done
+  set -e
 }
 
 rmmod_ko() {
@@ -62,7 +66,7 @@ rmmod_ko() {
 }
 
 main() {
-  if [[ $1 == "rmmod_ko" ]]; then
+  if [[ "$1" == "rmmod_ko" ]]; then
     rmmod_ko
   else
     insmod_ko
