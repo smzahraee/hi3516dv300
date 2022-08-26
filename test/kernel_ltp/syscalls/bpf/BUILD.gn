@@ -1,0 +1,57 @@
+# Copyright (C) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import("//kernel/linux/build/test/kernel_ltp/kernel_interface_template.gni")
+
+_output_dir = "${root_out_dir}/tests/ltp_testcases/SyscallsTest"
+
+declare_args() {
+  bpf_sources = [
+    "//third_party/ltp/testcases/kernel/syscalls/bpf/bpf_common.c",
+    "//third_party/ltp/testcases/kernel/syscalls/bpf/bpf_common.h",
+  ]
+}
+kernel_interface_bin("bpf_map01") {
+  output_dir = "${_output_dir}"
+  sources = bpf_sources
+  sources += [ "//third_party/ltp/testcases/kernel/syscalls/bpf/bpf_map01.c" ]
+}
+
+kernel_interface_bin("bpf_prog01") {
+  output_dir = "${_output_dir}"
+  sources = bpf_sources
+  sources += [ "//third_party/ltp/testcases/kernel/syscalls/bpf/bpf_prog01.c" ]
+}
+
+kernel_interface_bin("bpf_prog02") {
+  output_dir = "${_output_dir}"
+  sources = bpf_sources
+  sources += [ "//third_party/ltp/testcases/kernel/syscalls/bpf/bpf_prog02.c" ]
+}
+
+kernel_interface_bin("bpf_prog03") {
+  output_dir = "${_output_dir}"
+  sources = bpf_sources
+  sources += [ "//third_party/ltp/testcases/kernel/syscalls/bpf/bpf_prog03.c" ]
+}
+
+kernel_interface_bin("bpf_prog04") {
+  output_dir = "${_output_dir}"
+  sources = bpf_sources
+  sources += [ "//third_party/ltp/testcases/kernel/syscalls/bpf/bpf_prog04.c" ]
+}
+
+kernel_interface_bin("bpf_prog05") {
+  output_dir = "${_output_dir}"
+  sources = bpf_sources
+  sources += [ "//third_party/ltp/testcases/kernel/syscalls/bpf/bpf_prog05.c" ]
+}

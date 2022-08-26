@@ -1,0 +1,28 @@
+# Copyright (C) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+'HAVE_MALLINFO' 'false'
+'HAVE_MALLOPT' 'false'
+'HAVE_PREADV2' 'false'
+'HAVE_PROFIL' 'false'
+'HAVE_PWRITEV2' 'false'
+'HAVE_STRUCT_FANOTIFY_EVENT_INFO_FID_FSID___VAL' 'true'
+'HAVE_RENAMEAT2' 'false'
+'HAVE_STATX' 'false'
+'HAVE_STRUCT_LOOP_CONFIG' 'true'
+'HAVE_STRUCT_STATX' 'false'
+'HAVE_STRUCT_STATX_TIMESTAMP' 'false'
+'HAVE_STRUCT_TERMIO' 'false'
+'HAVE_ASM_LDT_H' 'false'
+'HAVE_PKEY_MPROTECT' 'false'
+'_LINUX_KERNEL_H' 'true'
+'HAVE_STRUCT_MMSGHDR ' 'true'

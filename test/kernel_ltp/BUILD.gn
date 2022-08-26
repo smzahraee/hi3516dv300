@@ -1,0 +1,122 @@
+# Copyright (C) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+ltp_source_dir = "third_party/ltp"
+ltp_script_dir = "kernel/linux/build/test/kernel_ltp"
+
+group("HatsKernelTest") {
+  testonly = true
+  deps = [ "syscalls:HatsSyscallsTest" ]
+}
+
+static_library("kernel_ltp_test") {
+  deps = [ ":generate_config" ]
+  include_dirs = [
+    "${root_build_dir}/tests/ltp_testcases/ltp/include",
+    "${root_build_dir}/tests/ltp_testcases/ltp/include/old",
+  ]
+  cflags = [ "-w" ]
+  defines = [
+    "LTPLIB",
+    "HAVE_ATOMIC_MEMORY_MODEL=1",
+    "HAVE_STRUCT_FILE_HANDLE",
+  ]
+  sources = [
+    "//third_party/ltp/lib/cloner.c",
+    "//third_party/ltp/lib/errnos.h",
+    "//third_party/ltp/lib/get_path.c",
+    "//third_party/ltp/lib/parse_opts.c",
+    "//third_party/ltp/lib/random_range.c",
+    "//third_party/ltp/lib/safe_file_ops.c",
+    "//third_party/ltp/lib/safe_macros.c",
+    "//third_party/ltp/lib/safe_net.c",
+    "//third_party/ltp/lib/safe_pthread.c",
+    "//third_party/ltp/lib/safe_stdio.c",
+    "//third_party/ltp/lib/self_exec.c",
+    "//third_party/ltp/lib/signame.h",
+    "//third_party/ltp/lib/tlibio.c",
+    "//third_party/ltp/lib/tst_af_alg.c",
+    "//third_party/ltp/lib/tst_ansi_color.c",
+    "//third_party/ltp/lib/tst_arch.c",
+    "//third_party/ltp/lib/tst_assert.c",
+    "//third_party/ltp/lib/tst_bool_expr.c",
+    "//third_party/ltp/lib/tst_buffers.c",
+    "//third_party/ltp/lib/tst_capability.c",
+    "//third_party/ltp/lib/tst_cgroup.c",
+    "//third_party/ltp/lib/tst_checkpoint.c",
+    "//third_party/ltp/lib/tst_checksum.c",
+    "//third_party/ltp/lib/tst_clocks.c",
+    "//third_party/ltp/lib/tst_clone.c",
+    "//third_party/ltp/lib/tst_cmd.c",
+    "//third_party/ltp/lib/tst_coredump.c",
+    "//third_party/ltp/lib/tst_cpu.c",
+    "//third_party/ltp/lib/tst_crypto.c",
+    "//third_party/ltp/lib/tst_device.c",
+    "//third_party/ltp/lib/tst_dir_is_empty.c",
+    "//third_party/ltp/lib/tst_fill_file.c",
+    "//third_party/ltp/lib/tst_fill_fs.c",
+    "//third_party/ltp/lib/tst_fips.c",
+    "//third_party/ltp/lib/tst_fs_has_free.c",
+    "//third_party/ltp/lib/tst_fs_link_count.c",
+    "//third_party/ltp/lib/tst_fs_setup.c",
+    "//third_party/ltp/lib/tst_fs_type.c",
+    "//third_party/ltp/lib/tst_get_bad_addr.c",
+    "//third_party/ltp/lib/tst_hugepage.c",
+    "//third_party/ltp/lib/tst_ioctl.c",
+    "//third_party/ltp/lib/tst_kconfig.c",
+    "//third_party/ltp/lib/tst_kernel.c",
+    "//third_party/ltp/lib/tst_kvercmp.c",
+    "//third_party/ltp/lib/tst_lockdown.c",
+    "//third_party/ltp/lib/tst_memutils.c",
+    "//third_party/ltp/lib/tst_mkfs.c",
+    "//third_party/ltp/lib/tst_module.c",
+    "//third_party/ltp/lib/tst_net.c",
+    "//third_party/ltp/lib/tst_netdevice.c",
+    "//third_party/ltp/lib/tst_parse_opts.c",
+    "//third_party/ltp/lib/tst_path_has_mnt_flags.c",
+    "//third_party/ltp/lib/tst_pid.c",
+    "//third_party/ltp/lib/tst_process_state.c",
+    "//third_party/ltp/lib/tst_res.c",
+    "//third_party/ltp/lib/tst_resource.c",
+    "//third_party/ltp/lib/tst_rtctime.c",
+    "//third_party/ltp/lib/tst_rtnetlink.c",
+    "//third_party/ltp/lib/tst_safe_file_at.c",
+    "//third_party/ltp/lib/tst_safe_io_uring.c",
+    "//third_party/ltp/lib/tst_safe_macros.c",
+    "//third_party/ltp/lib/tst_safe_sysv_ipc.c",
+    "//third_party/ltp/lib/tst_safe_timerfd.c",
+    "//third_party/ltp/lib/tst_sig.c",
+    "//third_party/ltp/lib/tst_sig_proc.c",
+    "//third_party/ltp/lib/tst_status.c",
+    "//third_party/ltp/lib/tst_supported_fs_types.c",
+    "//third_party/ltp/lib/tst_sys_conf.c",
+    "//third_party/ltp/lib/tst_taint.c",
+    "//third_party/ltp/lib/tst_test.c",
+    "//third_party/ltp/lib/tst_timer.c",
+    "//third_party/ltp/lib/tst_timer_test.c",
+    "//third_party/ltp/lib/tst_tmpdir.c",
+    "//third_party/ltp/lib/tst_uid.c",
+    "//third_party/ltp/lib/tst_virt.c",
+    "//third_party/ltp/lib/tst_wallclock.c",
+  ]
+}
+
+action("generate_config") {
+  script = "generate_config.sh"
+  outputs = [ "${root_build_dir}/tests/ltp_testcases/output" ]
+  args = [
+    rebase_path("${root_build_dir}/../../${ltp_source_dir}"),
+    rebase_path("${root_build_dir}/../../${ltp_script_dir}"),
+    rebase_path("${root_build_dir}/tests/ltp_testcases"),
+  ]
+}
