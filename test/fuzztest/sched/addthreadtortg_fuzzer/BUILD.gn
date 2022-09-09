@@ -22,7 +22,7 @@ ohos_fuzztest("AddThreadToRtgFuzzTest") {
       "//kernel/linux/build/test/fuzztest/sched/addthreadtortg_fuzzer"
 
   include_dirs = [
-    "//foundation/multimedia/image_standard/mock/native/include",
+    "//foundation/multimedia/image_framework/mock/native/include",
     "//foundation/resourceschedule/frame_aware_sched/common/include",
     "//third_party/bounds_checking_function/include",
   ]
@@ -37,7 +37,7 @@ ohos_fuzztest("AddThreadToRtgFuzzTest") {
   ]
 
   sources = [
-    "//foundation/multimedia/image_standard/mock/native/src/HiLog.cpp",
+    "//foundation/multimedia/image_framework/mock/native/src/HiLog.cpp",
     "//foundation/resourceschedule/frame_aware_sched/interfaces/innerkits/frameintf/rtg_interface.cpp",
     "addthreadtortg_fuzzer.cpp",
   ]
