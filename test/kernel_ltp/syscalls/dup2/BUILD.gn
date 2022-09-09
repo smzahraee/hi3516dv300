@@ -1,0 +1,50 @@
+# Copyright (C) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import("//kernel/linux/build/test/kernel_ltp/kernel_interface_template.gni")
+
+_output_dir = "${root_out_dir}/tests/ltp_testcases/SyscallsTest"
+
+kernel_interface_bin("dup201") {
+  output_dir = "${_output_dir}"
+  sources = [ "//third_party/ltp/testcases/kernel/syscalls/dup2/dup201.c" ]
+}
+
+kernel_interface_bin("dup202") {
+  output_dir = "${_output_dir}"
+  sources = [ "//third_party/ltp/testcases/kernel/syscalls/dup2/dup202.c" ]
+}
+
+kernel_interface_bin("dup203") {
+  output_dir = "${_output_dir}"
+  sources = [ "//third_party/ltp/testcases/kernel/syscalls/dup2/dup203.c" ]
+}
+
+kernel_interface_bin("dup204") {
+  output_dir = "${_output_dir}"
+  sources = [ "//third_party/ltp/testcases/kernel/syscalls/dup2/dup204.c" ]
+}
+
+kernel_interface_bin("dup205") {
+  output_dir = "${_output_dir}"
+  sources = [ "//third_party/ltp/testcases/kernel/syscalls/dup2/dup205.c" ]
+}
+
+kernel_interface_bin("dup206") {
+  output_dir = "${_output_dir}"
+  sources = [ "//third_party/ltp/testcases/kernel/syscalls/dup2/dup206.c" ]
+}
+
+kernel_interface_bin("dup207") {
+  output_dir = "${_output_dir}"
+  sources = [ "//third_party/ltp/testcases/kernel/syscalls/dup2/dup207.c" ]
+}
