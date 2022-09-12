@@ -37,5 +37,9 @@ fi
 
 elif [ "$5" == "arm64" ];then
     cp ${2}/kernel/OBJ/${8}/arch/arm64/boot/Image ${3}/Image
+
+elif [ "$5" == "x86_64" ];then
+    cp ${2}/kernel/OBJ/${8}/arch/x86/boot/bzImage ${3}/bzImage
 fi
+
 popd
