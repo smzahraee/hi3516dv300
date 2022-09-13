@@ -71,7 +71,7 @@ set_check_rtgid_debug()
         tst_res TFAIL "process $_pid rtgid set to $_set_rtgid unexpected!"
     fi
 
-    local _rtg_id=$(cat /proc/sched_rtg_debug | grep RTG_ID | grep -v grep | awk '{print $3}')
+    local _rtg_id=$(cat /proc/sched_rtg_debug | grep RTG_ID | grep -v grep | awk '{print $3}' | head -n 1)
     local _rtg_pid=$(cat /proc/sched_rtg_debug | grep $PID | grep -v grep | awk '{print $3}')
     if [ $_set_rtgid -ne 0 ]; then
         if [ $_rtg_id -eq $_expect_rtgid ]; then
