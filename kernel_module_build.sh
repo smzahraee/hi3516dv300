@@ -35,6 +35,8 @@ if [ "$KERNEL_ARCH" == "arm" ];then
     kernel_image="uImage"
 elif [ "$KERNEL_ARCH" == "arm64" ];then
     kernel_image="Image"
+elif [ "$KERNEL_ARCH" == "x86_64" ];then
+    kernel_image="bzImage"
 fi
 export KERNEL_IMAGE=${kernel_image}
 LINUX_KERNEL_IMAGE_FILE=${LINUX_KERNEL_OBJ_OUT}/arch/${KERNEL_ARCH}/boot/${kernel_image}
