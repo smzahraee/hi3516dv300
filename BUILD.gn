@@ -25,6 +25,8 @@ if (target_cpu == "arm") {
   kernel_image = "uImage"
 } else if (target_cpu == "arm64") {
   kernel_image = "Image"
+} else if (target_cpu == "x86_64") {
+  kernel_image = "bzImage"
 }
 
 if (os_level == "mini" || os_level == "small") {
