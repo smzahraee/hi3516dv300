@@ -8,8 +8,9 @@
     "private": false,
     "scripts": {},
     "dirs": {},
-    "scripts": {},
-    "segment": {},
+    "segment": {
+        "destPath": "kernel/linux/build"
+    },
     "component": {
         "name": "linux",
         "subsystem": "kernel",
