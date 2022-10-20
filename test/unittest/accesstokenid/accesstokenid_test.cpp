@@ -169,7 +169,7 @@ static void GetCurToken(unsigned long long *token, unsigned long long *ftoken)
 
 static void *CheckChildThreadInheritance(void *args)
 {
-    struct tokeninfo *tinfo = (struct tokeninfo *) args;
+    struct tokeninfo *tinfo = static_cast<struct tokeninfo *> (args);
 
     tinfo->pid = getpid();
     tinfo->tid = gettid();
@@ -182,7 +182,7 @@ static void *CheckChildThreadInheritance(void *args)
 
 static void *CheckChildThreadSetIndepent(void *args)
 {
-    struct tokeninfo *tinfo = (struct tokeninfo *) args;
+    struct tokeninfo *tinfo = static_cast<struct tokeninfo *> (args);
     unsigned long long tokenSet = GenRand64();
     unsigned long long ftokenSet = GenRand64();
     unsigned long long tokenidGet = INVAL_TOKEN;
