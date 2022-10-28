@@ -91,7 +91,7 @@ void SetUidAndGrpOther()
     return;
 }
 
-void SetRandTokenAndCheck(unsigned long long *dataToken)
+void SetRandTokenAndCheck(const unsigned long long *dataToken)
 {
     pid_t pid = getpid();
     pid_t tid = syscall(__NR_gettid);
@@ -214,7 +214,7 @@ int SetfTokenid(unsigned long long *ftoken)
     return 0;
 }
 
-void SetRandfTokenAndCheck(unsigned long long *dataFtoken)
+void SetRandfTokenAndCheck(const unsigned long long *dataFtoken)
 {
     pid_t pid = getpid();
     pid_t tid = syscall(__NR_gettid);

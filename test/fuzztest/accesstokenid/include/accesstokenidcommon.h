@@ -65,7 +65,7 @@ int SetfTokenid(unsigned long long *ftoken);
 void SetUidAndGrp();
 void SetUidAndGrpOther();
 void GetCurToken(unsigned long long *token);
-void SetRandTokenAndCheck(unsigned long long *dataToken);
+void SetRandTokenAndCheck(const unsigned long long *dataToken);
 void TokenTest(unsigned long long *dataToken);
 void ThreadTest(unsigned long long *dataToken);
 int AccessTokenidThreadTest(uint8_t *dataToken);
@@ -73,7 +73,7 @@ int AccessTokenidGrpTest(uint8_t *dataToken);
 int AccessTokenidGrpTestOther(uint8_t *dataToken);
 
 void GetCurfToken(unsigned long long *ftoken);
-void SetRandfTokenAndCheck(unsigned long long *dataFtoken);
+void SetRandfTokenAndCheck(const unsigned long long *dataFtoken);
 void FTokenTest(unsigned long long *dataFtoken);
 void ThreadTest(unsigned long long *dataFtoken);
 int AccessfTokenidThreadTest(uint8_t *dataFtoken);
