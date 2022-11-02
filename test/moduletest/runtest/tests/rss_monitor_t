@@ -1,11 +1,7 @@
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
+# SPDX-License-Identifier: GPL-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,19 +10,17 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: rss_monitor_t
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: rss_monitor_t testcase list
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Liu Ke - liuke94@huawei.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Sep 20 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
-mem_debug_t
-rss_monitor_t
+
+rss_monitor01 rss_monitor01.sh
+rss_monitor02 rss_monitor02.sh
+rss_monitor03 rss_monitor03.sh
+
