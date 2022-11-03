@@ -30,3 +30,4 @@ sched_rtg_t
 enhancedf2fs_t
 mem_debug_t
 rss_monitor_t
+purgeable_t
