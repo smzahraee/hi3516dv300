@@ -25,15 +25,13 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
-    losetup /dev/block/loop1 $IMG_FILE
-    mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
+
 }
 
 do_test()
 {
     ret=0
-    _ssr_path=/sys/fs/f2fs/loop1
+    _ssr_path=/sys/fs/f2fs/${DISK_NAME}
 
     tst_res TINFO "Start test hierarchical SSR threshold configuration interface."
 
@@ -70,7 +68,7 @@ do_test()
 
 confirm_value()
 {
-    local result_out1=$(cat /sys/fs/f2fs/loop1/$1)
+    local result_out1=$(cat /sys/fs/f2fs/${DISK_NAME}/$1)
     if [ "$result_out1" == "5242880" ]; then
         tst_res TPASS "$1 is 5242880 expected."
         return 0
@@ -82,7 +80,7 @@ confirm_value()
 
 confirm_change_value()
 {
-    local result_out2=$(cat /sys/fs/f2fs/loop1/$1)
+    local result_out2=$(cat /sys/fs/f2fs/${DISK_NAME}/$1)
     if [ "$result_out2" == "6000000" ]; then
         tst_res TPASS "$1 is 6000000 expected."
     else
@@ -97,8 +95,6 @@ do_clean()
     echo $init_value2 > $_ssr_path/hc_warm_data_lower_limit
     echo $init_value3 > $_ssr_path/hc_hot_node_lower_limit
     echo $init_value4 > $_ssr_path/hc_warm_node_lower_limit
-    losetup -d /dev/block/loop1
-    umount /mnt/f2fs_mount
 }
 
 do_setup

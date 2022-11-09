@@ -25,15 +25,13 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
-    losetup /dev/block/loop1 $IMG_FILE
-    mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
+
 }
 
 do_test()
 {
     ret=0
-    _ssr_path=/sys/fs/f2fs/loop1
+    _ssr_path=/sys/fs/f2fs/${DISK_NAME}
 
     tst_res TINFO "Start test hierarchical SSR waterline configuration interface."
 
@@ -96,8 +94,7 @@ do_clean()
     echo $init_value2 > $_ssr_path/hc_warm_data_waterline
     echo $init_value3 > $_ssr_path/hc_hot_node_waterline
     echo $init_value4 > $_ssr_path/hc_warm_node_waterline
-    losetup -d /dev/block/loop1
-    umount /mnt/f2fs_mount
+
 }
 
 do_setup

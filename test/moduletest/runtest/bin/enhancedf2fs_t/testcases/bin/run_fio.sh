@@ -22,10 +22,11 @@
 ################################################################################
 
 run_fio()
-{
-    ./fio --name=rw_bg --numjobs=1 --filename=/mnt/f2fs_mount/fio-test.file  \
-     --bs=32768K --rw=read --ioengine=psync --refill_buffers --group_reporting  \
-     --runtime=360 --time_based --filesize=128M     
+{   
+    mkdir $DISK_PATH/f2fs_test
+    ./fio --name=rw_bg --numjobs=1 --filename=$DISK_PATH/f2fs_test/fio-test.file  \
+    --bs=32768K --rw=read --ioengine=sync --refill_buffers --group_reporting  \
+    --runtime=360 --time_based --filesize=128M
 }
 
 run_fio

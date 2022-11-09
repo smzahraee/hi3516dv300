@@ -27,7 +27,7 @@ source performance_init.sh
 
 do_setup()
 {
-
+     
 }
 
 do_test()
@@ -37,7 +37,7 @@ do_test()
      tst_res TINFO "Start test discard size >= 1 block in performance mode."
 
      cat /sys/kernel/debug/tracing/trace_pipe | grep issue_discard >> log05.txt &
-     mkdir /mnt/f2fs_mount/test5
+     mkdir $DISK_PATH/test5
      if [ $? -eq 0 ]; then
           tst_res TPASS "Creation test5 dir successfully."
      else
@@ -47,10 +47,10 @@ do_test()
      local i=0
      while [ $i -lt 200 ]
      do
-          dd if=/dev/zero of=/mnt/f2fs_mount/test5/image$i bs=4k count=1
+          dd if=/dev/zero of=$DISK_PATH/test5/image$i bs=4k count=1
           i=$((i+1))
      done
-     rm -rf /mnt/f2fs_mount/test5/image*[1,3,5,7,9]
+     echo "y" | rm $DISK_PATH/test5/image*[1,3,5,7,9]
      if [ $? -eq 0 ]; then
           tst_res TPASS "Delete successfully."
      else
@@ -62,9 +62,9 @@ do_test()
      kill %1
      local blklen=$(cat log05.txt | awk 'NR == 1' | awk -F '0x' '{print$3}')
      if [ $((16#$blklen)) -ge 1 ];then
-          tst_res TPASS "Log printing successfully."
+          tst_res TPASS "blklen = $blklen >= 1 successfully."
      else
-          tst_res TFAIL "Log printing failed."
+          tst_res TFAIL "blklen = $blklen >= 1 failed."
           ret=$(( $ret + 1 ))
      fi
 
@@ -79,9 +79,10 @@ do_test()
 
 do_clean()
 {
-     rm -rf log05.txt
-     losetup -d /dev/block/loop1
-     umount /mnt/f2fs_mount
+     echo "y" | rm $DISK_PATH/test5/*
+     rmdir $DISK_PATH/test5/
+     echo "y" | rm $DISK_PATH/f2fs_test/*
+     rmdir $DISK_PATH/f2fs_test/
 }
 
 do_setup

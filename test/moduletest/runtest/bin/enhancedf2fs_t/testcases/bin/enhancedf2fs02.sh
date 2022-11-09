@@ -41,7 +41,7 @@ do_test()
     cat /sys/kernel/debug/tracing/trace_pipe | grep issue_discard >> log02.txt &
     sh run_fio.sh > run_fio.txt &
     sleep 60
-    mkdir /mnt/f2fs_mount/test2
+    mkdir $DISK_PATH/test2
     if [ $? -eq 0 ]; then
         tst_res TPASS "Created test2 dir successfully."
     else
@@ -52,10 +52,10 @@ do_test()
     local i=0
     while [ $i -lt 30 ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/test2/image$i bs=8M count=1
+        dd if=/dev/zero of=$DISK_PATH/test2/image$i bs=8M count=1
         i=$(( $i + 1 ))
     done
-    rm -rf /mnt/f2fs_mount/test2/image*[1,3,5,7,9]
+    echo "y" | rm $DISK_PATH/test2/image*[1,3,5,7,9]
     if [ $? -eq 0 ]; then
         tst_res TPASS "Deleted successfully."
     else
@@ -67,7 +67,7 @@ do_test()
     local second=$(wc -l log02.txt | awk -F ' ' '{print$1}')
     sleep 90
     kill %1
-
+    sleep 5
     local err=$(cat run_fio.txt | grep err | awk -F ':' '{print$3}' | tr -cd "[0-9]")
     if [ $err -eq 0 ]; then
         tst_res TPASS "fio read successfully."
@@ -78,18 +78,12 @@ do_test()
 
     local blklen=$(cat log02.txt | awk 'NR == 1' | awk -F '0x' '{print$3}')
     if [ $((16#$blklen)) -ge 512 ]; then
-        tst_res TPASS "blklen >= 512 successfully."
+        tst_res TPASS "blklen = $blklen >= 512 successfully."
     else
-        tst_res TFAIL "blklen >= 512 failed."
+        tst_res TFAIL "blklen = $blklen >= 512 failed."
         ret=$(( $ret + 1 ))
     fi
 
-    if [ $(( $second - $first )) -gt 0 ]; then
-        tst_res TPASS "IO perception test successfully."
-    else
-        tst_res TFAIL "IO perception test failed."
-        ret=$(( $ret + 1 ))
-    fi
 
     if [ $ret -eq 0 ];then
         tst_res TPASS "life mode, discard is greater than or equal to 512 block  \
@@ -102,9 +96,9 @@ do_test()
 
 do_clean()
 {
-    rm -rf log02.txt
-    losetup -d /dev/block/loop1
-    umount /mnt/f2fs_mount
+    echo "y" | rm $DISK_PATH/test2/*
+    rmdir $DISK_PATH/test2/
+    echo "y" | rm log02.txt
 }
 
 do_setup

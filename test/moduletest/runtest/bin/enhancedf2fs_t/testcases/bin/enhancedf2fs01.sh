@@ -35,8 +35,15 @@ do_test()
      local ret=0
 
      tst_res TINFO "Start test discard size >= 512 blocks in life mode."
+     undiscard_num=$(cat /proc/fs/f2fs/${DISK_NAME}/undiscard_info |tr -cd "[0-9]")
+     if [ "$undiscard_num" != "" ] ;then
+          tst_res TPASS "Get undiscard info successfully, number is ${undiscard_num}."
+     else
+          tst_res TFAIL "Get undiscard info failed."
+          ret=$(( $ret + 1 ))
+     fi
      cat /sys/kernel/debug/tracing/trace_pipe | grep issue_discard >> log01.txt &
-     mkdir /mnt/f2fs_mount/test1
+     mkdir $DISK_PATH/test1
      if [ $? -eq 0 ]; then
           tst_res TPASS "Created test1 dir successfully."
      else
@@ -46,10 +53,10 @@ do_test()
      local i=0
      while [ $i -lt 30 ]
      do
-          dd if=/dev/zero of=/mnt/f2fs_mount/test1/image$i bs=8M count=1
+          dd if=/dev/zero of=$DISK_PATH/test1/image$i bs=8M count=1
           i=$(( $i + 1 ))
      done
-     rm -rf /mnt/f2fs_mount/test1/image*[1,3,5,7,9]
+     echo "y" | rm $DISK_PATH/test1/image*[1,3,5,7,9]
      if [ $? -eq 0 ]; then
           tst_res TPASS "Deleted successfully."
      else
@@ -62,9 +69,9 @@ do_test()
 
      local blklen=$(cat log01.txt | awk 'NR == 1' | awk -F '0x' '{print$3}')
      if [ $((16#$blklen)) -ge 512 ]; then
-          tst_res TPASS "blklen >= 512 successfully."
+          tst_res TPASS "blklen = $blklen >= 512 successfully."
      else
-          tst_res TFAIL "blklen >= 512 failed."
+          tst_res TFAIL "blklen = $blklen >= 512 failed."
           ret=$(( $ret + 1 ))
      fi
 
@@ -77,9 +84,8 @@ do_test()
 
 do_clean()
 {
-     rm log01.txt
-     losetup -d /dev/block/loop1
-     umount /mnt/f2fs_mount
+     echo "y" | rm $DISK_PATH/test1/*
+     rmdir $DISK_PATH/test1/
 }
 
 do_setup

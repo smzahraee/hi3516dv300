@@ -25,9 +25,7 @@ source tst_oh.sh
 
 state_init()
 {
-    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
-    losetup /dev/block/loop1 $IMG_FILE
-    mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
+    mkdir $DISK_PATH/f2fs_test
 }
 
 performance_init()
@@ -39,9 +37,13 @@ performance_init()
     local a=$(cat $segs_path | grep segs | awk -F ' ' '{print$3}')
     echo "start Embedded file system $(date +%Y%m%d%H%M%S)...." >> log06.txt
     local i=0
-    while [ $i -lt 37 ]
+    df -h | grep -w "$DISK_NAME" | awk -F " " '{print $2}' > 1.txt
+    total_mem=$(sed 's/.$//' 1.txt)
+    mid_mem=$(expr $total_mem \* 90)
+    expected_mem=$(expr $mid_mem / 100)
+    while [ $i -lt $expected_mem ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/image$i bs=512M count=1
+        dd if=/dev/zero of=$DISK_PATH/f2fs_test/image$i bs=1G count=1
         i=$(( $i + 1 ))
     done
     echo "end Embedded file system $(date +%Y%m%d%H%M%S)...." >> log06.txt
@@ -58,7 +60,7 @@ performance_init()
     fi
 
     sleep 60
-    if [ $(cat /sys/fs/f2fs/loop1/discard_type) == '2' ];then
+    if [ $(cat /sys/fs/f2fs/${DISK_NAME}/discard_type) == '2' ];then
         tst_res TPASS "performance model successfully."
     else
         tst_res TFAIL "performance model failed."
@@ -78,6 +80,8 @@ performance_init()
     else
         tst_res TFAIL "performance_init failed!"
     fi
+
+    echo "y" | rm 1.txt
 }
 
 state_init
