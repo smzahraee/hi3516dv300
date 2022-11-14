@@ -23,8 +23,7 @@
 
 delete_catalogue()
 {
-    rm /mnt/f2fs_mount/*
-    rmdir /mnt/f2fs_mount
+    
 }
 
 echo "***************************enhanced UNINIT START**************************"

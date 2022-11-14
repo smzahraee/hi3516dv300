@@ -25,9 +25,7 @@ source tst_oh.sh
 
 state_init()
 {
-    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
-    losetup /dev/block/loop1 $IMG_FILE
-    mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
+
 }
 
 life_init()
@@ -51,7 +49,7 @@ life_init()
         ret=$(( $ret + 1 ))
     fi
 
-    if [ $(cat /sys/fs/f2fs/loop1/discard_type) == '0' ];then
+    if [ $(cat /sys/fs/f2fs/${DISK_NAME}/discard_type) == '0' ];then
         tst_res TPASS "life model successfully."
     else
         tst_res TFAIL "life model failed."

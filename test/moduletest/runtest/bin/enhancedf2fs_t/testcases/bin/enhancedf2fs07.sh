@@ -25,22 +25,20 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
-    losetup /dev/block/loop1 $IMG_FILE
-    mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
+
 }
 
 do_test()
 {
     local ret=0
-    _ssr_path=/sys/fs/f2fs/loop1
+    _ssr_path=/sys/fs/f2fs/${DISK_NAME}
 
     tst_res TINFO "Start test hierarchical SSR control interface."
 
     if [ $(cat $_ssr_path/hc_enable) == '0' ]; then
-        tst_res TPASS "default is 0 successfully."
+        tst_res TPASS "$_ssr_path default is 0 successfully."
     else
-        tst_res TFAIL "default not is 0 failed."
+        tst_res TFAIL "$_ssr_path default not is 0 failed."
         ret=$(( $ret + 1 ))
     fi
 
@@ -56,8 +54,6 @@ do_test()
 do_clean()
 {
     echo $temp > $_ssr_path/hc_enable
-    losetup -d /dev/block/loop1 
-    umount /mnt/f2fs_mount
 }
 
 do_setup

@@ -38,7 +38,7 @@ do_test()
 
      cat /sys/kernel/debug/tracing/trace_pipe | grep issue_discard >> log03.txt &
      sleep 60
-     mkdir /mnt/f2fs_mount/test3
+     mkdir $DISK_PATH/test3
      if [ $? -eq 0 ]; then
           tst_res TPASS "Creation test3 dir successfully."
      else
@@ -49,10 +49,10 @@ do_test()
      local i=0
      while [ $i -lt 50 ]
      do
-          dd if=/dev/zero of=/mnt/f2fs_mount/test3/image$i bs=512K count=1
+          dd if=/dev/zero of=$DISK_PATH/test3/image$i bs=512K count=1
           i=$(( $i + 1 ))
      done
-     rm -rf /mnt/f2fs_mount/test3/image*[1,3,5,7,9]
+     echo "y" | rm $DISK_PATH/test3/image*[1,3,5,7,9]
      if [ $? -eq 0 ]; then
           tst_res TPASS "Deleted successfully."
      else
@@ -65,9 +65,9 @@ do_test()
 
      local blklen=$(cat log03.txt | awk 'NR == 1' | awk -F '0x' '{print$3}')
      if [ $((16#$blklen)) -ge 16 ];then
-          tst_res TPASS "blklen >= 16 successfully."
+          tst_res TPASS "blklen = $blklen >= 16 successfully."
      else
-          tst_res TFAIL "Log printing fail."
+          tst_res TFAIL "blklen = $blklen >= 16  fail."
           ret=$(( $ret + 1 ))
      fi
 
@@ -82,9 +82,10 @@ do_test()
 
 do_clean()
 {
-     rm -rf log03.txt
-     losetup -d /dev/block/loop1
-     umount /mnt/f2fs_mount
+     echo "y" | rm $DISK_PATH/test3/*
+     rmdir $DISK_PATH/test3/
+     echo "y" | rm $DISK_PATH/f2fs_test/*
+     rmdir $DISK_PATH/f2fs_test/
 }
 
 do_setup

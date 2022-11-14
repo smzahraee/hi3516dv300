@@ -20,19 +20,33 @@
 # History:     April 8 2022 - init scripts
 #
 ################################################################################
-export IMG_FILE=/data/image_f2fs
 
 create_catalogue()
 {
-    mkdir /mnt/f2fs_mount/
+    export DISK_PATH=$(mount | grep f2fs | cut -F 3)
+    export DISK_NAME=$(df -h |grep /dev/block |grep $DISK_PATH |awk '{print $1}' |cut -d "/" -f4)
+}
+
+test_remount()
+{
+	gc_merge_mount_opt=$(mount |grep gc_merge)
+	if [[ "$gc_merge_mount_opt" == "" ]] ;then
+		mount -o remount,gc_merge $DISK_PATH/
+		mount -o remount,nogc_merge $DISK_PATH/
+	else
+		mount -o remount,nogc_merge $DISK_PATH/
+		mount -o remount,gc_merge $DISK_PATH/
+	fi
+	mount -o remount,rw $DISK_PATH/
 }
 
 enable_init()
 {
-    dd if=/dev/zero of=$IMG_FILE bs=1M count=20480
+
 }
 
 echo "***************************ENHANCED INIT START***************************"
 create_catalogue
+test_remount
 enable_init
 echo "***************************ENHANCED INIT END*****************************"

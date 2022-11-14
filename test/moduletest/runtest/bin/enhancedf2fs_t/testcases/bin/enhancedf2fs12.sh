@@ -25,16 +25,14 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
-    losetup /dev/block/loop1 $IMG_FILE
-    mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
+    mkdir $DISK_PATH/f2fs_test
 }
 
 do_test()
 {
     local ret=0
     local _sys_path=/sys/kernel/debug/tracing
-    temp=$(cat /sys/fs/f2fs/loop1/gc_urgent)
+    temp=$(cat /sys/fs/f2fs/${DISK_NAME}/gc_urgent)
 
     tst_res TINFO "Start test GC function."
 
@@ -45,12 +43,12 @@ do_test()
     local i=0
     while [ $i -lt 512 ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/image$i bs=1M count=1
+        dd if=/dev/zero of=$DISK_PATH/f2fs_test/image$i bs=1M count=1
         i=$(( $i + 1 ))
     done
-    rm -rf /mnt/f2fs_mount/image*[1,3,5,7,9]
+    echo "y" | rm $DISK_PATH/f2fs_test/image*[1,3,5,7,9]
 
-    echo 1 > /sys/fs/f2fs/loop1/gc_urgent
+    echo 1 > /sys/fs/f2fs/${DISK_NAME}/gc_urgent
 
     sleep 60
     kill %1
@@ -69,11 +67,10 @@ do_test()
 }
 
 do_clean()
-{
-    rm -rf log12.txt
-    echo $temp > /sys/fs/f2fs/loop1/gc_urgent
-    losetup -d /dev/block/loop1 
-    umount /mnt/f2fs_mount
+{   
+    echo $temp > /sys/fs/f2fs/${DISK_NAME}/gc_urgent
+    echo "y" | rm $DISK_PATH/f2fs_test/*
+    rmdir $DISK_PATH/f2fs_test
 }
 
 do_setup

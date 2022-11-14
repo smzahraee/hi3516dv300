@@ -25,9 +25,7 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
-    losetup /dev/block/loop1 $IMG_FILE
-    mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
+    mkdir $DISK_PATH/f2fs_test
 }
 
 do_test()
@@ -39,32 +37,32 @@ do_test()
     local i=0
     while [ $i -lt 32 ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/image$i bs=512M count=1
+        dd if=/dev/zero of=$DISK_PATH/f2fs_test/image$i bs=512M count=1
         i=$(( $i+ 1 ))
     done
 
-    mkdir /mnt/f2fs_mount/test11
+    mkdir $DISK_PATH/test11
     local i=0
     while [ $i -lt 5120 ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/test11/image$i bs=512k count=1
+        dd if=/dev/zero of=$DISK_PATH/test11/image$i bs=512k count=1
         i=$(( $i + 1 ))
     done
-    rm -rf /mnt/f2fs_mount/test11/image*[1,3,5,7,9]
+    echo "y" | rm $DISK_PATH/test11/image*[1,3,5,7,9]
 
-    echo 0 > /sys/fs/f2fs/loop1/hc_enable
+    echo 0 > /sys/fs/f2fs/${DISK_NAME}/hc_enable
     echo 1 > $_sys_path/tracing_on
     echo 1 > $_sys_path/events/f2fs/f2fs_grading_ssr_allocate/enable
 
     cat $_sys_path/trace_pipe | grep ssr >> log11.txt &
-    mkdir /mnt/f2fs_mount/test11/f2fs_grading_ssr_allocate
+    mkdir $DISK_PATH/test11/f2fs_grading_ssr_allocate
     local i=0
     while [ $i -lt 200 ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/test11/f2fs_grading_ssr_allocate/image$i bs=4k count=1
+        dd if=/dev/zero of=$DISK_PATH/test11/f2fs_grading_ssr_allocate/image$i bs=4k count=1
         i=$(( $i + 1 ))
     done
-    rm -rf /mnt/f2fs_mount/test11/f2fs_grading_ssr_allocate/image*[1,3,5,7,9]
+    echo "y" | rm $DISK_PATH/test11/f2fs_grading_ssr_allocate/image*[1,3,5,7,9]
 
     sleep 180
     kill %1
@@ -85,9 +83,12 @@ do_test()
 
 do_clean()
 {
-    rm -rf log11.txt
-    losetup -d /dev/block/loop1
-    umount /mnt/f2fs_mount
+    echo "y" | rm $DISK_PATH/test11/f2fs_grading_ssr_allocate/*
+    rmdir $DISK_PATH/test11/f2fs_grading_ssr_allocate/
+    echo "y" | rm $DISK_PATH/test11/*
+    rmdir $DISK_PATH/test11/
+    echo "y" | rm $DISK_PATH/f2fs_test/*
+    rmdir $DISK_PATH/f2fs_test/
 }
 
 do_setup

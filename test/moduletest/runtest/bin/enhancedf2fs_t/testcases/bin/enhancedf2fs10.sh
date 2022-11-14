@@ -25,9 +25,7 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkfs.f2fs -d1 -t1 -O quota $IMG_FILE
-    losetup /dev/block/loop1 $IMG_FILE
-    mount -t f2fs /dev/block/loop1 /mnt/f2fs_mount/
+    mkdir $DISK_PATH/
 }
 
 do_test()
@@ -38,34 +36,40 @@ do_test()
     tst_res TINFO "Start test hierarchical SSR recovery function is enabled."
 
     local i=0
-    while [ $i -lt 32 ]
+    df -h | grep -w "$DISK_NAME" | awk -F " " '{print $2}' > 1.txt
+    df -h | grep -w "$DISK_NAME" | awk -F " " '{print $3}' > 2.txt
+    total_mem=$(sed 's/.$//' 1.txt)
+    used_mem=$(sed 's/.$//' 2.txt | cut -d '.' -f1)
+    mid_mem=$(expr $total_mem - 2)
+    expected_mem=$(expr $mid_mem - $used_mem)
+    while [ $i -lt $expected_mem ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/image$i bs=512M count=1
+        dd if=/dev/zero of=$DISK_PATH/image$i bs=1G count=1
         i=$(( $i + 1 ))
     done
-    mkdir /mnt/f2fs_mount/test10
+    mkdir $DISK_PATH/test10
     local i=0
     while [ $i -lt 5120 ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/test10/image$i bs=512k count=1
+        dd if=/dev/zero of=$DISK_PATH/test10/image$i bs=512k count=1
         i=$(( $i + 1 ))
     done
-    rm -rf /mnt/f2fs_mount/test10/image*[1,3,5,7,9]
+    echo "y" | rm $DISK_PATH/test10/image*[1,3,5,7,9]
 
-    echo 1 > /sys/fs/f2fs/loop1/hc_enable
+    echo 1 > /sys/fs/f2fs/${DISK_NAME}/hc_enable
     echo 1 > $_sys_path/tracing_on
     echo 1 > $_sys_path/events/f2fs/f2fs_grading_ssr_allocate/enable
 
     cat $_sys_path/trace_pipe | grep ssr >> log10.txt &
 
-    mkdir /mnt/f2fs_mount/test10/f2fs_grading_ssr_allocate
+    mkdir $DISK_PATH/test10/f2fs_grading_ssr_allocate
     local i=0
     while [ $i -lt 200 ]
     do
-        dd if=/dev/zero of=/mnt/f2fs_mount/test10/f2fs_grading_ssr_allocate/image$i bs=4k count=1
+        dd if=/dev/zero of=$DISK_PATH/test10/f2fs_grading_ssr_allocate/image$i bs=4k count=1
         i=$(($i + 1))
     done
-    rm -rf /mnt/f2fs_mount/test10/f2fs_grading_ssr_allocate/image*[1,3,5,7,9]
+    echo "y" | rm $DISK_PATH/test10/f2fs_grading_ssr_allocate/image*[1,3,5,7,9]
 
     sleep 180
     kill %1
@@ -82,13 +86,18 @@ do_test()
     else
         tst_res TFAIL "The hierarchical SSR recovery function is enabled failed!"
     fi
+    
+    echo "y" | rm 1.txt
+    echo "y" | rm 2.txt
 }
 
 do_clean()
 {
-    rm -rf log10.txt
-    losetup -d /dev/block/loop1
-    umount /mnt/f2fs_mount
+    echo "y" | rm $DISK_PATH/test10/f2fs_grading_ssr_allocate/*
+    rmdir $DISK_PATH/test10/f2fs_grading_ssr_allocate/
+    echo "y" | rm $DISK_PATH/test10/*
+    rmdir $DISK_PATH/test10/
+    echo "y" | rm $DISK_PATH/image*
 }
 
 do_setup
