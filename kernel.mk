@@ -67,7 +67,6 @@ PRODUCT_PATCH_FILE := $(OHOS_BUILD_HOME)/vendor/hisilicon/watchos/patches/$(DEVI
 SMALL_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME)_$(BUILD_TYPE).patch
 KERNEL_IMAGE_FILE := $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/boot/$(KERNEL_IMAGE)
 DEFCONFIG_FILE := $(DEVICE_NAME)_$(BUILD_TYPE)_defconfig
-NEWIP_PATCH_FILE := $(OHOS_BUILD_HOME)/foundation/communication/sfc/newip/apply_newip.sh
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
@@ -92,9 +91,6 @@ ifneq ($(findstring $(BUILD_TYPE), small),)
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(SMALL_PATCH_FILE)
 endif
 
-ifeq ($(NEWIP_PATCH_FILE), $(wildcard $(NEWIP_PATCH_FILE)))
-	$(hide) $(NEWIP_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) ${KERNEL_VERSION}
-endif
 	$(hide) cp -rf $(KERNEL_CONFIG_PATH)/. $(KERNEL_SRC_TMP_PATH)/
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) distclean
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) $(DEFCONFIG_FILE)
