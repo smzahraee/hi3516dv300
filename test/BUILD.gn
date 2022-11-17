@@ -19,11 +19,22 @@ if (is_standard_system) {
 
 if (is_standard_system) {
   module_output_path = "linuxkerneltest/"
-  linuxkerneltest_public_deps = [ "//third_party/googletest:gtest_main" ]
+  linuxkerneltest_public_deps = [
+    "//third_party/bounds_checking_function:libsec_shared",
+    "//third_party/googletest:gtest_main",
+  ]
 
   ohos_unittest("accesstokenid_test") {
     module_out_path = module_output_path
     sources = [ "unittest/accesstokenid/accesstokenid_test.cpp" ]
+    deps = linuxkerneltest_public_deps
+    part_name = "linux"
+    subsystem_name = "kernel"
+  }
+
+  ohos_unittest("rtg_test") {
+    module_out_path = module_output_path
+    sources = [ "unittest/rtg/rtg_test.cpp" ]
     deps = linuxkerneltest_public_deps
     part_name = "linux"
     subsystem_name = "kernel"
@@ -46,6 +57,7 @@ group("linuxkerneltest") {
     deps = [
       ":accesstokenid_test",
       ":init_runtest",
+      ":rtg_test",
       "fuzztest:fuzztest",
 
       #"kernel_ltp:HatsKernelTest",
