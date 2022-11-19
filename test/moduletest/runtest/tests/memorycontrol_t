@@ -1,11 +1,7 @@
 ################################################################################
 #
 # Copyright (C) 2022 Huawei Device Co., Ltd.
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
+# SPDX-License-Identifier: GPL-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,21 +10,17 @@
 # limitations under the License.
 #
 ################################################################################
-# File: OH_RK3568_config
+# File: memorycontrol_t
 #
-# Description: OpenHarmony linuxkerneltest testsuite list for RK3568
+# Description: memorycontrol_t testcase list
 #
-# Authors:     Ma Feng - mafeng.ma@huawei.com
+# Authors:     Wu Lisai - wulisai@huawei-partners.com
 #
-# History:     Mar 15 2022 - init scripts
+# History:     Nov 18 2022 - init scripts
 #
 ################################################################################
-cpuisolation_t
-cpusetdecouple_cpuhotplug_t
-enhancedswap_t
-sched_rtg_t
-enhancedf2fs_t
-mem_debug_t
-rss_monitor_t
-purgeable_t
-memorycontrol_t
+
+memory_control01 memory_control01.sh
+memory_control02 memory_control02.sh
+memory_control03 memory_control03.sh
+
