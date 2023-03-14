@@ -26,7 +26,6 @@ endif
 
 KERNEL_SRC_PATH := $(OHOS_BUILD_HOME)/kernel/linux/${KERNEL_VERSION}
 KERNEL_PATCH_PATH := $(OHOS_BUILD_HOME)/kernel/linux/patches/${KERNEL_VERSION}
-KERNEL_CONFIG_PATH := $(OHOS_BUILD_HOME)/kernel/linux/config/${KERNEL_VERSION}
 PREBUILTS_GCC_DIR := $(OHOS_BUILD_HOME)/prebuilts/gcc
 CLANG_HOST_TOOLCHAIN := $(OHOS_BUILD_HOME)/prebuilts/clang/ohos/linux-x86_64/llvm/bin
 KERNEL_HOSTCC := $(CLANG_HOST_TOOLCHAIN)/clang
@@ -70,6 +69,24 @@ DEFCONFIG_FILE := $(DEVICE_NAME)_$(BUILD_TYPE)_defconfig
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
+HARMONY_CONFIG_PATH := $(OHOS_BUILD_HOME)/kernel/linux/config/$(KERNEL_VERSION)
+DEVICE_CONFIG_PATH  := $(OHOS_BUILD_HOME)/kernel/linux/config/$(KERNEL_VERSION)/$(DEVICE_NAME)
+DEFCONFIG_BASE_FILE := $(HARMONY_CONFIG_PATH)/base_defconfig
+DEFCONFIG_TYPE_FILE := $(HARMONY_CONFIG_PATH)/type/$(BUILD_TYPE)_defconfig
+DEFCONFIG_FORM_FILE := $(HARMONY_CONFIG_PATH)/form/$(KERNEL_FORM)_defconfig
+DEFCONFIG_ARCH_FILE := $(DEVICE_CONFIG_PATH)/arch/$(KERNEL_ARCH)_defconfig
+DEFCONFIG_PROC_FILE := $(DEVICE_CONFIG_PATH)/product/$(KERNEL_PROD)_defconfig
+
+ifneq ($(shell test -e $DEFCONFIG_FORM_FILE), 0)
+    DEFCONFIG_FORM_FILE :=
+    $(warning no form config file $(DEFCONFIG_FORM_FILE))
+endif
+
+ifneq ($(shell test -e $DEFCONFIG_PROC_FILE), 0)
+    DEFCONFIG_PROC_FILE :=
+    $(warning no product config file $(DEFCONFIG_PROC_FILE))
+endif
+
 $(KERNEL_IMAGE_FILE):
 	$(hide) echo "build kernel..."
 ifeq ($(DEVICE_NAME), hispark_phoenix)
@@ -90,8 +107,8 @@ endif
 ifneq ($(findstring $(BUILD_TYPE), small),)
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(SMALL_PATCH_FILE)
 endif
-
-	$(hide) cp -rf $(KERNEL_CONFIG_PATH)/. $(KERNEL_SRC_TMP_PATH)/
+	sh $(OHOS_BUILD_HOME)/kernel/linux/$(KERNEL_VERSION)/scripts/kconfig/merge_config.sh -O $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/configs/ -m $(DEFCONFIG_TYPE_FILE) $(DEFCONFIG_FORM_FILE) $(DEFCONFIG_ARCH_FILE) $(DEFCONFIG_PROC_FILE) $(DEFCONFIG_BASE_FILE)
+	mv $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/configs/.config $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/configs/$(DEFCONFIG_FILE)
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) distclean
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) $(DEFCONFIG_FILE)
 ifeq ($(KERNEL_VERSION), linux-5.10)
