@@ -22,13 +22,13 @@ import time
 
 
 ignores = [
-    "include/trace/events/eas_sched.h: warning: format '%d' expects arguments of type 'int', but argument 9 has type 'long unsigned int' [-Wformat=]",
+    "include/trace/events/eas_sched.h: warning: format '%d' expects argument of type 'int', but argument 9 has type 'long unsigned int' [-Wformat=]",
     "drivers/block/zram/zram_drv.c: warning: left shift count >= width of type",
     "include/trace/events/eas_sched.h: note: in expansion of macro",
     "include/trace/events/eas_sched.h: note: format string is defined here",
     "include/trace/trace_events.h: note: in expansion of macro",
     "mm/vmscan.c: warning: suggest parentheses around assignment used as truth value [-Wparentheses]",
-    "lib/bitfiled_kunit.c: warning: the frame size of \d+ bytes is larger than \d+ bytes",
+    "lib/bitfield_kunit.c: warning: the frame size of \d+ bytes is larger than \d+ bytes",
 ]
 
 
@@ -62,7 +62,7 @@ class Reporter:
         try:
             warning = re.search(regex, line).group(0)
         except:
-            print('Expect>>>', details)
+            print('Except>>>', details)
             return
 
         report = {
@@ -117,6 +117,8 @@ class Reporter:
             if not report is None:
                 reports.append(report)
 
+        return reports
+
 
     def parse(self, content):
         blocks = content.split('\n')
@@ -137,9 +139,9 @@ class Reporter:
             ('[-Wframe-larger-than=]', 'warning: the frame size [^\[]*'),
             ('[-Wshift-count-overflow]', 'warning: left shift count >= width of type'),
             ('definition or declaration', 'warning: .* declared inside parameter list will not be visible outside of this definition or declaration'),
-            ('character', 'warning: missing termination .* character'),
+            ('character', 'warning: missing terminating .* character'),
             ('in expansion of macro', 'note: in expansion of macro'),
-            ('note: fromat string is defined here', 'note: format string is defined here'),
+            ('note: format string is defined here', 'note: format string is defined here'),
             ('[-Wparentheses]', 'suggest parentheses around assignment used as truth value'),
         )
 
@@ -233,6 +235,10 @@ def make_j(arch, cross_compile, knl_path):
     outmsg, errmsg, ret = exec_cmd(make, cwd=knl_path)
     if ret:
         print(f'"{make}" errors --> \n {errmsg}')
+        return ret, f'"{make}" errors --> \n {errmsg}'
+    elif len(errmsg) > 0:
+        print(f'"{make}" warnings --> \n {errmsg}')
+        print("\nbuild log:\n%s", errmsg)
         result = "success"
         reporter = Reporter(arch, knl_path)
         known_issue = "\nKnown issue:\n"
@@ -252,9 +258,9 @@ def make_j(arch, cross_compile, knl_path):
                 new_issue = new_issue + report['title'] + "\n"
                 new_issue = new_issue + report['report'] + "\n"
             print(new_issue)
-            return 2, f'"{make}" warning --> \n {errmsg}'
+            return 2, f'"{make}" warning --> \n {new_issue}'
 
-        return ret, f'"{make}" warnings in ignores --> \n {errmsg}'
+        return ret, f'"{make}" warnings in ignores --> \n {known_issue}'
 
     return ret, f'"{make}" success!'
 
