@@ -22,7 +22,7 @@ ohos_fuzztest("AddThreadToRtgFuzzTest") {
       "//kernel/linux/build/test/fuzztest/sched/addthreadtortg_fuzzer"
 
   include_dirs = [
-    "//foundation/multimedia/image_framework/mock/native/include",
+    "//foundation/multimedia/image_framework/mock/native/include/log",
     "//foundation/resourceschedule/frame_aware_sched/common/include",
     "//third_party/bounds_checking_function/include",
   ]
