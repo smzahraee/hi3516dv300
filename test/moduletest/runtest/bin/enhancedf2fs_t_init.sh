@@ -23,7 +23,7 @@
 
 create_catalogue()
 {
-    export DISK_PATH=$(mount | grep f2fs | cut -F 3)
+    export DISK_PATH="/data"
     export DISK_NAME=$(df -h |grep /dev/block |grep $DISK_PATH |awk '{print $1}' |cut -d "/" -f4)
 }
 
