@@ -29,6 +29,7 @@ ignores = [
     "include/trace/trace_events.h: note: in expansion of macro",
     "mm/vmscan.c: warning: suggest parentheses around assignment used as truth value [-Wparentheses]",
     "lib/bitfield_kunit.c: warning: the frame size of \d+ bytes is larger than \d+ bytes",
+    "drivers/mmc/host/sdhci-esdhc-imx.c: warning: 'sdhci_esdhc_imx_probe_nondt' defined but not used",
 ]
 
 
@@ -238,7 +239,6 @@ def make_j(arch, cross_compile, knl_path):
         return ret, f'"{make}" errors --> \n {errmsg}'
     elif len(errmsg) > 0:
         print(f'"{make}" warnings --> \n {errmsg}')
-        print("\nbuild log:\n%s", errmsg)
         result = "success"
         reporter = Reporter(arch, knl_path)
         known_issue = "\nKnown issue:\n"
