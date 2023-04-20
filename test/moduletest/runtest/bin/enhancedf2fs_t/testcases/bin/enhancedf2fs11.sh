@@ -35,10 +35,13 @@ do_test()
 
     tst_res TINFO "Start test hierarchical SSR recycling is disabled."
     local i=0
-    while [ $i -lt 32 ]
+    df -h | grep -w "$DISK_NAME" | awk -F " " '{print $4}' > 1.txt
+    avail_mem=$(sed 's/.$//' 1.txt | cut -d '.' -f1)
+    expected_mem=$(expr $avail_mem - 3)
+    while [ $i -lt $expected_mem ]
     do
-        dd if=/dev/zero of=$DISK_PATH/f2fs_test/image$i bs=512M count=1
-        i=$(( $i+ 1 ))
+        dd if=/dev/zero of=$DISK_PATH/f2fs_test/image$i bs=1G count=1
+        i=$(( $i + 1 ))
     done
 
     mkdir $DISK_PATH/test11
@@ -79,6 +82,8 @@ do_test()
     else
         tst_res TFAIL "Hierarchical SSR recycling is disabled failed!"
     fi
+    
+    echo "y" | rm 1.txt
 }
 
 do_clean()

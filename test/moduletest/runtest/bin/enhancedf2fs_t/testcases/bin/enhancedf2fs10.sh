@@ -25,7 +25,7 @@ source tst_oh.sh
 
 do_setup()
 {
-    mkdir $DISK_PATH/
+    mkdir $DISK_PATH/f2fs_test
 }
 
 do_test()
@@ -36,15 +36,12 @@ do_test()
     tst_res TINFO "Start test hierarchical SSR recovery function is enabled."
 
     local i=0
-    df -h | grep -w "$DISK_NAME" | awk -F " " '{print $2}' > 1.txt
-    df -h | grep -w "$DISK_NAME" | awk -F " " '{print $3}' > 2.txt
-    total_mem=$(sed 's/.$//' 1.txt)
-    used_mem=$(sed 's/.$//' 2.txt | cut -d '.' -f1)
-    mid_mem=$(expr $total_mem - 2)
-    expected_mem=$(expr $mid_mem - $used_mem)
+    df -h | grep -w "$DISK_NAME" | awk -F " " '{print $4}' > 1.txt
+    avail_mem=$(sed 's/.$//' 1.txt | cut -d '.' -f1)
+    expected_mem=$(expr $avail_mem - 3)
     while [ $i -lt $expected_mem ]
     do
-        dd if=/dev/zero of=$DISK_PATH/image$i bs=1G count=1
+        dd if=/dev/zero of=$DISK_PATH/f2fs_test/image$i bs=1G count=1
         i=$(( $i + 1 ))
     done
     mkdir $DISK_PATH/test10
@@ -88,7 +85,6 @@ do_test()
     fi
     
     echo "y" | rm 1.txt
-    echo "y" | rm 2.txt
 }
 
 do_clean()
@@ -97,7 +93,8 @@ do_clean()
     rmdir $DISK_PATH/test10/f2fs_grading_ssr_allocate/
     echo "y" | rm $DISK_PATH/test10/*
     rmdir $DISK_PATH/test10/
-    echo "y" | rm $DISK_PATH/image*
+    echo "y" | rm $DISK_PATH/f2fs_test/*
+    rmdir $DISK_PATH/f2fs_test/
 }
 
 do_setup
