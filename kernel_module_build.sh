@@ -21,6 +21,7 @@ export KERNEL_ARCH=$3
 export PRODUCT_PATH=$4
 export DEVICE_NAME=$5
 export KERNEL_VERSION=$6
+
 if [ "$BUILD_TYPE" == "small" ];then
     LINUX_KERNEL_OUT=${OUT_DIR}/kernel/${KERNEL_VERSION}
 elif [ "$BUILD_TYPE" == "standard" ];then

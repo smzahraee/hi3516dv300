@@ -69,6 +69,8 @@ if (os_level == "mini" || os_level == "small") {
       product_path,
       device_name,
       linux_kernel_version,
+      build_variant,
+      device_type,
     ]
   }
 
