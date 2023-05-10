@@ -21,7 +21,7 @@ set -e
 
 echo build_kernel
 pushd ${1}
-./kernel_module_build.sh ${2} ${4} ${5} ${6} ${7} ${8} ${9} ${10}
+./kernel_module_build.sh ${2} ${4} ${5} ${6} ${7} ${8}
 mkdir -p ${3}
 rm -rf ${3}/../../../kernel.timestamp
 
