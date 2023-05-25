@@ -31,29 +31,30 @@ do_test()
 {
     local ret=0
     local memcg_100_stat=/dev/memcg/100/memory.stat
-    local memcg_stat=/dev/memcg/memory.stat
+    local memcg_eswap=/dev/memcg/memory.eswap_info
     local avail_buffers=/dev/memcg/memory.avail_buffers
     local zswapd_s=/dev/memcg/memory.zswapd_pressure_show
 
     tst_res TINFO "Start zram to Eswap test"
     # get init Eswap values
     eswap_100_b=$(cat ${memcg_100_stat} | grep 'Eswap' | awk -F ' ' '{print$2}')
-    eswap_b=$(cat ${memcg_stat} | grep 'Eswap' | awk -F ' ' '{print$2}')
+    eswap_b=$(cat ${memcg_eswap} | awk -F ' ' '{print$4}')
 
     # turn on enhanced swap out
-    echo 1 > /dev/memcg/memory.zram_wm_ratio
+    echo 30 > /dev/memcg/memory.zram_wm_ratio
+    echo 60 10 50 > /dev/memcg/memory.zswapd_single_memcg_param
 
     # get buffer_size
     buffer_size=$(cat $zswapd_s | grep 'buffer_size' | awk -F ':' '{print$2}')
 
     # set avail_buffers > buffer_size to swap out to Eswap
-    echo 0 $(( $buffer_size + 50 )) $(( $buffer_size + 100 )) 0 > $avail_buffers
+    echo $(( $buffer_size + 180 )) $(( $buffer_size + 150 )) $(( $buffer_size + 200 )) 0 > $avail_buffers
 
     sleep 3
 
     # get new Eswap values after swap-out to Eswap
     eswap_100_a=$(cat ${memcg_100_stat} | grep 'Eswap' | awk -F ' ' '{print$2}')
-    eswap_a=$(cat ${memcg_stat} | grep 'Eswap' | awk -F ' ' '{print$2}')
+    eswap_a=$(cat ${memcg_eswap} | awk -F ' ' '{print$4}')
 
     tst_res TINFO "root Eswap: $eswap_b --> $eswap_a"
     tst_res TINFO "100 Eswap: $eswap_100_b --> $eswap_100_a"
