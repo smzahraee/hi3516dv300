@@ -17,7 +17,7 @@ set -e
 
 export OUT_DIR=$1
 export BUILD_TYPE=$2
-export KERNEL_ARCH=$3
+export KERNEL_ARCH="arm64"
 export PRODUCT_PATH=$4
 export DEVICE_NAME=$5
 export KERNEL_VERSION=$6
